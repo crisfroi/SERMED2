@@ -135,7 +135,10 @@ export const useRoleBasedData = () => {
   // Función para obtener estadísticas permitidas según el rol
   const getAllowedMetrics = useMemo(() => {
     return () => {
-      if (!userRole) return [];
+      if (!userRole) {
+        console.warn('No userRole available for getAllowedMetrics');
+        return [];
+      }
 
       const baseMetrics = [
         'total_professionals',
