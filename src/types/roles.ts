@@ -246,11 +246,19 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
 // Funciones de utilidad para verificar permisos
 export const hasPermission = (userRole: UserRole, permission: string): boolean => {
   const role = ROLE_DEFINITIONS[userRole];
+  if (!role) {
+    console.warn(`Role definition not found for role: ${userRole}`);
+    return false;
+  }
   return role.permissions.includes(permission);
 };
 
 export const canAccessTab = (userRole: UserRole, tab: string): boolean => {
   const role = ROLE_DEFINITIONS[userRole];
+  if (!role) {
+    console.warn(`Role definition not found for role: ${userRole}`);
+    return false;
+  }
   return role.dashboardTabs.includes(tab);
 };
 
