@@ -264,6 +264,10 @@ export const canAccessTab = (userRole: UserRole, tab: string): boolean => {
 
 export const getUserPermissions = (userRole: UserRole): Permission[] => {
   const role = ROLE_DEFINITIONS[userRole];
+  if (!role) {
+    console.warn(`Role definition not found for role: ${userRole}`);
+    return [];
+  }
   return PERMISSIONS.filter(p => role.permissions.includes(p.id));
 };
 
