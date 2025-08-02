@@ -7,7 +7,7 @@ import { UserRole } from '@/types/roles';
  */
 export const useRoleBasedData = () => {
   const { userRole, user, getRestrictions } = useAuth();
-  const restrictions = getRestrictions();
+  const restrictions = getRestrictions() || {};
 
   // Función para filtrar datos de profesionales según el rol
   const filterProfessionalsData = useMemo(() => {
