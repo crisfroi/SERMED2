@@ -73,7 +73,7 @@ const EnhancedAIChat: React.FC<EnhancedAIChatProps> = ({ onNavigateToTab }) => {
   const [selectedMetricCategory, setSelectedMetricCategory] = useState<string>("all");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { userRole, hasPermission } = useAuth();
+  const { userRole, hasPermission, isLoading: authLoading } = useAuth();
 
   // Add safety check to prevent undefined role issues
   const roleBasedData = useRoleBasedData();
