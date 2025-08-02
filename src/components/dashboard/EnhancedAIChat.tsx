@@ -75,6 +75,22 @@ const EnhancedAIChat: React.FC<EnhancedAIChatProps> = ({ onNavigateToTab }) => {
   const { toast } = useToast();
   const { userRole, hasPermission, isLoading: authLoading } = useAuth();
 
+  // Early return if authentication is still loading
+  if (authLoading || !userRole) {
+    return (
+      <div className="flex flex-col h-full max-h-[600px]">
+        <Card className="flex-1 flex flex-col">
+          <CardContent className="flex-1 flex items-center justify-center">
+            <div className="flex items-center space-x-2">
+              <Loader2 className="w-6 h-6 animate-spin" />
+              <span>Cargando chat de IA...</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   // Add safety check to prevent undefined role issues
   const roleBasedData = useRoleBasedData();
   const getAllowedMetrics = roleBasedData?.getAllowedMetrics || (() => []);
