@@ -139,7 +139,7 @@ Como usuario con rol "${userRole}", tienes acceso a ${allowedMetricsCount} tipos
       timestamp: new Date()
     };
     setMessages([welcomeMessage]);
-  }, [userRole, getAllowedMetrics]);
+  }, [userRole]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
