@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserRole, hasPermission, canAccessTab, getRoleRestrictions } from '@/types/roles';
 import { supabase } from '@/integrations/supabase/client';
@@ -238,8 +237,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   };
 
   const getRestrictions = () => {
-    if (!userRole) return {};
-    return getRoleRestrictions(userRole);
+    if (!userRole) {
+      console.warn('No userRole available for getRestrictions');
+      return {};
+    }
+    try {
+      return getRoleRestrictions(userRole);
+    } catch (error) {
+      console.error('Error getting role restrictions:', error);
+      return {};
+    }
   };
 
   const switchRole = (newRole: UserRole) => {
