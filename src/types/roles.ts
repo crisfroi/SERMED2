@@ -260,7 +260,12 @@ export const getUserPermissions = (userRole: UserRole): Permission[] => {
 };
 
 export const getRoleRestrictions = (userRole: UserRole) => {
-  return ROLE_DEFINITIONS[userRole].restrictions || {};
+  const roleDefinition = ROLE_DEFINITIONS[userRole];
+  if (!roleDefinition) {
+    console.warn(`Role definition not found for role: ${userRole}`);
+    return {};
+  }
+  return roleDefinition.restrictions || {};
 };
 
 // Vista específica para cada rol en el dashboard
