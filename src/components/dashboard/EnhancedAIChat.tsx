@@ -110,12 +110,16 @@ const EnhancedAIChat: React.FC<EnhancedAIChatProps> = ({ onNavigateToTab }) => {
 
   // Mensaje de bienvenida inicial
   useEffect(() => {
+    if (!userRole) return; // Don't show welcome message if no role
+
+    const allowedMetricsCount = getAllowedMetrics()?.length || 0;
+
     const welcomeMessage: Message = {
       id: "welcome",
       type: "system",
-      content: `¡Hola! Soy tu asistente de IA especializado en análisis de datos del sistema de profesionales sanitarios de Guinea Ecuatorial. 
+      content: `¡Hola! Soy tu asistente de IA especializado en análisis de datos del sistema de profesionales sanitarios de Guinea Ecuatorial.
 
-Como usuario con rol "${userRole}", tienes acceso a ${getAllowedMetrics().length} tipos de métricas y análisis.
+Como usuario con rol "${userRole}", tienes acceso a ${allowedMetricsCount} tipos de métricas y análisis.
 
 **¿Qué puedo hacer por ti?**
 • Analizar estadísticas de profesionales sanitarios
