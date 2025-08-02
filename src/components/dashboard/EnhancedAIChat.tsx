@@ -74,7 +74,11 @@ const EnhancedAIChat: React.FC<EnhancedAIChatProps> = ({ onNavigateToTab }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { userRole, hasPermission } = useAuth();
-  const { getAllowedMetrics, canAccessSensitiveData } = useRoleBasedData();
+
+  // Add safety check to prevent undefined role issues
+  const roleBasedData = useRoleBasedData();
+  const getAllowedMetrics = roleBasedData?.getAllowedMetrics || (() => []);
+  const canAccessSensitiveData = roleBasedData?.canAccessSensitiveData || (() => false);
 
   // Cargar todas las métricas disponibles
   const { data: estadisticasBasicas } = useEstadisticasAvanzadas();
