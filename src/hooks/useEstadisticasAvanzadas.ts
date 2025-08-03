@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getErrorMessage, logError } from "@/utils/errorHandler";
+import { getQueryConfig } from "@/config/slowConnectionConfig";
 
 export function useEstadisticasAvanzadas() {
   return useQuery({
     queryKey: ["estadisticas-avanzadas"], // Mantenemos la queryKey original
+    ...getQueryConfig('estadisticasAvanzadas'), // Aplicar configuración para conexiones lentas
     queryFn: async () => {
       console.log("Fetching estadísticas avanzadas...");
 
