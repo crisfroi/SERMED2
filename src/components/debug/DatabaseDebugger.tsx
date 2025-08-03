@@ -16,6 +16,7 @@ interface TestResult {
 export const DatabaseDebugger: React.FC = () => {
   const [results, setResults] = useState<TestResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
+  const [skipAuth, setSkipAuth] = useState(false);
 
   const addResult = (result: Omit<TestResult, 'timestamp'>) => {
     setResults(prev => [...prev, {
