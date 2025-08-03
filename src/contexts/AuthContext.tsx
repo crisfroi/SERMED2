@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserRole, hasPermission, canAccessTab, getRoleRestrictions } from '@/types/roles';
 import { supabase } from '@/integrations/supabase/client';
@@ -224,21 +223,46 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   };
 
   const checkPermission = (permission: string): boolean => {
-    if (!userRole) return false;
-    const hasPerms = hasPermission(userRole, permission);
-    console.log(`🔐 Checking permission '${permission}' for role '${userRole}':`, hasPerms);
-    return hasPerms;
+    if (!userRole) {
+      console.warn('No userRole available for permission check:', permission);
+      return false;
+    }
+    try {
+      const hasPerms = hasPermission(userRole, permission);
+      console.log(`🔐 Checking permission '${permission}' for role '${userRole}':`, hasPerms);
+      return hasPerms;
+    } catch (error) {
+      console.error('Error checking permission:', error);
+      return false;
+    }
   };
 
   const checkTabAccess = (tab: string): boolean => {
-    if (!userRole) return false;
-    const canAccess = canAccessTab(userRole, tab);
-    console.log(`🔐 Checking tab access '${tab}' for role '${userRole}':`, canAccess);
-    return canAccess;
+    if (!userRole) {
+      console.warn('No userRole available for tab access check:', tab);
+      return false;
+    }
+    try {
+      const canAccess = canAccessTab(userRole, tab);
+      console.log(`🔐 Checking tab access '${tab}' for role '${userRole}':`, canAccess);
+      return canAccess;
+    } catch (error) {
+      console.error('Error checking tab access:', error);
+      return false;
+    }
   };
 
   const getRestrictions = () => {
-    return getRoleRestrictions(userRole);
+    if (!userRole) {
+      console.warn('No userRole available for getRestrictions');
+      return {};
+    }
+    try {
+      return getRoleRestrictions(userRole);
+    } catch (error) {
+      console.error('Error getting role restrictions:', error);
+      return {};
+    }
   };
 
   const switchRole = (newRole: UserRole) => {

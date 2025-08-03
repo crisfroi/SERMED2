@@ -60,7 +60,8 @@ import ProfessionalSearch from "@/components/dashboard/ProfessionalSearch";
 import ErrorBoundary from "@/components/ui/error-boundary";
 import ConnectionDebugPanel from "@/components/dashboard/ConnectionDebugPanel";
 import { OfflineNotification } from "@/components/ui/offline-notification";
-import { DatabaseDiagnostic } from "@/components/dashboard/DatabaseDiagnostic";
+import DatabaseDiagnostic from "@/components/dashboard/DatabaseDiagnostic";
+import DatabaseDebuggerSimple from "@/components/debug/DatabaseDebuggerSimple";
 
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -369,8 +370,7 @@ const Dashboard = () => {
     { id: "health-centers", label: "Centros", icon: MapPin },
     ...(userRole === "administrador"
       ? [
-          { id: "users", label: "Usuarios", icon: Users },
-          { id: "diagnostic", label: "Diagnóstico DB", icon: AlertTriangle }
+          { id: "users", label: "Usuarios", icon: Users }
         ]
       : []),
   ];
@@ -493,11 +493,11 @@ const Dashboard = () => {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="text-red-600 focus:text-red-700 focus:bg-red-50"
+                  disabled
+                  className="text-gray-400 cursor-not-allowed opacity-50"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Cerrar Sesión</span>
+                  <span>Cerrar Sesión (Deshabilitado)</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -631,13 +631,7 @@ const Dashboard = () => {
             {userRole === "administrador" && <AdminPanel />}
           </TabsContent>
 
-          <TabsContent value="diagnostic" className="space-y-6">
-            {userRole === "administrador" && (
-              <div className="flex justify-center">
-                <DatabaseDiagnostic />
-              </div>
-            )}
-          </TabsContent>
+
         </Tabs>
       </div>
     </div>

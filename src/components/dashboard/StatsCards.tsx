@@ -40,49 +40,52 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
     disableOfflineMode,
   } = useOfflineMode();
 
+  // Force mock data immediately if no real data is available
+  const forcedMockData = {
+    total: 150,
+    aprobados: 120,
+    recibidos: 15,
+    rechazados: 10,
+    revisando: 5,
+    vencimientosProximos: 8,
+    carnetVencidos: 3,
+    generoMasculino: 65,
+    generoFemenino: 55,
+    tasaAprobacion: "80.0",
+    tasaRechazo: "6.7"
+  };
+
   // Enhanced fallback logic based on error type
   let effectiveStats = stats;
   let fallbackReason = null;
 
-  // If main stats failed or are empty, use fallback data
-  if (!stats || (stats && stats.total === 0 && error)) {
-    console.log("Main stats failed or empty, analyzing for fallback...");
-
-    // Priority 1: Use test stats if available and not loading
-    if (testStats && !testLoading && !testError) {
-      console.log("Using test stats as primary fallback");
-      effectiveStats = testStats;
-      fallbackReason = "test";
-    }
-    // Priority 2: Use mock data if test stats are not available
-    else if (mockStats && !mockLoading) {
-      console.log("Using mock data as fallback");
-      effectiveStats = mockStats;
-      fallbackReason = "mock";
-    }
-    // Priority 3: Check error type for specific fallback decisions
-    else if (error) {
-      const errorMessage = error?.message || "";
-      const isFetchError =
-        errorMessage.includes("fetch") ||
-        errorMessage.includes("Failed to fetch") ||
-        errorMessage.includes("TypeError");
-
-      const isNetworkError =
-        errorMessage.includes("network") ||
-        errorMessage.includes("NetworkError") ||
-        errorMessage.includes("CORS");
-
-      // If it's a network/fetch error, use mock data
-      if (isFetchError || isNetworkError) {
-        console.log("Using mock data due to network/fetch error");
-        effectiveStats = mockStats;
-        fallbackReason = "network";
-      }
-    }
+  // Priority 1: Use main stats if available and valid
+  if (stats && stats.total > 0) {
+    console.log("Using main stats data");
+    effectiveStats = stats;
+  }
+  // Priority 2: Use test stats if available and not loading
+  else if (testStats && !testLoading && !testError) {
+    console.log("Using test stats as primary fallback");
+    effectiveStats = testStats;
+    fallbackReason = "test";
+  }
+  // Priority 3: Use mock data if available
+  else if (mockStats) {
+    console.log("Using mock data as fallback");
+    effectiveStats = mockStats;
+    fallbackReason = "mock";
+  }
+  // Priority 4: Use forced mock data immediately if everything else is loading or failed
+  else {
+    console.log("Using forced mock data");
+    effectiveStats = forcedMockData;
+    fallbackReason = "forced-mock";
   }
 
-  if (isLoading) {
+  // Since we now always have effectiveStats (forced mock if nothing else),
+  // we only show loading in very specific cases
+  if (!effectiveStats) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -198,7 +201,7 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
                     fallbackReason === "test" &&
                     "Using test data due to database connection issues"}
                   {!isOfflineMode &&
-                    fallbackReason === "mock" &&
+                    (fallbackReason === "mock" || fallbackReason === "forced-mock") &&
                     "Using mock data - database unavailable"}
                 </div>
                 {isOfflineMode && (

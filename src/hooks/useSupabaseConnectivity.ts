@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { getQueryConfig } from "@/config/slowConnectionConfig";
 
 export function useSupabaseConnectivity() {
   return useQuery({
     queryKey: ["supabase-connectivity"],
+    ...getQueryConfig('connectivity'), // Configuración para conexiones lentas
     queryFn: async () => {
       console.log("=== SIMPLE SUPABASE CONNECTIVITY TEST ===");
 

@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { getSlowConnectionQueryClient } from "@/config/slowConnectionConfig";
 import Home from "./pages/Home";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
@@ -13,20 +14,23 @@ import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient({
+  ...getSlowConnectionQueryClient(),
   defaultOptions: {
+    ...getSlowConnectionQueryClient().defaultOptions,
     queries: {
-      // Configuración de reintentos
+      ...getSlowConnectionQueryClient().defaultOptions.queries,
+      // Configuración de reintentos específica para errores de auth
       retry: (failureCount, error: any) => {
         // No reintentar si es un error de autenticación
         if (error?.message?.includes('auth') || error?.message?.includes('unauthorized')) {
           return false;
         }
-        
-        // Reintentar hasta 3 veces para errores de red
-        if (failureCount < 3) {
+
+        // Usar configuración de conexión lenta para otros errores
+        if (failureCount < 5) { // Aumentado de 3 a 5
           return true;
         }
-        
+
         return false;
       },
       

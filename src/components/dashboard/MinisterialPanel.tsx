@@ -48,9 +48,9 @@ import {
   CheckCircle,
   XCircle,
   FileText,
+  AlertTriangle,
   Stamp,
   Send,
-  AlertTriangle,
   BarChart3,
   Users,
   TrendingUp,
@@ -522,13 +522,17 @@ const MinisterialPanel = () => {
       </div>
 
       <Tabs defaultValue="signatures" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger
             value="signatures"
             className="flex items-center space-x-2"
           >
             <FileCheck className="w-4 h-4" />
             <span>Pendientes de Firma</span>
+          </TabsTrigger>
+          <TabsTrigger value="incidents" className="flex items-center space-x-2">
+            <AlertTriangle className="w-4 h-4" />
+            <span>Incidencias</span>
           </TabsTrigger>
           <TabsTrigger value="history" className="flex items-center space-x-2">
             <History className="w-4 h-4" />
@@ -901,6 +905,219 @@ const MinisterialPanel = () => {
                           .length
                       }
                     </Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="incidents">
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-orange-600" />
+                  Registro de Incidencias del Sistema
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {/* Estadísticas de incidencias */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <Card className="border-red-200 bg-red-50">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm text-red-600">Incidencias Críticas</p>
+                            <p className="text-2xl font-bold text-red-800">3</p>
+                          </div>
+                          <AlertTriangle className="h-8 w-8 text-red-600" />
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-yellow-200 bg-yellow-50">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm text-yellow-600">En Proceso</p>
+                            <p className="text-2xl font-bold text-yellow-800">8</p>
+                          </div>
+                          <Clock className="h-8 w-8 text-yellow-600" />
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-green-200 bg-green-50">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm text-green-600">Resueltas (30 días)</p>
+                            <p className="text-2xl font-bold text-green-800">25</p>
+                          </div>
+                          <CheckCircle className="h-8 w-8 text-green-600" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Tabla de incidencias */}
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>ID</TableHead>
+                        <TableHead>Tipo</TableHead>
+                        <TableHead>Centro/Área</TableHead>
+                        <TableHead>Descripción</TableHead>
+                        <TableHead>Prioridad</TableHead>
+                        <TableHead>Estado</TableHead>
+                        <TableHead>Fecha</TableHead>
+                        <TableHead>Acciones</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell className="font-mono">#INC-001</TableCell>
+                        <TableCell>
+                          <Badge variant="destructive">Sistema</Badge>
+                        </TableCell>
+                        <TableCell>Hospital Nacional</TableCell>
+                        <TableCell className="max-w-xs truncate">
+                          Error en generación de carnets profesionales
+                        </TableCell>
+                        <TableCell>
+                          <Badge className="bg-red-100 text-red-800">Crítica</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className="bg-yellow-100 text-yellow-800">En Proceso</Badge>
+                        </TableCell>
+                        <TableCell>24/12/2024</TableCell>
+                        <TableCell>
+                          <Button size="sm" variant="outline">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+
+                      <TableRow>
+                        <TableCell className="font-mono">#INC-002</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">Personal</Badge>
+                        </TableCell>
+                        <TableCell>Centro de Salud Bata</TableCell>
+                        <TableCell className="max-w-xs truncate">
+                          Falta de personal médico especializado
+                        </TableCell>
+                        <TableCell>
+                          <Badge className="bg-orange-100 text-orange-800">Alta</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className="bg-blue-100 text-blue-800">Asignada</Badge>
+                        </TableCell>
+                        <TableCell>23/12/2024</TableCell>
+                        <TableCell>
+                          <Button size="sm" variant="outline">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+
+                      <TableRow>
+                        <TableCell className="font-mono">#INC-003</TableCell>
+                        <TableCell>
+                          <Badge variant="default">Infraestructura</Badge>
+                        </TableCell>
+                        <TableCell>Clínica Malabo</TableCell>
+                        <TableCell className="max-w-xs truncate">
+                          Problema con equipos de diagnóstico
+                        </TableCell>
+                        <TableCell>
+                          <Badge className="bg-yellow-100 text-yellow-800">Media</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className="bg-green-100 text-green-800">Resuelta</Badge>
+                        </TableCell>
+                        <TableCell>22/12/2024</TableCell>
+                        <TableCell>
+                          <Button size="sm" variant="outline">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+
+                      <TableRow>
+                        <TableCell className="font-mono">#INC-004</TableCell>
+                        <TableCell>
+                          <Badge variant="destructive">Sistema</Badge>
+                        </TableCell>
+                        <TableCell>Plataforma Nacional</TableCell>
+                        <TableCell className="max-w-xs truncate">
+                          Lentitud en consultas de base de datos
+                        </TableCell>
+                        <TableCell>
+                          <Badge className="bg-red-100 text-red-800">Crítica</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className="bg-blue-100 text-blue-800">Investigando</Badge>
+                        </TableCell>
+                        <TableCell>21/12/2024</TableCell>
+                        <TableCell>
+                          <Button size="sm" variant="outline">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Resumen de tendencias */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-blue-600" />
+                  Tendencias de Incidencias
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-semibold mb-3">Por Tipo de Incidencia</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-sm">Sistema/Técnicas</span>
+                        <Badge variant="destructive">45%</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">Personal/Recursos</span>
+                        <Badge variant="secondary">30%</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">Infraestructura</span>
+                        <Badge variant="default">25%</Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold mb-3">Tiempo de Resolución</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-sm">Menos de 24h</span>
+                        <Badge className="bg-green-100 text-green-800">60%</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">1-7 días</span>
+                        <Badge className="bg-yellow-100 text-yellow-800">30%</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">Más de 7 días</span>
+                        <Badge className="bg-red-100 text-red-800">10%</Badge>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>

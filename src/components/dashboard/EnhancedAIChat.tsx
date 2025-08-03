@@ -73,8 +73,28 @@ const EnhancedAIChat: React.FC<EnhancedAIChatProps> = ({ onNavigateToTab }) => {
   const [selectedMetricCategory, setSelectedMetricCategory] = useState<string>("all");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { userRole, hasPermission } = useAuth();
-  const { getAllowedMetrics, canAccessSensitiveData } = useRoleBasedData();
+  const { userRole, hasPermission, isLoading: authLoading } = useAuth();
+
+  // Early return if authentication is still loading
+  if (authLoading || !userRole) {
+    return (
+      <div className="flex flex-col h-full max-h-[600px]">
+        <Card className="flex-1 flex flex-col">
+          <CardContent className="flex-1 flex items-center justify-center">
+            <div className="flex items-center space-x-2">
+              <Loader2 className="w-6 h-6 animate-spin" />
+              <span>Cargando chat de IA...</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Add safety check to prevent undefined role issues
+  const roleBasedData = useRoleBasedData();
+  const getAllowedMetrics = roleBasedData?.getAllowedMetrics || (() => []);
+  const canAccessSensitiveData = roleBasedData?.canAccessSensitiveData || (() => false);
 
   // Cargar todas las métricas disponibles
   const { data: estadisticasBasicas } = useEstadisticasAvanzadas();
@@ -90,12 +110,16 @@ const EnhancedAIChat: React.FC<EnhancedAIChatProps> = ({ onNavigateToTab }) => {
 
   // Mensaje de bienvenida inicial
   useEffect(() => {
+    if (!userRole) return; // Don't show welcome message if no role
+    
+    const allowedMetricsCount = getAllowedMetrics()?.length || 0;
+    
     const welcomeMessage: Message = {
       id: "welcome",
       type: "system",
       content: `¡Hola! Soy tu asistente de IA especializado en análisis de datos del sistema de profesionales sanitarios de Guinea Ecuatorial. 
 
-Como usuario con rol "${userRole}", tienes acceso a ${getAllowedMetrics().length} tipos de métricas y análisis.
+Como usuario con rol "${userRole}", tienes acceso a ${allowedMetricsCount} tipos de métricas y análisis.
 
 **¿Qué puedo hacer por ti?**
 • Analizar estadísticas de profesionales sanitarios
@@ -115,7 +139,7 @@ Como usuario con rol "${userRole}", tienes acceso a ${getAllowedMetrics().length
       timestamp: new Date()
     };
     setMessages([welcomeMessage]);
-  }, [userRole, getAllowedMetrics]);
+  }, [userRole]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -341,19 +365,6 @@ No encontré una respuesta específica para tu consulta, pero aquí tienes algun
 
       const executionTime = Date.now() - startTime;
       
-      // Agregar metadatos a la respuesta
-      const botMessage: Message = {
-        id: Date.now().toString(),
-        type: "bot",
-        content: response,
-        timestamp: new Date(),
-        metadata: {
-          queryType: "data_analysis",
-          resultCount,
-          executionTime
-        }
-      };
-
       return response;
 
     } catch (error) {

@@ -7,7 +7,7 @@ import { UserRole } from '@/types/roles';
  */
 export const useRoleBasedData = () => {
   const { userRole, user, getRestrictions } = useAuth();
-  const restrictions = getRestrictions();
+  const restrictions = getRestrictions() || {};
 
   // Función para filtrar datos de profesionales según el rol
   const filterProfessionalsData = useMemo(() => {
@@ -135,7 +135,10 @@ export const useRoleBasedData = () => {
   // Función para obtener estadísticas permitidas según el rol
   const getAllowedMetrics = useMemo(() => {
     return () => {
-      if (!userRole) return [];
+      if (!userRole) {
+        console.warn('No userRole available for getAllowedMetrics');
+        return [];
+      }
 
       const baseMetrics = [
         'total_professionals',
