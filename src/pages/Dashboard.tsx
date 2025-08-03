@@ -603,7 +603,7 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="ai-chat" className="space-y-6">
-            <ImprovedAIChat
+            <AIAdvancedAnalyticsChat
               onNavigateToTab={(tab, filters) => {
                 setActiveTab(tab);
                 if (filters) {
