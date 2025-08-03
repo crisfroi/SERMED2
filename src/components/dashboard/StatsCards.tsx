@@ -81,8 +81,8 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
     fallbackReason = "forced-mock";
   }
 
-  // Only show loading if we don't have any data (including mock data)
-  const shouldShowLoading = isLoading && testLoading && connectivityLoading && !effectiveStats;
+  // Only show loading if we don't have any data available at all
+  const shouldShowLoading = !effectiveStats && (isLoading || testLoading || mockLoading);
 
   if (shouldShowLoading) {
     return (
