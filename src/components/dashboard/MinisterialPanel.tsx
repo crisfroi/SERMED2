@@ -51,7 +51,6 @@ import {
   AlertTriangle,
   Stamp,
   Send,
-  AlertTriangle,
   BarChart3,
   Users,
   TrendingUp,
