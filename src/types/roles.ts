@@ -271,6 +271,7 @@ export const getUserPermissions = (userRole: UserRole): Permission[] => {
   return PERMISSIONS.filter(p => role.permissions.includes(p.id));
 };
 
+<<<<<<< HEAD
 export const getRoleRestrictions = (userRole: UserRole) => {
   const roleDefinition = ROLE_DEFINITIONS[userRole];
   if (!roleDefinition) {
@@ -278,6 +279,13 @@ export const getRoleRestrictions = (userRole: UserRole) => {
     return {};
   }
   return roleDefinition.restrictions || {};
+=======
+export const getRoleRestrictions = (userRole: UserRole | null) => {
+  if (!userRole || !ROLE_DEFINITIONS[userRole]) {
+    return {};
+  }
+  return ROLE_DEFINITIONS[userRole].restrictions || {};
+>>>>>>> origin/main
 };
 
 // Vista específica para cada rol en el dashboard

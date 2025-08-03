@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,7 +13,44 @@ import PublicSearch from "./pages/PublicSearch";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Configuración de reintentos
+      retry: (failureCount, error: any) => {
+        // No reintentar si es un error de autenticación
+        if (error?.message?.includes('auth') || error?.message?.includes('unauthorized')) {
+          return false;
+        }
+        
+        // Reintentar hasta 3 veces para errores de red
+        if (failureCount < 3) {
+          return true;
+        }
+        
+        return false;
+      },
+      
+      // Tiempo de espera entre reintentos
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      
+      // Tiempo de vida de los datos en caché
+      staleTime: 5 * 60 * 1000, // 5 minutos
+      
+      // Tiempo de vida de los datos en caché cuando no hay suscriptores
+      gcTime: 10 * 60 * 1000, // 10 minutos
+      
+      // Configuración de refetch
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true
+    },
+    
+    mutations: {
+      // Configuración de reintentos para mutaciones
+      retry: 1
+    }
+  }
+});
 
 function App() {
   return (
