@@ -522,13 +522,17 @@ const MinisterialPanel = () => {
       </div>
 
       <Tabs defaultValue="signatures" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger
             value="signatures"
             className="flex items-center space-x-2"
           >
             <FileCheck className="w-4 h-4" />
             <span>Pendientes de Firma</span>
+          </TabsTrigger>
+          <TabsTrigger value="incidents" className="flex items-center space-x-2">
+            <AlertTriangle className="w-4 h-4" />
+            <span>Incidencias</span>
           </TabsTrigger>
           <TabsTrigger value="history" className="flex items-center space-x-2">
             <History className="w-4 h-4" />
