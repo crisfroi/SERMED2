@@ -200,7 +200,7 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
                     fallbackReason === "test" &&
                     "Using test data due to database connection issues"}
                   {!isOfflineMode &&
-                    fallbackReason === "mock" &&
+                    (fallbackReason === "mock" || fallbackReason === "forced-mock") &&
                     "Using mock data - database unavailable"}
                 </div>
                 {isOfflineMode && (
