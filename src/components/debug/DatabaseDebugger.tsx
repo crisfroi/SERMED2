@@ -184,53 +184,71 @@ export const DatabaseDebugger: React.FC = () => {
 
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Test 4: Database Query Test
+    // Test 4: Database Query Test (with timeout)
     addResult({
       name: 'Consulta de Base de Datos',
       status: 'pending',
-      message: 'Intentando consulta a la tabla principal...'
+      message: 'Intentando consulta a la tabla principal (timeout 10s)...'
     });
 
     try {
       const startTime = Date.now();
-      const { data, error, count } = await supabase
+
+      // Create timeout promise
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Timeout de consulta después de 10 segundos')), 10000)
+      );
+
+      // Race between database query and timeout
+      const dbPromise = supabase
         .from('profesionales_sanitarios')
         .select('id', { count: 'exact' })
         .limit(1);
-      
+
+      const result = await Promise.race([dbPromise, timeoutPromise]) as any;
       const queryTime = Date.now() - startTime;
 
-      if (error) {
-        throw error;
+      if (result && 'error' in result && result.error) {
+        throw result.error;
       }
 
-      setResults(prev => prev.map(r => 
-        r.name === 'Consulta de Base de Datos' 
-          ? { 
-              ...r, 
-              status: 'success', 
+      const { data, error, count } = result;
+
+      setResults(prev => prev.map(r =>
+        r.name === 'Consulta de Base de Datos'
+          ? {
+              ...r,
+              status: 'success',
               message: `Consulta exitosa (${queryTime}ms) - ${count || 0} registros totales`,
               details: {
                 recordCount: count || 0,
                 sampleData: data,
                 queryTime,
-                tableName: 'profesionales_sanitarios'
+                tableName: 'profesionales_sanitarios',
+                success: true
               }
             }
           : r
       ));
     } catch (error: any) {
-      setResults(prev => prev.map(r => 
-        r.name === 'Consulta de Base de Datos' 
-          ? { 
-              ...r, 
-              status: 'error', 
-              message: `Error de BD: ${error.message}`,
+      const isTimeout = error.message.includes('Timeout');
+      setResults(prev => prev.map(r =>
+        r.name === 'Consulta de Base de Datos'
+          ? {
+              ...r,
+              status: isTimeout ? 'error' : 'error',
+              message: isTimeout
+                ? 'Timeout en consulta de base de datos - la BD no responde'
+                : `Error de BD: ${error.message}`,
               details: {
+                isTimeout,
                 code: error.code,
                 details: error.details,
                 hint: error.hint,
-                message: error.message
+                message: error.message,
+                possibleCauses: isTimeout
+                  ? ['Red lenta', 'Servidor Supabase sobrecargado', 'Políticas RLS bloqueando consulta']
+                  : ['Políticas RLS', 'Tabla no existe', 'Permisos insuficientes']
               }
             }
           : r
