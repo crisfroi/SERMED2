@@ -32,7 +32,7 @@ import {
   useCenterCategoryStats,
   useTitulacionCategoryStats,
 } from "@/hooks/useAdvancedAnalytics";
-import AdvancedAnalyticsResults from "./AdvancedAnalyticsResults";
+import { AdvancedAnalyticsResults } from "./AdvancedAnalyticsResults";
 
 interface Message {
   id: string;
