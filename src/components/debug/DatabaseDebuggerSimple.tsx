@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { AlertCircle, CheckCircle, Loader2, Database, Wifi, AlertTriangle, Clock } from 'lucide-react';
+import { AlertCircle, CheckCircle, Loader2, Database, Wifi, AlertTriangle, Clock, Settings } from 'lucide-react';
 import SupabaseTimeoutDiagnostic from './SupabaseTimeoutDiagnostic';
 import SupabaseConfigGuide from './SupabaseConfigGuide';
 
