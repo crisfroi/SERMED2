@@ -44,9 +44,14 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
   let effectiveStats = stats;
   let fallbackReason = null;
 
-  // If main stats failed or are empty, use fallback data
-  if (!stats || (stats && stats.total === 0 && error)) {
-    console.log("Main stats failed or empty, analyzing for fallback...");
+  // Check if we should use fallback data
+  const shouldUseFallback = !stats ||
+    (stats && stats.total === 0) ||
+    error ||
+    (isLoading && testLoading && connectivityLoading && mockStats);
+
+  if (shouldUseFallback) {
+    console.log("Main stats not available, analyzing for fallback...");
 
     // Priority 1: Use test stats if available and not loading
     if (testStats && !testLoading && !testError) {
@@ -54,7 +59,7 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
       effectiveStats = testStats;
       fallbackReason = "test";
     }
-    // Priority 2: Use mock data if test stats are not available
+    // Priority 2: Use mock data if available (even if other hooks are loading)
     else if (mockStats && !mockLoading) {
       console.log("Using mock data as fallback");
       effectiveStats = mockStats;
@@ -82,7 +87,10 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
     }
   }
 
-  if (isLoading) {
+  // Only show loading if we don't have any data (including mock data)
+  const shouldShowLoading = isLoading && testLoading && connectivityLoading && !effectiveStats;
+
+  if (shouldShowLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
