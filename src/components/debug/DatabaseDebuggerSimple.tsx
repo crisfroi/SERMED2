@@ -250,6 +250,36 @@ export const DatabaseDebuggerSimple: React.FC = () => {
     runFocusedTest();
   }, []);
 
+  // Show timeout diagnostic if we detect timeout issues
+  useEffect(() => {
+    const hasTimeouts = results.some(r =>
+      r.status === 'error' &&
+      r.details?.isTimeout
+    );
+    if (hasTimeouts) {
+      setShowTimeoutDiagnostic(true);
+    }
+  }, [results]);
+
+  if (showTimeoutDiagnostic) {
+    return (
+      <div className="space-y-6">
+        <SupabaseTimeoutDiagnostic />
+        <Card className="w-full max-w-4xl mx-auto">
+          <CardContent className="p-4">
+            <Button
+              onClick={() => setShowTimeoutDiagnostic(false)}
+              variant="outline"
+              className="w-full"
+            >
+              ← Volver al diagnóstico básico
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
