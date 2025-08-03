@@ -44,47 +44,41 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
   let effectiveStats = stats;
   let fallbackReason = null;
 
-  // Check if we should use fallback data
-  const shouldUseFallback = !stats ||
-    (stats && stats.total === 0) ||
-    error ||
-    (isLoading && testLoading && connectivityLoading && mockStats);
-
-  if (shouldUseFallback) {
-    console.log("Main stats not available, analyzing for fallback...");
-
-    // Priority 1: Use test stats if available and not loading
-    if (testStats && !testLoading && !testError) {
-      console.log("Using test stats as primary fallback");
-      effectiveStats = testStats;
-      fallbackReason = "test";
-    }
-    // Priority 2: Use mock data if available (even if other hooks are loading)
-    else if (mockStats && !mockLoading) {
-      console.log("Using mock data as fallback");
-      effectiveStats = mockStats;
-      fallbackReason = "mock";
-    }
-    // Priority 3: Check error type for specific fallback decisions
-    else if (error) {
-      const errorMessage = error?.message || "";
-      const isFetchError =
-        errorMessage.includes("fetch") ||
-        errorMessage.includes("Failed to fetch") ||
-        errorMessage.includes("TypeError");
-
-      const isNetworkError =
-        errorMessage.includes("network") ||
-        errorMessage.includes("NetworkError") ||
-        errorMessage.includes("CORS");
-
-      // If it's a network/fetch error, use mock data
-      if (isFetchError || isNetworkError) {
-        console.log("Using mock data due to network/fetch error");
-        effectiveStats = mockStats;
-        fallbackReason = "network";
-      }
-    }
+  // Priority 1: Use main stats if available and valid
+  if (stats && stats.total > 0) {
+    console.log("Using main stats data");
+    effectiveStats = stats;
+  }
+  // Priority 2: Use test stats if available and not loading
+  else if (testStats && !testLoading && !testError) {
+    console.log("Using test stats as primary fallback");
+    effectiveStats = testStats;
+    fallbackReason = "test";
+  }
+  // Priority 3: Use mock data if available
+  else if (mockStats) {
+    console.log("Using mock data as fallback");
+    effectiveStats = mockStats;
+    fallbackReason = "mock";
+  }
+  // Priority 4: If there are errors but no fallback data yet, try to force mock data
+  else if (error || (!stats && !isLoading)) {
+    console.log("Forcing mock data due to errors or no data");
+    // Return mock data directly if everything else fails
+    effectiveStats = {
+      total: 150,
+      aprobados: 120,
+      recibidos: 15,
+      rechazados: 10,
+      revisando: 5,
+      vencimientosProximos: 8,
+      carnetVencidos: 3,
+      generoMasculino: 65,
+      generoFemenino: 55,
+      tasaAprobacion: "80.0",
+      tasaRechazo: "6.7"
+    };
+    fallbackReason = "forced-mock";
   }
 
   // Only show loading if we don't have any data (including mock data)
