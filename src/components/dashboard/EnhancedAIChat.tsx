@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,6 +19,8 @@ import {
   TrendingUp
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRoleBasedData } from "@/hooks/useRoleBasedData";
 import { useAdvancedAnalyticsAI, type AdvancedStatsQuery } from "@/hooks/useAdvancedAnalyticsAI";
 import AdvancedAnalyticsResults from "./AdvancedAnalyticsResults";
 
@@ -46,7 +47,6 @@ const EnhancedAIChat: React.FC<EnhancedAIChatProps> = ({ onNavigateToTab }) => {
   const [currentResults, setCurrentResults] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-<<<<<<< HEAD
   const { userRole, hasPermission, isLoading: authLoading } = useAuth();
 
   // Early return if authentication is still loading
@@ -69,8 +69,6 @@ const EnhancedAIChat: React.FC<EnhancedAIChatProps> = ({ onNavigateToTab }) => {
   const roleBasedData = useRoleBasedData();
   const getAllowedMetrics = roleBasedData?.getAllowedMetrics || (() => []);
   const canAccessSensitiveData = roleBasedData?.canAccessSensitiveData || (() => false);
-=======
->>>>>>> origin/main
 
   const {
     loading,
@@ -94,15 +92,11 @@ const EnhancedAIChat: React.FC<EnhancedAIChatProps> = ({ onNavigateToTab }) => {
     const welcomeMessage: Message = {
       id: "welcome",
       type: "system",
-<<<<<<< HEAD
-      content: `¡Hola! Soy tu asistente de IA especializado en análisis de datos del sistema de profesionales sanitarios de Guinea Ecuatorial.
-
-Como usuario con rol "${userRole}", tienes acceso a ${allowedMetricsCount} tipos de métricas y análisis.
-=======
       content: `🤖 **Asistente de Análisis Avanzado con IA**
 
 ¡Hola! Soy tu asistente especializado en análisis de datos del sistema de profesionales sanitarios de Guinea Ecuatorial.
->>>>>>> origin/main
+
+Como usuario con rol "${userRole}", tienes acceso a ${allowedMetricsCount} tipos de métricas y análisis.
 
 **¿Qué puedo hacer por ti?**
 • Analizar estadísticas demográficas
@@ -123,11 +117,7 @@ Como usuario con rol "${userRole}", tienes acceso a ${allowedMetricsCount} tipos
       timestamp: new Date()
     };
     setMessages([welcomeMessage]);
-<<<<<<< HEAD
-  }, [userRole]);
-=======
-  }, [connectionStatus]);
->>>>>>> origin/main
+  }, [userRole, connectionStatus]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
