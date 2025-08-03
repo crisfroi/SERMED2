@@ -263,19 +263,62 @@ export const DatabaseDebuggerSimple: React.FC = () => {
     }
   }, [results]);
 
+  if (showConfigGuide) {
+    return (
+      <div className="space-y-6">
+        <SupabaseConfigGuide />
+        <Card className="w-full max-w-4xl mx-auto">
+          <CardContent className="p-4">
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setShowConfigGuide(false)}
+                variant="outline"
+                className="flex-1"
+              >
+                ← Volver al diagnóstico
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowConfigGuide(false);
+                  setShowTimeoutDiagnostic(true);
+                }}
+                variant="outline"
+                className="flex-1"
+              >
+                Ver Análisis Timeout →
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (showTimeoutDiagnostic) {
     return (
       <div className="space-y-6">
         <SupabaseTimeoutDiagnostic />
         <Card className="w-full max-w-4xl mx-auto">
           <CardContent className="p-4">
-            <Button
-              onClick={() => setShowTimeoutDiagnostic(false)}
-              variant="outline"
-              className="w-full"
-            >
-              ← Volver al diagnóstico básico
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setShowTimeoutDiagnostic(false)}
+                variant="outline"
+                className="flex-1"
+              >
+                ← Volver al diagnóstico
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowTimeoutDiagnostic(false);
+                  setShowConfigGuide(true);
+                }}
+                variant="outline"
+                className="flex-1"
+              >
+                Ver Guía Configuración →
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
