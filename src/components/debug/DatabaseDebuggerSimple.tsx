@@ -292,16 +292,25 @@ export const DatabaseDebuggerSimple: React.FC = () => {
             Pruebas específicas para identificar por qué la BD está "unavailable"
           </p>
           <div className="flex gap-2">
-            <Button 
-              onClick={runPublicTableTest} 
+            <Button
+              onClick={runPublicTableTest}
               disabled={isRunning}
               variant="outline"
               size="sm"
             >
               Probar Tabla Pública
             </Button>
-            <Button 
-              onClick={runFocusedTest} 
+            <Button
+              onClick={() => setShowTimeoutDiagnostic(true)}
+              variant="outline"
+              size="sm"
+              className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
+            >
+              <Clock className="h-4 w-4 mr-2" />
+              Análisis Timeout
+            </Button>
+            <Button
+              onClick={runFocusedTest}
               disabled={isRunning}
               variant="outline"
               size="sm"
