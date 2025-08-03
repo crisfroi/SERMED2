@@ -40,6 +40,21 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
     disableOfflineMode,
   } = useOfflineMode();
 
+  // Force mock data immediately if no real data is available
+  const forcedMockData = {
+    total: 150,
+    aprobados: 120,
+    recibidos: 15,
+    rechazados: 10,
+    revisando: 5,
+    vencimientosProximos: 8,
+    carnetVencidos: 3,
+    generoMasculino: 65,
+    generoFemenino: 55,
+    tasaAprobacion: "80.0",
+    tasaRechazo: "6.7"
+  };
+
   // Enhanced fallback logic based on error type
   let effectiveStats = stats;
   let fallbackReason = null;
@@ -61,23 +76,10 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
     effectiveStats = mockStats;
     fallbackReason = "mock";
   }
-  // Priority 4: If there are errors but no fallback data yet, try to force mock data
-  else if (error || (!stats && !isLoading)) {
-    console.log("Forcing mock data due to errors or no data");
-    // Return mock data directly if everything else fails
-    effectiveStats = {
-      total: 150,
-      aprobados: 120,
-      recibidos: 15,
-      rechazados: 10,
-      revisando: 5,
-      vencimientosProximos: 8,
-      carnetVencidos: 3,
-      generoMasculino: 65,
-      generoFemenino: 55,
-      tasaAprobacion: "80.0",
-      tasaRechazo: "6.7"
-    };
+  // Priority 4: Use forced mock data immediately if everything else is loading or failed
+  else {
+    console.log("Using forced mock data");
+    effectiveStats = forcedMockData;
     fallbackReason = "forced-mock";
   }
 
@@ -247,7 +249,7 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
               Profesionales acreditados
             </p>
             <div className="mt-2 text-xs text-blue-600 font-medium">
-              Clic para ver detalles →
+              Clic para ver detalles ��
             </div>
           </CardContent>
         </Card>
