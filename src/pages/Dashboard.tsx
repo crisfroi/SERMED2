@@ -61,7 +61,7 @@ import ErrorBoundary from "@/components/ui/error-boundary";
 import ConnectionDebugPanel from "@/components/dashboard/ConnectionDebugPanel";
 import { OfflineNotification } from "@/components/ui/offline-notification";
 import DatabaseDiagnostic from "@/components/dashboard/DatabaseDiagnostic";
-import DatabaseDebugger from "@/components/debug/DatabaseDebugger";
+import DatabaseDebuggerSimple from "@/components/debug/DatabaseDebuggerSimple";
 
 import type { Tables } from "@/integrations/supabase/types";
 
