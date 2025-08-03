@@ -121,39 +121,63 @@ export const DatabaseDebugger: React.FC = () => {
 
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Test 3: Authentication Check
+    // Test 3: Authentication Check (with timeout)
     addResult({
       name: 'Estado de Autenticación',
       status: 'pending',
-      message: 'Verificando estado de autenticación...'
+      message: 'Verificando estado de autenticación (timeout 5s)...'
     });
 
     try {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      
-      setResults(prev => prev.map(r => 
-        r.name === 'Estado de Autenticación' 
-          ? { 
-              ...r, 
-              status: sessionError ? 'error' : (sessionData.session ? 'success' : 'warning'), 
-              message: sessionError 
-                ? `Error de autenticación: ${sessionError.message}`
-                : sessionData.session 
-                  ? `Usuario autenticado: ${sessionData.session.user?.email}`
-                  : 'No hay usuario autenticado (usando acceso anónimo)',
+      // Create a timeout promise
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Timeout después de 5 segundos')), 5000)
+      );
+
+      // Race between auth check and timeout
+      const authPromise = supabase.auth.getSession();
+
+      const result = await Promise.race([authPromise, timeoutPromise]) as any;
+
+      if (result && typeof result === 'object' && 'data' in result) {
+        const { data: sessionData, error: sessionError } = result;
+
+        setResults(prev => prev.map(r =>
+          r.name === 'Estado de Autenticación'
+            ? {
+                ...r,
+                status: sessionError ? 'error' : (sessionData.session ? 'success' : 'warning'),
+                message: sessionError
+                  ? `Error de autenticación: ${sessionError.message}`
+                  : sessionData.session
+                    ? `Usuario autenticado: ${sessionData.session.user?.email}`
+                    : 'No hay usuario autenticado (modo anónimo funcional)',
+                details: {
+                  hasSession: !!sessionData.session,
+                  user: sessionData.session?.user?.email || 'Anónimo',
+                  expiresAt: sessionData.session?.expires_at,
+                  error: sessionError?.message
+                }
+              }
+            : r
+        ));
+      }
+    } catch (error: any) {
+      const isTimeout = error.message.includes('Timeout');
+      setResults(prev => prev.map(r =>
+        r.name === 'Estado de Autenticación'
+          ? {
+              ...r,
+              status: isTimeout ? 'warning' : 'error',
+              message: isTimeout
+                ? 'Timeout en autenticación - probablemente el módulo auth está colgado. Continuando con modo anónimo.'
+                : `Error: ${error.message}`,
               details: {
-                hasSession: !!sessionData.session,
-                user: sessionData.session?.user?.email || 'Anónimo',
-                expiresAt: sessionData.session?.expires_at,
-                error: sessionError?.message
+                isTimeout,
+                error: error.message,
+                recommendation: isTimeout ? 'La app puede funcionar sin autenticación para consultas públicas' : null
               }
             }
-          : r
-      ));
-    } catch (error: any) {
-      setResults(prev => prev.map(r => 
-        r.name === 'Estado de Autenticación' 
-          ? { ...r, status: 'error', message: `Error: ${error.message}` }
           : r
       ));
     }
