@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AlertCircle, CheckCircle, Loader2, Database, Wifi, AlertTriangle, Clock } from 'lucide-react';
 import SupabaseTimeoutDiagnostic from './SupabaseTimeoutDiagnostic';
+import SupabaseConfigGuide from './SupabaseConfigGuide';
 
 interface TestResult {
   name: string;
