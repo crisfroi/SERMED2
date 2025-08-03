@@ -493,11 +493,11 @@ const Dashboard = () => {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="text-red-600 focus:text-red-700 focus:bg-red-50"
+                  disabled
+                  className="text-gray-400 cursor-not-allowed opacity-50"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Cerrar Sesión</span>
+                  <span>Cerrar Sesión (Deshabilitado)</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
