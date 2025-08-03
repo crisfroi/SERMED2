@@ -21,11 +21,6 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-<<<<<<< HEAD
-import { useRoleBasedData } from "@/hooks/useRoleBasedData";
-import { useAdvancedAnalyticsAI, type AdvancedStatsQuery } from "@/hooks/useAdvancedAnalyticsAI";
-import AdvancedAnalyticsResults from "./AdvancedAnalyticsResults";
-=======
 import useRoleBasedData from "@/hooks/useRoleBasedData";
 import { AVAILABLE_METRICS, ADVANCED_ANALYTICS, COMPLEX_QUERIES } from "@/utils/availableMetrics";
 import { useEstadisticasAvanzadas } from "@/hooks/useEstadisticasAvanzadas";
@@ -40,7 +35,6 @@ import {
   useCenterCategoryStats,
   useTitulacionCategoryStats,
 } from "@/hooks/useAdvancedAnalytics";
->>>>>>> origin/main
 
 interface Message {
   id: string;
@@ -79,7 +73,6 @@ const EnhancedAIChat: React.FC<EnhancedAIChatProps> = ({ onNavigateToTab }) => {
   const [selectedMetricCategory, setSelectedMetricCategory] = useState<string>("all");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-<<<<<<< HEAD
   const { userRole, hasPermission, isLoading: authLoading } = useAuth();
 
   // Early return if authentication is still loading
@@ -102,10 +95,6 @@ const EnhancedAIChat: React.FC<EnhancedAIChatProps> = ({ onNavigateToTab }) => {
   const roleBasedData = useRoleBasedData();
   const getAllowedMetrics = roleBasedData?.getAllowedMetrics || (() => []);
   const canAccessSensitiveData = roleBasedData?.canAccessSensitiveData || (() => false);
-=======
-  const { userRole, hasPermission } = useAuth();
-  const { getAllowedMetrics, canAccessSensitiveData } = useRoleBasedData();
->>>>>>> origin/main
 
   // Cargar todas las métricas disponibles
   const { data: estadisticasBasicas } = useEstadisticasAvanzadas();
@@ -122,15 +111,13 @@ const EnhancedAIChat: React.FC<EnhancedAIChatProps> = ({ onNavigateToTab }) => {
   // Mensaje de bienvenida inicial
   useEffect(() => {
     if (!userRole) return; // Don't show welcome message if no role
-
+    
     const allowedMetricsCount = getAllowedMetrics()?.length || 0;
-
+    
     const welcomeMessage: Message = {
       id: "welcome",
       type: "system",
       content: `¡Hola! Soy tu asistente de IA especializado en análisis de datos del sistema de profesionales sanitarios de Guinea Ecuatorial. 
-
-Como usuario con rol "${userRole}", tienes acceso a ${getAllowedMetrics().length} tipos de métricas y análisis.
 
 Como usuario con rol "${userRole}", tienes acceso a ${allowedMetricsCount} tipos de métricas y análisis.
 
@@ -152,11 +139,7 @@ Como usuario con rol "${userRole}", tienes acceso a ${allowedMetricsCount} tipos
       timestamp: new Date()
     };
     setMessages([welcomeMessage]);
-<<<<<<< HEAD
-  }, [userRole, connectionStatus]);
-=======
-  }, [userRole, getAllowedMetrics]);
->>>>>>> origin/main
+  }, [userRole]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -382,19 +365,6 @@ No encontré una respuesta específica para tu consulta, pero aquí tienes algun
 
       const executionTime = Date.now() - startTime;
       
-      // Agregar metadatos a la respuesta
-      const botMessage: Message = {
-        id: Date.now().toString(),
-        type: "bot",
-        content: response,
-        timestamp: new Date(),
-        metadata: {
-          queryType: "data_analysis",
-          resultCount,
-          executionTime
-        }
-      };
-
       return response;
 
     } catch (error) {
