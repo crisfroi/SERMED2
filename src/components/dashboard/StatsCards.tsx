@@ -83,10 +83,9 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
     fallbackReason = "forced-mock";
   }
 
-  // Only show loading if we don't have any data available at all
-  const shouldShowLoading = !effectiveStats && (isLoading || testLoading || mockLoading);
-
-  if (shouldShowLoading) {
+  // Since we now always have effectiveStats (forced mock if nothing else),
+  // we only show loading in very specific cases
+  if (!effectiveStats) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -249,7 +248,7 @@ const StatsCards = ({ onNavigateToProfessionals }: StatsCardsProps) => {
               Profesionales acreditados
             </p>
             <div className="mt-2 text-xs text-blue-600 font-medium">
-              Clic para ver detalles ��
+              Clic para ver detalles →
             </div>
           </CardContent>
         </Card>
