@@ -336,14 +336,15 @@ export const DatabaseDebuggerSimple: React.FC = () => {
           <p className="text-sm text-gray-600">
             Pruebas específicas para identificar por qué la BD está "unavailable"
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Button
-              onClick={runPublicTableTest}
-              disabled={isRunning}
-              variant="outline"
+              onClick={() => setShowConfigGuide(true)}
+              variant="default"
               size="sm"
+              className="bg-blue-600 hover:bg-blue-700"
             >
-              Probar Tabla Pública
+              <Settings className="h-4 w-4 mr-2" />
+              Guía Configuración Supabase
             </Button>
             <Button
               onClick={() => setShowTimeoutDiagnostic(true)}
@@ -353,6 +354,14 @@ export const DatabaseDebuggerSimple: React.FC = () => {
             >
               <Clock className="h-4 w-4 mr-2" />
               Análisis Timeout
+            </Button>
+            <Button
+              onClick={runPublicTableTest}
+              disabled={isRunning}
+              variant="outline"
+              size="sm"
+            >
+              Probar Tabla Pública
             </Button>
             <Button
               onClick={runFocusedTest}
