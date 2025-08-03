@@ -253,7 +253,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   };
 
   const getRestrictions = () => {
-<<<<<<< HEAD
     if (!userRole) {
       console.warn('No userRole available for getRestrictions');
       return {};
@@ -264,9 +263,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       console.error('Error getting role restrictions:', error);
       return {};
     }
-=======
-    return getRoleRestrictions(userRole);
->>>>>>> origin/main
   };
 
   const switchRole = (newRole: UserRole) => {
