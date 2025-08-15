@@ -244,7 +244,7 @@ const UserRoleManagementAuth: React.FC = () => {
                   Para acceder a la funcionalidad completa de gestión de usuarios, 
                   se requiere configurar el service role key de Supabase.
                 </p>
-                <Button onClick={loadUsers} variant="outline" size="sm">
+                <Button onClick={() => refetch()} variant="outline" size="sm">
                   <Loader2 className="w-4 h-4 mr-2" />
                   Reintentar
                 </Button>
@@ -318,7 +318,7 @@ const UserRoleManagementAuth: React.FC = () => {
       {/* Botones de acción */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <Button onClick={loadUsers} variant="outline" disabled={isLoading}>
+          <Button onClick={() => refetch()} variant="outline" disabled={isLoading}>
             {isLoading ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : (
@@ -411,22 +411,22 @@ const UserRoleManagementAuth: React.FC = () => {
               </div>
               
               <div className="flex gap-2">
-                <Button 
-                  onClick={handleCreateUser} 
-                  disabled={isLoading}
+                <Button
+                  onClick={handleCreateUser}
+                  disabled={createUserMutation.isPending}
                   className="flex-1"
                 >
-                  {isLoading ? (
+                  {createUserMutation.isPending ? (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   ) : (
                     <Plus className="w-4 h-4 mr-2" />
                   )}
                   Crear Usuario
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => setIsAddDialogOpen(false)}
-                  disabled={isLoading}
+                  disabled={createUserMutation.isPending}
                 >
                   Cancelar
                 </Button>
