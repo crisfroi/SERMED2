@@ -183,31 +183,10 @@ const UserRoleManagementAuth: React.FC = () => {
       return;
     }
 
-    setIsLoading(true);
     try {
-      console.log('🔄 Creando usuario en Supabase Auth...');
-      
-      // Crear usuario usando Supabase Auth Admin API
-      const { data, error } = await supabase.auth.admin.createUser({
-        email: newUser.email,
-        password: newUser.password,
-        email_confirm: true, // Auto confirmar email
-        user_metadata: {
-          role: newUser.role,
-          full_name: newUser.full_name,
-          department: newUser.department,
-          assigned_center_id: newUser.assigned_center_id || null
-        }
-      });
+      await createUserMutation.mutateAsync(newUser);
 
-      if (error) {
-        throw error;
-      }
-
-      console.log('✅ Usuario creado exitosamente:', data.user.email);
-      toast.success('Usuario creado exitosamente en Supabase Auth');
-      
-      // Limpiar formulario
+      // Limpiar formulario en caso de éxito
       setNewUser({
         email: '',
         password: '',
@@ -216,73 +195,33 @@ const UserRoleManagementAuth: React.FC = () => {
         department: 'Ministerio de Sanidad y Bienestar Social',
         assigned_center_id: ''
       });
-      
+
       setIsAddDialogOpen(false);
-      loadUsers(); // Recargar lista
-      
-    } catch (error: any) {
-      console.error('❌ Error creating user:', error);
-      
-      if (error.message?.includes('admin')) {
-        toast.error('Funcionalidad limitada: Se requiere service role key para crear usuarios');
-      } else {
-        toast.error('Error al crear usuario: ' + error.message);
-      }
-    } finally {
-      setIsLoading(false);
+
+    } catch (error) {
+      // El error ya se maneja en el hook
+      console.error('Error handled by mutation hook');
     }
   };
 
   const handleUpdateUserRole = async (userId: string, newRole: UserRole) => {
-    setIsLoading(true);
     try {
-      console.log('🔄 Actualizando rol de usuario...');
-      
-      const { data, error } = await supabase.auth.admin.updateUserById(
-        userId,
-        {
-          user_metadata: {
-            role: newRole
-          }
-        }
-      );
-
-      if (error) {
-        throw error;
-      }
-
-      console.log('✅ Rol actualizado exitosamente');
-      toast.success('Rol de usuario actualizado exitosamente');
-      loadUsers();
-      
-    } catch (error: any) {
-      console.error('❌ Error updating user role:', error);
-      toast.error('Error al actualizar rol: ' + error.message);
-    } finally {
-      setIsLoading(false);
+      await updateUserMutation.mutateAsync({
+        user_id: userId,
+        role: newRole
+      });
+    } catch (error) {
+      // El error ya se maneja en el hook
+      console.error('Error handled by mutation hook');
     }
   };
 
   const handleDeleteUser = async (userId: string) => {
-    setIsLoading(true);
     try {
-      console.log('🔄 Eliminando usuario...');
-      
-      const { data, error } = await supabase.auth.admin.deleteUser(userId);
-
-      if (error) {
-        throw error;
-      }
-
-      console.log('✅ Usuario eliminado exitosamente');
-      toast.success('Usuario eliminado exitosamente');
-      loadUsers();
-      
-    } catch (error: any) {
-      console.error('❌ Error deleting user:', error);
-      toast.error('Error al eliminar usuario: ' + error.message);
-    } finally {
-      setIsLoading(false);
+      await deleteUserMutation.mutateAsync(userId);
+    } catch (error) {
+      // El error ya se maneja en el hook
+      console.error('Error handled by mutation hook');
     }
   };
 
