@@ -183,6 +183,13 @@ const UserRoleManagementAuth: React.FC = () => {
       return;
     }
 
+    // Validar que los roles de hospital tengan hospital asignado
+    if ((newUser.role === 'DIRECTIVO_CENTRO_SANITARIO' || newUser.role === 'HOSPITAL') &&
+        !newUser.assigned_center_id) {
+      toast.error('Debe seleccionar un hospital para este rol');
+      return;
+    }
+
     try {
       await createUserMutation.mutateAsync(newUser);
 
