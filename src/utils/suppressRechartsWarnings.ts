@@ -15,14 +15,21 @@ export const suppressRechartsWarnings = () => {
   // Override console.warn to filter out Recharts defaultProps warnings
   console.warn = (...args: any[]) => {
     const firstArg = args[0];
-    const message = args.join(' ');
+    const secondArg = args[1];
 
-    // Filter out Recharts defaultProps warnings (multiple patterns)
+    // React warning format: "%s: Support for defaultProps will be removed...", componentName
+    if (typeof firstArg === 'string' &&
+        firstArg.includes('%s: Support for defaultProps will be removed from function components') &&
+        typeof secondArg === 'string' &&
+        rechartsComponents.includes(secondArg)) {
+      return; // Suppress this specific warning pattern
+    }
+
+    // Also check other patterns for safety
+    const message = args.join(' ');
     if (typeof firstArg === 'string' && (
         (firstArg.includes('Support for defaultProps will be removed') &&
          rechartsComponents.some(component => message.includes(component))) ||
-        (firstArg.includes('%s: Support for defaultProps will be removed') &&
-         rechartsComponents.some(component => args[1] && args[1].includes && args[1].includes(component))) ||
         (message.includes('Support for defaultProps will be removed from function components') &&
          rechartsComponents.some(component => message.includes(component)))
     )) {
