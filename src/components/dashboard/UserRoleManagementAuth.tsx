@@ -85,10 +85,13 @@ interface NewUser {
 const UserRoleManagementAuth: React.FC = () => {
   const { user: currentUser } = useAuth();
   const { data: centros = [], isLoading: loadingCentros } = useCentrosSalud();
-  
-  const [users, setUsers] = useState<ExtendedUser[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
+  // Usar hooks personalizados para gestión de usuarios
+  const { data: users = [], isLoading, error, refetch } = useSupabaseUsers();
+  const createUserMutation = useCreateSupabaseUser();
+  const updateUserMutation = useUpdateSupabaseUser();
+  const deleteUserMutation = useDeleteSupabaseUser();
+
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<ExtendedUser | null>(null);
@@ -683,7 +686,7 @@ const UserRoleManagementAuth: React.FC = () => {
                               <AlertDialogTitle>¿Eliminar usuario?</AlertDialogTitle>
                               <AlertDialogDescription>
                                 Esta acción eliminará permanentemente la cuenta de usuario "{user.email}" 
-                                de Supabase Auth. Esta acción no se puede deshacer.
+                                de Supabase Auth. Esta acci��n no se puede deshacer.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
