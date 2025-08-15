@@ -56,7 +56,12 @@ import {
 import { UserRole } from "@/types/roles";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCentrosSalud } from "@/hooks/useCentrosSalud";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  useSupabaseUsers,
+  useCreateSupabaseUser,
+  useUpdateSupabaseUser,
+  useDeleteSupabaseUser
+} from "@/hooks/useSupabaseUserManagement";
 import { toast } from "sonner";
 import type { User } from "@supabase/supabase-js";
 
