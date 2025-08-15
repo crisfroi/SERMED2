@@ -8,23 +8,32 @@ export const suppressRechartsWarnings = () => {
 
   // List of Recharts components that use defaultProps
   const rechartsComponents = [
-    'XAxis', 'YAxis', 'CartesianGrid', 'Tooltip', 'ResponsiveContainer',
-    'BarChart', 'LineChart', 'PieChart', 'Pie', 'Bar', 'Line', 'Cell'
+    'XAxis', 'YAxis', 'XAxis2', 'YAxis2', 'CartesianGrid', 'Tooltip', 'ResponsiveContainer',
+    'BarChart', 'LineChart', 'PieChart', 'Pie', 'Bar', 'Line', 'Cell', 'Legend',
+    'Surface', 'ChartLayoutContextProvider2', 'CategoricalChartWrapper'
   ];
 
   // Override console.warn to filter out Recharts defaultProps warnings
   console.warn = (...args: any[]) => {
-    const message = args.join(' ');
+    const firstArg = args[0];
+    const secondArg = args[1];
 
-    // Filter out Recharts defaultProps warnings
-    if (message.includes('Support for defaultProps will be removed from function components') &&
-        rechartsComponents.some(component => message.includes(component))) {
-      return; // Don't log these warnings
+    // React warning format: "%s: Support for defaultProps will be removed...", componentName
+    if (typeof firstArg === 'string' &&
+        firstArg.includes('%s: Support for defaultProps will be removed from function components') &&
+        typeof secondArg === 'string' &&
+        rechartsComponents.includes(secondArg)) {
+      return; // Suppress this specific warning pattern
     }
 
-    // Also filter out React 18 specific warnings about defaultProps
-    if (message.includes('%s: Support for defaultProps will be removed') &&
-        rechartsComponents.some(component => message.includes(component))) {
+    // Also check other patterns for safety
+    const message = args.join(' ');
+    if (typeof firstArg === 'string' && (
+        (firstArg.includes('Support for defaultProps will be removed') &&
+         rechartsComponents.some(component => message.includes(component))) ||
+        (message.includes('Support for defaultProps will be removed from function components') &&
+         rechartsComponents.some(component => message.includes(component)))
+    )) {
       return; // Don't log these warnings
     }
 

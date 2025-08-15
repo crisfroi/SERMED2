@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserRole, hasPermission, canAccessTab, getRoleRestrictions } from '@/types/roles';
 import { supabase } from '@/integrations/supabase/client';
@@ -59,7 +58,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         .single();
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Error loading user profile:', error);
+        console.error('Error loading user profile:', error.message || error);
+        console.error('Full error details:', JSON.stringify(error, null, 2));
       }
 
       let userProfile: UserProfile;
@@ -90,7 +90,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
         // Intentar crear el perfil en la base de datos
         try {
-          await supabase
+          const { data: insertedProfile, error: insertError } = await supabase
             .from('user_profiles')
             .insert({
               id: authUser.id,
@@ -99,9 +99,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
               role: userProfile.role,
               department: userProfile.department,
               is_active: true
-            });
+            })
+            .select()
+            .single();
+
+          if (insertError) {
+            console.warn('Could not create user profile in database:', insertError);
+            console.warn('Insert error details:', JSON.stringify(insertError, null, 2));
+          } else {
+            console.log('✅ Successfully created user profile in database:', insertedProfile);
+          }
         } catch (insertError) {
-          console.warn('Could not create user profile in database:', insertError);
+          console.warn('Exception while creating user profile:', insertError);
         }
       }
 
@@ -150,7 +159,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           await loadUserProfile(supabaseUser);
         } else {
           console.log('👤 No hay usuario autenticado, usando datos demo');
-          // Create demo user for development
+          // Create demo user for development - this ensures the app works without authentication
           const mockUser: UserProfile = {
             id: 'demo-user-id',
             email: 'chamibeny@gmail.com',
@@ -166,6 +175,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
             },
             created_at: new Date().toISOString()
           };
+          console.log('✅ Demo user created successfully');
           setUser(mockUser);
           setUserRole('SUPER_ADMINISTRADOR');
         }

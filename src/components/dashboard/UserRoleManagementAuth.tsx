@@ -1,0 +1,637 @@
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { 
+  Mail, 
+  Plus, 
+  Edit, 
+  Trash2, 
+  Users, 
+  Shield, 
+  Crown, 
+  Eye, 
+  Building2, 
+  Hospital,
+  AlertTriangle,
+  Loader2,
+  Key,
+  UserCheck
+} from "lucide-react";
+import { UserRole } from "@/types/roles";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCentrosSalud } from "@/hooks/useCentrosSalud";
+import {
+  useSupabaseUsers,
+  useCreateSupabaseUser,
+  useUpdateSupabaseUser,
+  useDeleteSupabaseUser
+} from "@/hooks/useSupabaseUserManagement";
+import { toast } from "sonner";
+import type { User } from "@supabase/supabase-js";
+
+interface ExtendedUser extends User {
+  role?: UserRole;
+  full_name?: string;
+  department?: string;
+  assigned_center_id?: string;
+  center_name?: string;
+}
+
+interface NewUser {
+  email: string;
+  password: string;
+  role: UserRole;
+  full_name?: string;
+  department?: string;
+  assigned_center_id?: string;
+}
+
+const UserRoleManagementAuth: React.FC = () => {
+  const { user: currentUser } = useAuth();
+  const { data: centros = [], isLoading: loadingCentros } = useCentrosSalud();
+
+  // Usar hooks personalizados para gestión de usuarios
+  const { data: users = [], isLoading, error, refetch } = useSupabaseUsers();
+  const createUserMutation = useCreateSupabaseUser();
+  const updateUserMutation = useUpdateSupabaseUser();
+  const deleteUserMutation = useDeleteSupabaseUser();
+
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<ExtendedUser | null>(null);
+  const [newUser, setNewUser] = useState<NewUser>({
+    email: '',
+    password: '',
+    role: 'OBSERVADOR',
+    full_name: '',
+    department: 'Ministerio de Sanidad y Bienestar Social',
+    assigned_center_id: ''
+  });
+
+  const roleOptions = [
+    { 
+      value: 'SUPER_ADMINISTRADOR', 
+      label: 'Super Administrador',
+      description: 'Acceso completo al sistema'
+    },
+    { 
+      value: 'PERSONALIDAD_MINISTERIAL', 
+      label: 'Personalidad Ministerial',
+      description: 'Acceso a datos ministeriales y estadísticas'
+    },
+    { 
+      value: 'DIRECTIVO_CENTRO_SANITARIO', 
+      label: 'Directivo Centro Sanitario',
+      description: 'Gestión de centro específico'
+    },
+    { 
+      value: 'HOSPITAL', 
+      label: 'Hospital',
+      description: 'Acceso de red hospitalaria'
+    },
+    { 
+      value: 'REVISOR_SOLICITUDES', 
+      label: 'Revisor de Solicitudes',
+      description: 'Validación de solicitudes'
+    },
+    { 
+      value: 'OBSERVADOR', 
+      label: 'Observador',
+      description: 'Solo lectura de datos p��blicos'
+    },
+  ];
+
+  // Los datos se cargan automáticamente con el hook useSupabaseUsers
+
+  const getRoleIcon = (role: UserRole) => {
+    switch (role) {
+      case 'SUPER_ADMINISTRADOR':
+        return <Crown className="w-4 h-4" />;
+      case 'PERSONALIDAD_MINISTERIAL':
+        return <Users className="w-4 h-4" />;
+      case 'DIRECTIVO_CENTRO_SANITARIO':
+        return <Building2 className="w-4 h-4" />;
+      case 'HOSPITAL':
+        return <Hospital className="w-4 h-4" />;
+      case 'REVISOR_SOLICITUDES':
+        return <Shield className="w-4 h-4" />;
+      case 'OBSERVADOR':
+        return <Eye className="w-4 h-4" />;
+      default:
+        return <Users className="w-4 h-4" />;
+    }
+  };
+
+  const getRoleColor = (role: UserRole) => {
+    switch (role) {
+      case 'SUPER_ADMINISTRADOR':
+        return 'bg-red-100 text-red-800';
+      case 'PERSONALIDAD_MINISTERIAL':
+        return 'bg-purple-100 text-purple-800';
+      case 'DIRECTIVO_CENTRO_SANITARIO':
+        return 'bg-green-100 text-green-800';
+      case 'HOSPITAL':
+        return 'bg-teal-100 text-teal-800';
+      case 'REVISOR_SOLICITUDES':
+        return 'bg-blue-100 text-blue-800';
+      case 'OBSERVADOR':
+        return 'bg-gray-100 text-gray-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleCreateUser = async () => {
+    if (!newUser.email || !newUser.password || !newUser.role) {
+      toast.error('Email, contraseña y rol son requeridos');
+      return;
+    }
+
+    // Validar que los roles de hospital tengan hospital asignado
+    if ((newUser.role === 'DIRECTIVO_CENTRO_SANITARIO' || newUser.role === 'HOSPITAL') &&
+        !newUser.assigned_center_id) {
+      toast.error('Debe seleccionar un hospital para este rol');
+      return;
+    }
+
+    try {
+      await createUserMutation.mutateAsync(newUser);
+
+      // Limpiar formulario en caso de éxito
+      setNewUser({
+        email: '',
+        password: '',
+        role: 'OBSERVADOR',
+        full_name: '',
+        department: 'Ministerio de Sanidad y Bienestar Social',
+        assigned_center_id: ''
+      });
+
+      setIsAddDialogOpen(false);
+
+    } catch (error) {
+      // El error ya se maneja en el hook
+      console.error('Error handled by mutation hook');
+    }
+  };
+
+  const handleUpdateUserRole = async (userId: string, newRole: UserRole) => {
+    try {
+      await updateUserMutation.mutateAsync({
+        user_id: userId,
+        role: newRole
+      });
+    } catch (error) {
+      // El error ya se maneja en el hook
+      console.error('Error handled by mutation hook');
+    }
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    try {
+      await deleteUserMutation.mutateAsync(userId);
+    } catch (error) {
+      // El error ya se maneja en el hook
+      console.error('Error handled by mutation hook');
+    }
+  };
+
+  if (error && users.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <AlertTriangle className="w-5 h-5 text-orange-500" />
+            Error en Panel de Usuarios (Supabase Auth)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Alert>
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              <div className="space-y-2">
+                <p><strong>Error:</strong> {error}</p>
+                <p className="text-sm text-gray-600">
+                  Para acceder a la funcionalidad completa de gestión de usuarios, 
+                  se requiere configurar el service role key de Supabase.
+                </p>
+                <Button onClick={() => refetch()} variant="outline" size="sm">
+                  <Loader2 className="w-4 h-4 mr-2" />
+                  Reintentar
+                </Button>
+              </div>
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold">Gestión de Usuarios (Supabase Auth)</h2>
+        <p className="text-gray-600">
+          Administrar usuarios del sistema usando Supabase Authentication
+        </p>
+      </div>
+
+      {error && (
+        <Alert>
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            {error} (Funcionalidad limitada - se requiere service role key)
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Header con estadísticas */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total Usuarios</p>
+                <p className="text-2xl font-bold">{users.length}</p>
+              </div>
+              <Users className="w-8 h-8 text-blue-500" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Usuarios Autenticados</p>
+                <p className="text-2xl font-bold">{users.length}</p>
+              </div>
+              <UserCheck className="w-8 h-8 text-green-500" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Administradores</p>
+                <p className="text-2xl font-bold">
+                  {users.filter(u => u.role === 'SUPER_ADMINISTRADOR').length}
+                </p>
+              </div>
+              <Crown className="w-8 h-8 text-red-500" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Botones de acción */}
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-4">
+          <Button onClick={() => refetch()} variant="outline" disabled={isLoading}>
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Users className="w-4 h-4 mr-2" />
+            )}
+            Actualizar
+          </Button>
+        </div>
+
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Crear Usuario
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>Crear Nuevo Usuario en Supabase Auth</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Alert>
+                <Key className="h-4 w-4" />
+                <AlertDescription>
+                  Se requiere service role key para crear usuarios. En modo demo esta función está limitada.
+                </AlertDescription>
+              </Alert>
+              
+              <div>
+                <label className="text-sm font-medium">Email</label>
+                <Input
+                  type="email"
+                  value={newUser.email}
+                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                  placeholder="usuario@salud.gq"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium">Contraseña</label>
+                <Input
+                  type="password"
+                  value={newUser.password}
+                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                  placeholder="Contraseña segura"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium">Nombre Completo</label>
+                <Input
+                  value={newUser.full_name}
+                  onChange={(e) => setNewUser({ ...newUser, full_name: e.target.value })}
+                  placeholder="Nombre completo del usuario"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium">Rol</label>
+                <Select 
+                  value={newUser.role} 
+                  onValueChange={(value) => setNewUser({ ...newUser, role: value as UserRole })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {roleOptions.map((role) => (
+                      <SelectItem key={role.value} value={role.value}>
+                        <div className="flex items-center gap-2">
+                          {getRoleIcon(role.value as UserRole)}
+                          <div>
+                            <div className="font-medium">{role.label}</div>
+                            <div className="text-xs text-gray-500">{role.description}</div>
+                          </div>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium">Departamento</label>
+                <Input
+                  value={newUser.department}
+                  onChange={(e) => setNewUser({ ...newUser, department: e.target.value })}
+                  placeholder="Departamento o área de trabajo"
+                />
+              </div>
+
+              {/* Selector de Hospital - Solo para roles que lo necesiten */}
+              {(newUser.role === 'DIRECTIVO_CENTRO_SANITARIO' || newUser.role === 'HOSPITAL') && (
+                <div>
+                  <label className="text-sm font-medium">
+                    Hospital Asignado *
+                    <span className="text-xs text-gray-500 block">
+                      El usuario solo tendrá acceso a datos de este hospital
+                    </span>
+                  </label>
+                  <Select
+                    value={newUser.assigned_center_id}
+                    onValueChange={(value) => setNewUser({ ...newUser, assigned_center_id: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar hospital..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {loadingCentros ? (
+                        <SelectItem value="" disabled>
+                          <div className="flex items-center gap-2">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Cargando hospitales...
+                          </div>
+                        </SelectItem>
+                      ) : centros.length === 0 ? (
+                        <SelectItem value="" disabled>
+                          No hay hospitales disponibles
+                        </SelectItem>
+                      ) : (
+                        centros.map((centro) => (
+                          <SelectItem key={centro.id} value={centro.id}>
+                            <div className="flex items-center gap-2">
+                              <Hospital className="w-4 h-4" />
+                              <div>
+                                <div className="font-medium">{centro.nombre}</div>
+                                <div className="text-xs text-gray-500">
+                                  {centro.categoria} - {centro.provincia}
+                                </div>
+                              </div>
+                            </div>
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectContent>
+                  </Select>
+                  {(newUser.role === 'DIRECTIVO_CENTRO_SANITARIO' || newUser.role === 'HOSPITAL') && !newUser.assigned_center_id && (
+                    <p className="text-xs text-red-600 mt-1">
+                      ⚠️ Es obligatorio seleccionar un hospital para este rol
+                    </p>
+                  )}
+                </div>
+              )}
+              
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleCreateUser}
+                  disabled={createUserMutation.isPending}
+                  className="flex-1"
+                >
+                  {createUserMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Plus className="w-4 h-4 mr-2" />
+                  )}
+                  Crear Usuario
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsAddDialogOpen(false)}
+                  disabled={createUserMutation.isPending}
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Tabla de usuarios */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Usuarios Autenticados ({users.length} en total)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin mr-2" />
+              <span>Cargando usuarios desde Supabase Auth...</span>
+            </div>
+          ) : users.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              No hay usuarios registrados en Supabase Auth
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Usuario</TableHead>
+                  <TableHead>Rol</TableHead>
+                  <TableHead>Hospital Asignado</TableHead>
+                  <TableHead>Departamento</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead>Último Login</TableHead>
+                  <TableHead>Acciones</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {users.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{user.full_name || user.email}</div>
+                        <div className="text-sm text-gray-500 flex items-center gap-1">
+                          <Mail className="w-3 h-3" />
+                          {user.email}
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          ID: {user.id.substring(0, 8)}...
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={`${getRoleColor(user.role || 'OBSERVADOR')} flex items-center gap-1 w-fit`}>
+                        {getRoleIcon(user.role || 'OBSERVADOR')}
+                        {roleOptions.find(r => r.value === user.role)?.label || user.role}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {user.assigned_center_id ? (
+                        <div className="flex items-center gap-2">
+                          <Hospital className="w-4 h-4 text-blue-500" />
+                          <div>
+                            <div className="text-sm font-medium">
+                              {user.center_name || 'Hospital Asignado'}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              ID: {user.assigned_center_id.substring(0, 8)}...
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-sm text-gray-400">
+                          {(user.role === 'DIRECTIVO_CENTRO_SANITARIO' || user.role === 'HOSPITAL') ?
+                            '⚠️ Sin asignar' : 'No aplica'
+                          }
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm">{user.department || '-'}</span>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="default">
+                        Autenticado
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm text-gray-500">
+                        {user.last_sign_in_at ? 
+                          new Date(user.last_sign_in_at).toLocaleDateString() : 
+                          'Nunca'
+                        }
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setEditingUser(user)}
+                        >
+                          <Edit className="w-3 h-3" />
+                        </Button>
+                        
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>¿Eliminar usuario?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Esta acción eliminará permanentemente la cuenta de usuario "{user.email}" 
+                                de Supabase Auth. Esta acción no se puede deshacer.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteUser(user.id)}
+                                className="bg-red-600 hover:bg-red-700"
+                              >
+                                Eliminar
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default UserRoleManagementAuth;
