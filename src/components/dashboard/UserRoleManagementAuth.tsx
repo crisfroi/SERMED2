@@ -133,7 +133,7 @@ const UserRoleManagementAuth: React.FC = () => {
     { 
       value: 'OBSERVADOR', 
       label: 'Observador',
-      description: 'Solo lectura de datos públicos'
+      description: 'Solo lectura de datos p��blicos'
     },
   ];
 
@@ -517,6 +517,7 @@ const UserRoleManagementAuth: React.FC = () => {
                 <TableRow>
                   <TableHead>Usuario</TableHead>
                   <TableHead>Rol</TableHead>
+                  <TableHead>Hospital Asignado</TableHead>
                   <TableHead>Departamento</TableHead>
                   <TableHead>Estado</TableHead>
                   <TableHead>Último Login</TableHead>
@@ -543,6 +544,27 @@ const UserRoleManagementAuth: React.FC = () => {
                         {getRoleIcon(user.role || 'OBSERVADOR')}
                         {roleOptions.find(r => r.value === user.role)?.label || user.role}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {user.assigned_center_id ? (
+                        <div className="flex items-center gap-2">
+                          <Hospital className="w-4 h-4 text-blue-500" />
+                          <div>
+                            <div className="text-sm font-medium">
+                              {user.center_name || 'Hospital Asignado'}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              ID: {user.assigned_center_id.substring(0, 8)}...
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-sm text-gray-400">
+                          {(user.role === 'DIRECTIVO_CENTRO_SANITARIO' || user.role === 'HOSPITAL') ?
+                            '⚠️ Sin asignar' : 'No aplica'
+                          }
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell>
                       <span className="text-sm">{user.department || '-'}</span>
