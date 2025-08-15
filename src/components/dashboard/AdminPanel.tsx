@@ -34,7 +34,7 @@ import ErrorAnalysis from "@/components/dashboard/ErrorAnalysis";
 import SimpleConnectionTest from "@/components/dashboard/SimpleConnectionTest";
 import SupabaseConnectionTest from "@/components/dashboard/SupabaseConnectionTest";
 import SupabaseDebugTest from "@/components/dashboard/SupabaseDebugTest";
-import UserRoleManagement from "@/components/dashboard/UserRoleManagement";
+import UserRoleManagementFixed from "@/components/dashboard/UserRoleManagementFixed";
 import ConnectivityDiagnostic from "@/components/dashboard/ConnectivityDiagnostic";
 import CarnetQueueProcessor from "@/components/dashboard/CarnetQueueProcessor";
 
@@ -421,7 +421,7 @@ const AdminPanel = () => {
         </TabsContent>
 
         <TabsContent value="users">
-          <UserRoleManagement />
+          <UserRoleManagementFixed />
         </TabsContent>
 
         <TabsContent value="maintenance">
