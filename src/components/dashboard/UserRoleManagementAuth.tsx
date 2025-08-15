@@ -137,107 +137,7 @@ const UserRoleManagementAuth: React.FC = () => {
     },
   ];
 
-  useEffect(() => {
-    loadUsers();
-  }, []);
-
-  const loadUsers = async () => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      console.log('🔄 Cargando usuarios desde Supabase Auth...');
-      
-      // Intentar obtener usuarios usando el admin API
-      // Nota: Esto requiere service role key en producción
-      const { data, error } = await supabase.auth.admin.listUsers();
-      
-      if (error) {
-        console.error('❌ Error cargando usuarios con admin API:', error);
-        
-        // Fallback: Usar el usuario actual como ejemplo
-        const { data: currentUserData } = await supabase.auth.getUser();
-        
-        if (currentUserData.user) {
-          const userWithMetadata = {
-            ...currentUserData.user,
-            role: currentUserData.user.user_metadata?.role || 'SUPER_ADMINISTRADOR',
-            full_name: currentUserData.user.user_metadata?.full_name || 
-                      currentUserData.user.email?.split('@')[0],
-            department: currentUserData.user.user_metadata?.department || 
-                       'Ministerio de Sanidad y Bienestar Social'
-          };
-          
-          setUsers([userWithMetadata]);
-          console.log('✅ Mostrando usuario actual como ejemplo');
-          toast.success('Mostrando usuario actual (funcionalidad limitada en modo demo)');
-        } else {
-          throw new Error('No se pudo acceder a los usuarios');
-        }
-      } else {
-        console.log('✅ Usuarios cargados desde Auth:', data.users.length);
-        
-        // Procesar usuarios y agregar metadatos
-        const processedUsers = data.users.map(user => ({
-          ...user,
-          role: user.user_metadata?.role || user.app_metadata?.role || 'OBSERVADOR',
-          full_name: user.user_metadata?.full_name || 
-                    user.user_metadata?.name ||
-                    user.email?.split('@')[0],
-          department: user.user_metadata?.department || 
-                     user.app_metadata?.department ||
-                     'Ministerio de Sanidad y Bienestar Social',
-          assigned_center_id: user.user_metadata?.assigned_center_id || 
-                             user.app_metadata?.assigned_center_id
-        }));
-        
-        setUsers(processedUsers);
-        toast.success(`${processedUsers.length} usuarios cargados exitosamente`);
-      }
-      
-    } catch (error: any) {
-      console.error('❌ Error en loadUsers:', error);
-      const errorMessage = error.message || 'Error desconocido al cargar usuarios';
-      setError(errorMessage);
-      
-      // Proporcionar datos de demostración como fallback
-      console.log('🔄 Usando datos de demostración');
-      setUsers([
-        {
-          id: 'demo-auth-1',
-          email: 'admin@salud.gq',
-          role: 'SUPER_ADMINISTRADOR',
-          full_name: 'Administrador Sistema',
-          department: 'Ministerio de Sanidad',
-          created_at: new Date().toISOString(),
-          aud: 'authenticated',
-          app_metadata: {},
-          user_metadata: {
-            role: 'SUPER_ADMINISTRADOR',
-            full_name: 'Administrador Sistema'
-          }
-        },
-        {
-          id: 'demo-auth-2', 
-          email: 'revisor@salud.gq',
-          role: 'REVISOR_SOLICITUDES',
-          full_name: 'Revisor General',
-          department: 'Ministerio de Sanidad',
-          created_at: new Date().toISOString(),
-          aud: 'authenticated',
-          app_metadata: {},
-          user_metadata: {
-            role: 'REVISOR_SOLICITUDES',
-            full_name: 'Revisor General'
-          }
-        }
-      ] as ExtendedUser[]);
-      
-      toast.error(`Error al cargar usuarios: ${errorMessage} (usando datos demo)`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Los datos se cargan automáticamente con el hook useSupabaseUsers
 
   const getRoleIcon = (role: UserRole) => {
     switch (role) {
@@ -686,7 +586,7 @@ const UserRoleManagementAuth: React.FC = () => {
                               <AlertDialogTitle>¿Eliminar usuario?</AlertDialogTitle>
                               <AlertDialogDescription>
                                 Esta acción eliminará permanentemente la cuenta de usuario "{user.email}" 
-                                de Supabase Auth. Esta acci��n no se puede deshacer.
+                                de Supabase Auth. Esta acción no se puede deshacer.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
