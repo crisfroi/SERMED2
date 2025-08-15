@@ -8,8 +8,9 @@ export const suppressRechartsWarnings = () => {
 
   // List of Recharts components that use defaultProps
   const rechartsComponents = [
-    'XAxis', 'YAxis', 'CartesianGrid', 'Tooltip', 'ResponsiveContainer',
-    'BarChart', 'LineChart', 'PieChart', 'Pie', 'Bar', 'Line', 'Cell'
+    'XAxis', 'YAxis', 'XAxis2', 'YAxis2', 'CartesianGrid', 'Tooltip', 'ResponsiveContainer',
+    'BarChart', 'LineChart', 'PieChart', 'Pie', 'Bar', 'Line', 'Cell', 'Legend',
+    'Surface', 'ChartLayoutContextProvider2', 'CategoricalChartWrapper'
   ];
 
   // Override console.warn to filter out Recharts defaultProps warnings
