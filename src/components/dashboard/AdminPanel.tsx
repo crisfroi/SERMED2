@@ -37,6 +37,7 @@ import SupabaseDebugTest from "@/components/dashboard/SupabaseDebugTest";
 import UserRoleManagementAuth from "@/components/dashboard/UserRoleManagementAuth";
 import ConnectivityDiagnostic from "@/components/dashboard/ConnectivityDiagnostic";
 import CarnetQueueProcessor from "@/components/dashboard/CarnetQueueProcessor";
+import SupabaseAuthConfig from "@/components/dashboard/SupabaseAuthConfig";
 
 const AdminPanel = () => {
   const navigate = useNavigate();
@@ -297,6 +298,10 @@ const AdminPanel = () => {
             <AlertTriangle className="w-4 h-4" />
             <span className="hidden sm:inline">Mantenimiento</span>
           </TabsTrigger>
+          <TabsTrigger value="auth-config" className="flex items-center gap-1">
+            <Shield className="w-4 h-4" />
+            <span className="hidden sm:inline">Auth Config</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="settings">
@@ -422,6 +427,10 @@ const AdminPanel = () => {
 
         <TabsContent value="users">
           <UserRoleManagementAuth />
+        </TabsContent>
+
+        <TabsContent value="auth-config">
+          <SupabaseAuthConfig />
         </TabsContent>
 
         <TabsContent value="maintenance">
