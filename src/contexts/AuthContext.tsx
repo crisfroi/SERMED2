@@ -90,7 +90,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
         // Intentar crear el perfil en la base de datos
         try {
-          await supabase
+          const { data: insertedProfile, error: insertError } = await supabase
             .from('user_profiles')
             .insert({
               id: authUser.id,
@@ -99,9 +99,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
               role: userProfile.role,
               department: userProfile.department,
               is_active: true
-            });
+            })
+            .select()
+            .single();
+
+          if (insertError) {
+            console.warn('Could not create user profile in database:', insertError);
+            console.warn('Insert error details:', JSON.stringify(insertError, null, 2));
+          } else {
+            console.log('✅ Successfully created user profile in database:', insertedProfile);
+          }
         } catch (insertError) {
-          console.warn('Could not create user profile in database:', insertError);
+          console.warn('Exception while creating user profile:', insertError);
         }
       }
 
