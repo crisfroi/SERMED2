@@ -159,7 +159,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           await loadUserProfile(supabaseUser);
         } else {
           console.log('👤 No hay usuario autenticado, usando datos demo');
-          // Create demo user for development
+          // Create demo user for development - this ensures the app works without authentication
           const mockUser: UserProfile = {
             id: 'demo-user-id',
             email: 'chamibeny@gmail.com',
@@ -175,6 +175,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
             },
             created_at: new Date().toISOString()
           };
+          console.log('✅ Demo user created successfully');
           setUser(mockUser);
           setUserRole('SUPER_ADMINISTRADOR');
         }
