@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserRole, hasPermission, canAccessTab, getRoleRestrictions } from '@/types/roles';
 import { supabase } from '@/integrations/supabase/client';
@@ -59,7 +58,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         .single();
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Error loading user profile:', error);
+        console.error('Error loading user profile:', error.message || error);
+        console.error('Full error details:', JSON.stringify(error, null, 2));
       }
 
       let userProfile: UserProfile;
