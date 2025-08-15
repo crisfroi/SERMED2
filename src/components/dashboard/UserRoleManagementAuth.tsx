@@ -409,6 +409,59 @@ const UserRoleManagementAuth: React.FC = () => {
                   placeholder="Departamento o área de trabajo"
                 />
               </div>
+
+              {/* Selector de Hospital - Solo para roles que lo necesiten */}
+              {(newUser.role === 'DIRECTIVO_CENTRO_SANITARIO' || newUser.role === 'HOSPITAL') && (
+                <div>
+                  <label className="text-sm font-medium">
+                    Hospital Asignado *
+                    <span className="text-xs text-gray-500 block">
+                      El usuario solo tendrá acceso a datos de este hospital
+                    </span>
+                  </label>
+                  <Select
+                    value={newUser.assigned_center_id}
+                    onValueChange={(value) => setNewUser({ ...newUser, assigned_center_id: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar hospital..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {loadingCentros ? (
+                        <SelectItem value="" disabled>
+                          <div className="flex items-center gap-2">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Cargando hospitales...
+                          </div>
+                        </SelectItem>
+                      ) : centros.length === 0 ? (
+                        <SelectItem value="" disabled>
+                          No hay hospitales disponibles
+                        </SelectItem>
+                      ) : (
+                        centros.map((centro) => (
+                          <SelectItem key={centro.id} value={centro.id}>
+                            <div className="flex items-center gap-2">
+                              <Hospital className="w-4 h-4" />
+                              <div>
+                                <div className="font-medium">{centro.nombre}</div>
+                                <div className="text-xs text-gray-500">
+                                  {centro.categoria} - {centro.provincia}
+                                </div>
+                              </div>
+                            </div>
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectContent>
+                  </Select>
+                  {(newUser.role === 'DIRECTIVO_CENTRO_SANITARIO' || newUser.role === 'HOSPITAL') && !newUser.assigned_center_id && (
+                    <p className="text-xs text-red-600 mt-1">
+                      ⚠️ Es obligatorio seleccionar un hospital para este rol
+                    </p>
+                  )}
+                </div>
+              )}
               
               <div className="flex gap-2">
                 <Button
