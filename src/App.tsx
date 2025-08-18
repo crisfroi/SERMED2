@@ -1,111 +1,65 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
-import Home from "./pages/Home";
-import Index from "./pages/Index";
-import Dashboard from "./pages/Dashboard";
-import ProfessionalRegistration from "./pages/ProfessionalRegistration";
-import PublicSearch from "./pages/PublicSearch";
-import NotFound from "./pages/NotFound";
-import Auth from "./pages/Auth";
-// Clear any offline mode flags and auth state on app start
-import "@/utils/clearOfflineMode";
-import "@/utils/clearAuthState";
-// Suppress known Recharts warnings that don't affect functionality
-import "@/utils/suppressRechartsWarnings";
 
+import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from '@/components/ui/sonner';
+import { AuthProvider } from '@/contexts/AuthContext';
+import Home from '@/pages/Home';
+import Auth from '@/pages/Auth';
+import Dashboard from '@/pages/Dashboard';
+import ProfessionalRegistration from '@/pages/ProfessionalRegistration';
+import PublicSearch from '@/pages/PublicSearch';
+import NotFound from '@/pages/NotFound';
+import { suppressRechartsWarnings } from '@/utils/suppressRechartsWarnings';
+
+// Suprimir warnings de Recharts
+suppressRechartsWarnings();
+
+// Crear cliente de Query
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // Configuración de reintentos
-      retry: (failureCount, error: any) => {
-        // No reintentar si es un error de autenticación o token
-        if (error?.message?.includes('auth') ||
-            error?.message?.includes('unauthorized') ||
-            error?.message?.includes('Invalid Refresh Token') ||
-            error?.message?.includes('Refresh Token Not Found')) {
-          console.log('🔐 Auth error detected, not retrying:', error?.message);
-          return false;
-        }
-
-        // Reintentar hasta 3 veces para errores de red
-        if (failureCount < 3) {
-          return true;
-        }
-
-        return false;
-      },
-      
-      // Tiempo de espera entre reintentos
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-      
-      // Tiempo de vida de los datos en caché
       staleTime: 5 * 60 * 1000, // 5 minutos
-      
-      // Tiempo de vida de los datos en caché cuando no hay suscriptores
-      gcTime: 10 * 60 * 1000, // 10 minutos
-      
-      // Configuración de refetch
+      gcTime: 10 * 60 * 1000, // 10 minutos (reemplaza cacheTime)
       refetchOnWindowFocus: false,
-      refetchOnReconnect: true,
-      
-      // Manejo de errores
-      onError: (error: any) => {
-        // Si es un error de autenticación, no logear como error crítico
-        if (error?.message?.includes('auth') ||
-            error?.message?.includes('Invalid Refresh Token') ||
-            error?.message?.includes('Refresh Token Not Found')) {
-          console.log('🔐 Auth error handled gracefully:', error?.message);
-          return;
+      retry: (failureCount, error) => {
+        // No reintentar en errores 4xx (errores del cliente)
+        if (error && typeof error === 'object' && 'status' in error) {
+          const status = (error as any).status;
+          if (status >= 400 && status < 500) {
+            return false;
+          }
         }
-
-        // Si es un error de red, no mostrar errores en consola
-        if (error?.message?.includes('fetch') || error?.message?.includes('network')) {
-          console.log('Network error detected, using fallback data');
-          return;
-        }
-
-        console.error('Query error:', error);
-      }
+        return failureCount < 3;
+      },
     },
-    
     mutations: {
-      // Configuración de reintentos para mutaciones
-      retry: 1,
-      
-      // Manejo de errores para mutaciones
-      onError: (error: any) => {
-        console.error('Mutation error:', error);
-      }
-    }
-  }
+      retry: false,
+    },
+  },
 });
 
-function App() {
+const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider defaultRole="SUPER_ADMINISTRADOR">
-        <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/old-home" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/register" element={<ProfessionalRegistration />} />
-            <Route path="/search" element={<PublicSearch />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-        </TooltipProvider>
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen bg-background">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/dashboard/*" element={<Dashboard />} />
+              <Route path="/registro" element={<ProfessionalRegistration />} />
+              <Route path="/busqueda" element={<PublicSearch />} />
+              <Route path="/search" element={<PublicSearch />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Toaster />
+          </div>
+        </Router>
       </AuthProvider>
     </QueryClientProvider>
   );
-}
+};
 
 export default App;
