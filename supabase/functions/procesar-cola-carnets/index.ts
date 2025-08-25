@@ -84,7 +84,7 @@ serve(async (req) => {
 
       const carnetResult = await carnetResponse.json();
 
-      if (carnetResponse.ok && carnetResult.success) {
+      if (carnetResult.success) {
         // Marcar como completado
         await supabaseAdmin
           .from('cola_generacion_carnets')
