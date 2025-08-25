@@ -169,11 +169,16 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error general en procesamiento de cola:', error);
+    console.error('Error details:', {
+      message: error?.message,
+      stack: error?.stack,
+      name: error?.name
+    });
 
     return new Response(JSON.stringify({
       success: false,
       message: 'Error general al procesar cola de carnets',
-      error: error.message,
+      error: error?.message || 'Unknown error',
       processed: 0
     }), {
       status: 500,
