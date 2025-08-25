@@ -2462,7 +2462,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
             const { data: nominasData, error: nominasError } = await nominasQuery;
 
             if (nominasError) {
-              console.error('❌ Supabase error in fetchPagos (nominas):', nominasError);
+              console.error('❌ Supabase error in fetchPagos (nominas):', formatSupabaseError(nominasError));
               throw nominasError;
             }
 
