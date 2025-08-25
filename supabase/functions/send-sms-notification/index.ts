@@ -89,12 +89,13 @@ serve(async (req) => {
         profesional_id: profesionalId,
         telefono: telefono,
         tipo_notificacion: tipoNotificacion,
-        estado: 'enviado',
+        estado: isDevelopment ? 'simulado' : 'enviado',
         mensaje_sid: result.sid
       })
 
     if (insertError) {
-      console.error('Error saving notification:', insertError)
+      console.error('Error saving notification to database:', insertError)
+      // Don't fail the function if DB insert fails, SMS was still sent
     }
 
     return new Response(
