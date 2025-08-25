@@ -889,7 +889,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
 
             // Validate duration (must be between 12 and 24 hours)
             const durationHours = (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60);
-            console.log('��️ Calculated single guardia duration:', durationHours, 'hours');
+            console.log('⏱️ Calculated single guardia duration:', durationHours, 'hours');
 
             if (durationHours < 12) {
               throw new Error(`La duración de la guardia debe ser de al menos 12 horas. Duración actual: ${durationHours.toFixed(1)} horas`);
@@ -2703,7 +2703,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
 
           await get().fetchBaremos();
         } catch (error: any) {
-          console.error('Error creating baremo:', error);
+          console.error('Error creating baremo:', formatSupabaseError(error));
           throw error;
         }
       },
@@ -2719,7 +2719,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
 
           await get().fetchBaremos();
         } catch (error: any) {
-          console.error('Error updating baremo:', error);
+          console.error('Error updating baremo:', formatSupabaseError(error));
           throw error;
         }
       },
@@ -2735,7 +2735,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
 
           await get().fetchBaremos();
         } catch (error: any) {
-          console.error('Error deleting baremo:', error);
+          console.error('Error deleting baremo:', formatSupabaseError(error));
           throw error;
         }
       },
@@ -2797,7 +2797,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
 
           await get().fetchDiasFestivos();
         } catch (error: any) {
-          console.error('Error creating dia festivo:', error);
+          console.error('Error creating dia festivo:', formatSupabaseError(error));
           throw error;
         }
       },
@@ -2820,7 +2820,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
 
           await get().fetchDiasFestivos();
         } catch (error: any) {
-          console.error('Error updating dia festivo:', error);
+          console.error('Error updating dia festivo:', formatSupabaseError(error));
           throw error;
         }
       },
@@ -2836,7 +2836,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
 
           await get().fetchDiasFestivos();
         } catch (error: any) {
-          console.error('Error deleting dia festivo:', error);
+          console.error('Error deleting dia festivo:', formatSupabaseError(error));
           throw error;
         }
       },
@@ -2882,7 +2882,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
 
           await get().fetchAjustesBaremos();
         } catch (error: any) {
-          console.error('Error creating ajuste baremo:', error);
+          console.error('Error creating ajuste baremo:', formatSupabaseError(error));
           throw error;
         }
       },
@@ -2898,7 +2898,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
 
           await get().fetchAjustesBaremos();
         } catch (error: any) {
-          console.error('Error updating ajuste baremo:', error);
+          console.error('Error updating ajuste baremo:', formatSupabaseError(error));
           throw error;
         }
       },
@@ -2914,7 +2914,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
 
           await get().fetchAjustesBaremos();
         } catch (error: any) {
-          console.error('Error deleting ajuste baremo:', error);
+          console.error('Error deleting ajuste baremo:', formatSupabaseError(error));
           throw error;
         }
       },
