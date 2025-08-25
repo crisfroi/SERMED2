@@ -129,13 +129,34 @@ export const useCarnetQueue = () => {
       console.log('Procesando cola de carnets...');
 
       try {
-        const { data, error } = await supabase.functions.invoke('procesar-cola-carnets');
+        // Get current session for authentication
+        const { data: session } = await supabase.auth.getSession();
 
-        if (error) {
-          console.error('Error procesando cola:', getErrorMessage(error));
-          throw new Error(getErrorMessage(error));
+        if (!session?.session?.access_token) {
+          throw new Error('No hay sesión activa para autenticar la solicitud');
         }
 
+        // Make direct HTTP request to the Edge Function
+        const response = await fetch(`${supabase.supabaseUrl}/functions/v1/procesar-cola-carnets`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${session.session.access_token}`,
+            'apikey': supabase.supabaseKey,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Error response from Edge Function:', {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorText
+          });
+          throw new Error(`Edge Function error (${response.status}): ${errorText}`);
+        }
+
+        const data = await response.json();
         console.log('Resultado del procesamiento:', data);
         return data as QueueProcessResult;
 
