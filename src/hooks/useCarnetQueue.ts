@@ -206,11 +206,19 @@ export const useCarnetQueue = () => {
   // Función para procesar múltiples items de la cola
   const processMultipleQueue = async (maxItems: number = 5) => {
     setIsProcessingQueue(true);
-    
+
     try {
       for (let i = 0; i < maxItems; i++) {
-        await processQueueMutation.mutateAsync();
-        
+        console.log(`Processing queue item ${i + 1} of ${maxItems}`);
+
+        try {
+          await processQueueMutation.mutateAsync();
+          console.log(`Queue item ${i + 1} processed successfully`);
+        } catch (error) {
+          console.error(`Error processing queue item ${i + 1}:`, getErrorMessage(error));
+          // Continue with next item instead of breaking the loop
+        }
+
         // Pausa de 2 segundos entre procesamiento para no sobrecargar
         if (i < maxItems - 1) {
           await new Promise(resolve => setTimeout(resolve, 2000));
