@@ -1,6 +1,6 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { sendSMSWithFallback, validateSMSParams, normalizePhoneNumber, type SMSParams } from '@/utils/smsService';
 
 export interface SMSNotification {
   id: string;
@@ -59,32 +59,49 @@ export function useSendSMSNotification() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ 
-      profesionalId, 
-      telefono, 
-      tipoNotificacion, 
-      mensaje 
-    }: {
-      profesionalId: string;
-      telefono: string;
-      tipoNotificacion: string;
-      mensaje: string;
-    }) => {
-      const { data, error } = await supabase.functions.invoke('send-sms-notification', {
-        body: {
-          profesionalId,
-          telefono,
-          tipoNotificacion,
-          mensaje
-        }
+    mutationFn: async (params: SMSParams) => {
+      const { profesionalId, telefono, tipoNotificacion, mensaje } = params;
+
+      // Validate parameters first
+      const validationError = validateSMSParams(params);
+      if (validationError) {
+        throw new Error(validationError);
+      }
+
+      // Normalize phone number
+      const normalizedTelefono = normalizePhoneNumber(telefono);
+
+      console.log('SMS Hook: Sending SMS with validated params:', {
+        profesionalId,
+        telefono: normalizedTelefono,
+        tipoNotificacion,
+        mensajeLength: mensaje.length
       });
 
-      if (error) throw error;
-      return data;
+      // Use the robust SMS service with fallback
+      const result = await sendSMSWithFallback({
+        ...params,
+        telefono: normalizedTelefono
+      });
+
+      if (!result.success) {
+        throw new Error(result.error || 'Error desconocido al enviar SMS');
+      }
+
+      if (result.fallback) {
+        console.log('SMS Hook: Used fallback mode (simulation)');
+      }
+
+      return result;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('SMS Hook: Mutation successful, invalidating queries');
       queryClient.invalidateQueries({ queryKey: ['sms-notifications'] });
       queryClient.invalidateQueries({ queryKey: ['notification-count'] });
+      queryClient.invalidateQueries({ queryKey: ['profesionales'] });
+    },
+    onError: (error) => {
+      console.error('SMS Hook: Mutation failed:', error);
     }
   });
 }

@@ -141,16 +141,22 @@ serve(async (req) => {
       .download(rutaPlantilla);
 
     if (errorPlantilla || !data) {
-      console.error('Error al obtener plantilla SVG:', errorPlantilla);
-      const { data: plantillaGeneralData, error: errorPlantillaGeneral } = await supabaseAdmin.storage
-        .from('carnets')
-        .download('plantillas-carnets/general.svg');
+      console.error(`Error al obtener plantilla SVG para categoría "${categoria}":`, errorPlantilla);
 
-      if (errorPlantillaGeneral || !plantillaGeneralData) {
+      // Try to use auxiliar.svg as fallback instead of general.svg
+      const { data: plantillaFallbackData, error: errorPlantillaFallback } = await supabaseAdmin.storage
+        .from('carnets')
+        .download('plantillas-carnets/auxiliar.svg');
+
+      if (errorPlantillaFallback || !plantillaFallbackData) {
+        console.error('Error al obtener plantilla fallback (auxiliar.svg):', errorPlantillaFallback);
         return new Response(JSON.stringify({
           error: 'No se encontró ninguna plantilla válida',
-          categoria: categoria,
-          detalles: errorPlantilla?.message
+          categoria_solicitada: categoria,
+          plantilla_original: rutaPlantilla,
+          error_original: errorPlantilla?.message,
+          error_fallback: errorPlantillaFallback?.message,
+          profesional_id: idProfesional
         }), {
           status: 404,
           headers: {
@@ -159,22 +165,42 @@ serve(async (req) => {
           }
         });
       }
-      plantillaData = plantillaGeneralData;
+      console.log(`Usando plantilla fallback (auxiliar.svg) para categoría "${categoria}"`);
+      plantillaData = plantillaFallbackData;
     } else {
       plantillaData = data;
     }
 
     const plantillaSVG = await plantillaData.text();
+    console.log(`Plantilla SVG cargada, tamaño: ${plantillaSVG.length} caracteres`);
 
     // Procesar SVG con los datos del profesional
-    const carnetSVG = await procesarSVGConReemplazo(plantillaSVG, profesional, supabaseAdmin);
+    let carnetSVG;
+    try {
+      carnetSVG = await procesarSVGConReemplazo(plantillaSVG, profesional, supabaseAdmin);
+      console.log(`SVG procesado exitosamente, tamaño final: ${carnetSVG.length} caracteres`);
+    } catch (processingError) {
+      console.error('Error al procesar SVG:', processingError);
+      return new Response(JSON.stringify({
+        error: 'Error al procesar la plantilla SVG',
+        categoria: categoria,
+        profesional_id: idProfesional,
+        details: processingError.message
+      }), {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      });
+    }
 
     const nombreArchivo = `${profesional.nombre_completo.replace(/[^a-zA-Z0-9]/g, '')}_${Date.now()}.svg`;
     const rutaCarnet = `carnets-generados/${nombreArchivo}`;
 
     console.log(`Guardando carnet en: ${rutaCarnet}`);
 
-    const { error: errorGuardar } = await supabaseAdmin.storage
+    const { data: uploadResult, error: errorGuardar } = await supabaseAdmin.storage
       .from('carnets')
       .upload(rutaCarnet, new Blob([carnetSVG], { type: 'image/svg+xml' }), {
         contentType: 'image/svg+xml',
@@ -182,9 +208,15 @@ serve(async (req) => {
       });
 
     if (errorGuardar) {
-      console.error('Error al guardar el carnet generado:', errorGuardar);
+      console.error('Error al guardar el carnet generado:', {
+        error: errorGuardar,
+        ruta: rutaCarnet,
+        profesional_id: idProfesional
+      });
       return new Response(JSON.stringify({
         error: 'Error al guardar el carnet generado',
+        ruta_archivo: rutaCarnet,
+        profesional_id: idProfesional,
         details: errorGuardar.message
       }), {
         status: 500,
@@ -194,6 +226,8 @@ serve(async (req) => {
         }
       });
     }
+
+    console.log('Carnet guardado exitosamente:', uploadResult);
 
     const { data: urlCarnet } = await supabaseAdmin.storage
       .from('carnets')
@@ -206,7 +240,12 @@ serve(async (req) => {
       .eq('id', idProfesional);
 
     if (errorActualizar) {
-      console.error('Error al actualizar URL del carnet:', errorActualizar);
+      console.error('Error al actualizar URL del carnet en profesional:', {
+        error: errorActualizar,
+        profesional_id: idProfesional,
+        url_carnet: urlCarnet.publicUrl
+      });
+      // Don't return error here, continue with marking carnet as generated
     }
 
     // Marcar carnet como generado para evitar duplicados
@@ -217,7 +256,14 @@ serve(async (req) => {
       });
 
     if (errorMarcar) {
-      console.error('Error al marcar carnet como generado:', errorMarcar);
+      console.error('Error al marcar carnet como generado:', {
+        error: errorMarcar,
+        profesional_id: idProfesional,
+        resultado: marcadoExitoso
+      });
+      // Don't return error here, carnet was still generated successfully
+    } else {
+      console.log('Carnet marcado como generado exitosamente:', marcadoExitoso);
     }
 
     await supabaseAdmin.from('logs_sistema').insert({

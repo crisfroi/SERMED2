@@ -130,7 +130,21 @@ export function useEstadisticasAvanzadas() {
 
             const result = await supabase
               .from("profesionales_sanitarios")
-              .select("*");
+              .select(`
+                id,
+                estado_solicitud,
+                area_profesional,
+                provincia,
+                genero,
+                tipo_sector,
+                fecha_validez_carnet,
+                created_at,
+                año_graduacion,
+                categoria_titulacion,
+                situacion_laboral,
+                centro_salud_id,
+                funcion_publica
+              `);
 
             data = result.data;
             error = result.error;
@@ -176,7 +190,8 @@ export function useEstadisticasAvanzadas() {
         }
 
         if (error) {
-          logError("Error fetching estadísticas avanzadas", error);
+          console.error("Error fetching estadísticas avanzadas:", getErrorMessage(error));
+          console.error("Error fetching estadísticas avanzadas (full object):", error);
           const errorMessage = getErrorMessage(error);
 
           // If it's a fetch error, enable offline mode automatically

@@ -69,6 +69,7 @@ import { FuncionariosStatsWidget } from "@/components/dashboard/FuncionariosStat
 import ResizeObserverTestIndicator from "@/components/dashboard/ResizeObserverTestIndicator";
 
 import type { Tables } from "@/integrations/supabase/types";
+import { sendSMSWithFallback, validateSMSParams, normalizePhoneNumber } from "@/utils/smsService";
 
 type Profesional = Tables<"profesionales_sanitarios">;
 
@@ -327,46 +328,63 @@ const Dashboard = () => {
     }
 
     try {
-      const { data, error } = await supabase.functions.invoke(
-        "send-sms-notification",
-        {
-          body: JSON.stringify({
-            to: telefono,
-            body: messageBody,
-            profesionalId: profesionalId,
-            notificationType: tipoNotificacion,
-          }),
-          method: "POST",
-        },
-      );
+      // Validate SMS parameters first
+      const smsParams = {
+        profesionalId,
+        telefono: telefono!,
+        tipoNotificacion,
+        mensaje: messageBody
+      };
 
-      if (error) {
-        console.error("Error al invocar Edge Function para SMS:", error);
+      const validationError = validateSMSParams(smsParams);
+      if (validationError) {
         toast({
-          title: "Error al Enviar SMS",
-          description: `No se pudo enviar el SMS a ${nombreCompleto}. Detalles: ${error.message}`,
+          title: "Error de Validación",
+          description: validationError,
           variant: "destructive",
         });
-      } else {
-        console.log("Respuesta de Edge Function para SMS:", data);
-        if (data && data.success) {
-          toast({
-            title: "SMS Enviado Exitosamente",
-            description: `Se ha enviado un SMS a ${nombreCompleto}.`,
-          });
-        } else {
-          toast({
-            title: "Error al Enviar SMS",
-            description: `Hubo un problema al enviar el SMS a ${nombreCompleto}: ${data?.message || "Error desconocido"}`,
-            variant: "destructive",
-          });
-        }
+        return;
       }
-    } catch (apiError: any) {
-      console.error("Error general al enviar SMS:", apiError);
+
+      // Normalize phone number
+      const normalizedTelefono = normalizePhoneNumber(telefono!);
+
+      console.log('Dashboard: Attempting to send SMS with normalized params:', {
+        telefono: normalizedTelefono,
+        mensaje: messageBody.substring(0, 50) + '...',
+        profesionalId,
+        tipoNotificacion
+      });
+
+      // Use the robust SMS service with fallback
+      const result = await sendSMSWithFallback({
+        ...smsParams,
+        telefono: normalizedTelefono
+      });
+
+      if (result.success) {
+        const description = result.fallback
+          ? `Se ha simulado el envío de SMS a ${nombreCompleto} (${normalizedTelefono}). El servicio de SMS está en modo de prueba.`
+          : `Se ha enviado un SMS a ${nombreCompleto} (${normalizedTelefono}).`;
+
+        toast({
+          title: "SMS Enviado Exitosamente",
+          description,
+        });
+      } else {
+        toast({
+          title: "Error al Enviar SMS",
+          description: result.error || `No se pudo enviar el SMS a ${nombreCompleto}.`,
+          variant: "destructive",
+        });
+      }
+
+    } catch (error: any) {
+      console.error("Error general al enviar SMS:", error);
+
       toast({
-        title: "Error de Conexión",
-        description: `No se pudo conectar con el servicio de SMS. ${apiError.message || ""}`,
+        title: "Error Inesperado",
+        description: `Error inesperado al enviar SMS: ${error.message}`,
         variant: "destructive",
       });
     }
@@ -453,8 +471,7 @@ const Dashboard = () => {
     ...(userRole && canAccessTab("ministerial") ? [{ id: "ministerial", label: "Ministerial", icon: Settings }] : []),
     ...(userRole && canAccessTab("incidents") ? [{ id: "incidents", label: "Incidencias", icon: Activity }] : []),
     ...(userRole && canAccessTab("health-centers") ? [{ id: "health-centers", label: "Centros", icon: MapPin }] : []),
-    ...(userRole && hasPermission("manage_users") ? [{ id: "users", label: "Usuarios", icon: UserCog }] : []),
-    ...(userRole && hasPermission("system_configuration") ? [{ id: "admin", label: "Admin", icon: Settings }] : []),
+    ...(userRole && (hasPermission("manage_users") || hasPermission("system_configuration")) ? [{ id: "admin", label: "Admin", icon: Settings }] : []),
   ].filter(tab => userRole ? canAccessTab(tab.id) : tab.id === "overview" || tab.id === "professionals");
 
   return (
@@ -467,7 +484,7 @@ const Dashboard = () => {
             onValueChange={setActiveTab}
             className="space-y-0"
           >
-            <TabsList className="grid w-full grid-cols-5 md:grid-cols-10">
+            <TabsList className="flex w-full flex-wrap justify-start gap-1 h-auto p-1">
               {tabsConfig.map((tab) => {
                 const Icon = tab.icon;
                 return (
@@ -728,12 +745,8 @@ const Dashboard = () => {
             <HealthCenters />
           </TabsContent>
 
-          <TabsContent value="users" className="space-y-6">
-            {hasPermission("manage_users") && <AdminPanel />}
-          </TabsContent>
-
           <TabsContent value="admin" className="space-y-6">
-            {hasPermission("system_configuration") && <AdminPanel />}
+            {(hasPermission("manage_users") || hasPermission("system_configuration")) && <AdminPanel />}
           </TabsContent>
         </Tabs>
       </div>

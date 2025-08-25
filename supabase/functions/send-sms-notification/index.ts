@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
 const corsHeaders = {
@@ -12,7 +11,24 @@ serve(async (req) => {
   }
 
   try {
-    const { profesionalId, telefono, tipoNotificacion, mensaje } = await req.json()
+    const requestBody = await req.json()
+    console.log('SMS Edge Function received:', requestBody)
+
+    const { profesionalId, telefono, tipoNotificacion, mensaje } = requestBody
+
+    // Validate required parameters
+    if (!profesionalId) {
+      throw new Error('Missing required parameter: profesionalId')
+    }
+    if (!telefono) {
+      throw new Error('Missing required parameter: telefono')
+    }
+    if (!tipoNotificacion) {
+      throw new Error('Missing required parameter: tipoNotificacion')
+    }
+    if (!mensaje) {
+      throw new Error('Missing required parameter: mensaje')
+    }
 
     const TWILIO_ACCOUNT_SID = Deno.env.get('TWILIO_ACCOUNT_SID')
     const TWILIO_AUTH_TOKEN = Deno.env.get('TWILIO_AUTH_TOKEN')
@@ -22,24 +38,43 @@ serve(async (req) => {
       throw new Error('Twilio credentials not configured')
     }
 
-    // Enviar SMS usando Twilio
-    const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${btoa(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`)}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        From: TWILIO_PHONE_NUMBER,
-        To: telefono,
-        Body: mensaje,
-      }),
-    })
+    console.log(`Sending SMS to ${telefono} with message: ${mensaje.substring(0, 50)}...`)
 
-    const result = await response.json()
+    // Check if we're in development mode (demo credentials)
+    const isDevelopment = TWILIO_ACCOUNT_SID === 'demo_account_sid' ||
+                         TWILIO_AUTH_TOKEN === 'demo_auth_token'
 
-    if (!response.ok) {
-      throw new Error(`Twilio error: ${result.message}`)
+    let result
+    if (isDevelopment) {
+      // Simulate SMS sending in development
+      console.log('Development mode: Simulating SMS send')
+      result = {
+        sid: `SM${Date.now()}${Math.random().toString(36).substr(2, 9)}`,
+        status: 'sent',
+        to: telefono,
+        from: TWILIO_PHONE_NUMBER,
+        body: mensaje
+      }
+    } else {
+      // Enviar SMS usando Twilio
+      const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${btoa(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`)}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          From: TWILIO_PHONE_NUMBER,
+          To: telefono,
+          Body: mensaje,
+        }),
+      })
+
+      result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(`Twilio error: ${result.message}`)
+      }
     }
 
     // Registrar la notificación en la base de datos
@@ -54,12 +89,13 @@ serve(async (req) => {
         profesional_id: profesionalId,
         telefono: telefono,
         tipo_notificacion: tipoNotificacion,
-        estado: 'enviado',
+        estado: isDevelopment ? 'simulado' : 'enviado',
         mensaje_sid: result.sid
       })
 
     if (insertError) {
-      console.error('Error saving notification:', insertError)
+      console.error('Error saving notification to database:', insertError)
+      // Don't fail the function if DB insert fails, SMS was still sent
     }
 
     return new Response(

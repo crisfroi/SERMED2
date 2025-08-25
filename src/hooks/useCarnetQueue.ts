@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { getErrorMessage } from '@/utils/errorHandler';
 
@@ -44,7 +44,7 @@ export const useCarnetQueue = () => {
         .order('created_at', { ascending: true });
 
       if (error) {
-        console.error('Error fetching professionals without carnet:', error);
+        console.error('Error fetching professionals without carnet:', getErrorMessage(error));
         throw new Error(getErrorMessage(error));
       }
 
@@ -114,7 +114,7 @@ export const useCarnetQueue = () => {
       queryClient.invalidateQueries({ queryKey: ['professionals-without-carnet'] });
     },
     onError: (error) => {
-      console.error('Error adding to queue:', error);
+      console.error('Error adding to queue:', getErrorMessage(error));
       toast({
         title: "Error",
         description: getErrorMessage(error),
@@ -125,40 +125,64 @@ export const useCarnetQueue = () => {
 
   // Mutación para procesar la cola usando la edge function
   const processQueueMutation = useMutation({
+    retry: false, // Disable retries to prevent "body stream already read" errors
     mutationFn: async (): Promise<QueueProcessResult> => {
       console.log('Procesando cola de carnets...');
-      
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        const headers: Record<string, string> = {
-          "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkaWV5bmVuZGZqYmtiaGZvdnJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3ODI5MjEsImV4cCI6MjA2NjM1ODkyMX0.yFnLHavy8wzVjlg3sAI2mEG-XGDCV5FSr7OQsMefxL8",
-        };
 
-        if (session?.access_token) {
-          headers["Authorization"] = `Bearer ${session.access_token}`;
+      try {
+        // Get current session for authentication
+        const { data: session } = await supabase.auth.getSession();
+
+        if (!session?.session?.access_token) {
+          throw new Error('No hay sesión activa para autenticar la solicitud');
         }
 
-        const response = await fetch(
-          "https://wdieynendfjbkbhfovrx.supabase.co/functions/v1/procesar-cola-carnets",
-          {
-            method: "GET",
-            headers,
-          }
-        );
+        // Make direct HTTP request to the Edge Function
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/procesar-cola-carnets`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${session.session.access_token}`,
+            'apikey': SUPABASE_PUBLISHABLE_KEY,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        // Clone response for defensive programming (in case of unexpected retries)
+        const responseClone = response.clone();
+
+        // Read response body once and handle both success and error cases
+        let responseText;
+        try {
+          responseText = await response.text();
+        } catch (streamError) {
+          // If the stream was already read, try the clone
+          console.warn('Response stream already read, using clone:', streamError);
+          responseText = await responseClone.text();
+        }
 
         if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Error ${response.status}: ${errorText}`);
+          console.error('Error response from Edge Function:', {
+            status: response.status,
+            statusText: response.statusText,
+            body: responseText
+          });
+          throw new Error(`Edge Function error (${response.status}): ${responseText}`);
         }
 
-        const result = await response.json();
-        console.log('Resultado del procesamiento:', result);
-        
-        return result;
+        // Parse the successful response as JSON
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('Error parsing response JSON:', parseError);
+          throw new Error(`Invalid JSON response from Edge Function: ${responseText}`);
+        }
+
+        console.log('Resultado del procesamiento:', data);
+        return data as QueueProcessResult;
 
       } catch (error) {
-        console.error('Error procesando cola:', error);
+        console.error('Error procesando cola:', getErrorMessage(error));
         throw new Error(getErrorMessage(error));
       }
     },
@@ -181,7 +205,7 @@ export const useCarnetQueue = () => {
       queryClient.invalidateQueries({ queryKey: ['profesionales'] });
     },
     onError: (error) => {
-      console.error('Error in queue processing:', error);
+      console.error('Error in queue processing:', getErrorMessage(error));
       toast({
         title: "Error en Procesamiento",
         description: getErrorMessage(error),
@@ -193,18 +217,26 @@ export const useCarnetQueue = () => {
   // Función para procesar múltiples items de la cola
   const processMultipleQueue = async (maxItems: number = 5) => {
     setIsProcessingQueue(true);
-    
+
     try {
       for (let i = 0; i < maxItems; i++) {
-        await processQueueMutation.mutateAsync();
-        
+        console.log(`Processing queue item ${i + 1} of ${maxItems}`);
+
+        try {
+          await processQueueMutation.mutateAsync();
+          console.log(`Queue item ${i + 1} processed successfully`);
+        } catch (error) {
+          console.error(`Error processing queue item ${i + 1}:`, getErrorMessage(error));
+          // Continue with next item instead of breaking the loop
+        }
+
         // Pausa de 2 segundos entre procesamiento para no sobrecargar
         if (i < maxItems - 1) {
           await new Promise(resolve => setTimeout(resolve, 2000));
         }
       }
     } catch (error) {
-      console.error('Error in batch queue processing:', error);
+      console.error('Error in batch queue processing:', getErrorMessage(error));
     } finally {
       setIsProcessingQueue(false);
     }
@@ -233,7 +265,7 @@ export const useCarnetQueue = () => {
       }, 3000);
       
     } catch (error) {
-      console.error('Error in automated carnet generation:', error);
+      console.error('Error in automated carnet generation:', getErrorMessage(error));
     }
   };
 
