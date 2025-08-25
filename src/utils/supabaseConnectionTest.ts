@@ -4,6 +4,7 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
+import { getErrorMessage } from '@/utils/errorHandler';
 
 export interface ConnectivityTestResult {
   success: boolean;
