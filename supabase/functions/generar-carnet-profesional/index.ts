@@ -240,7 +240,12 @@ serve(async (req) => {
       .eq('id', idProfesional);
 
     if (errorActualizar) {
-      console.error('Error al actualizar URL del carnet:', errorActualizar);
+      console.error('Error al actualizar URL del carnet en profesional:', {
+        error: errorActualizar,
+        profesional_id: idProfesional,
+        url_carnet: urlCarnet.publicUrl
+      });
+      // Don't return error here, continue with marking carnet as generated
     }
 
     // Marcar carnet como generado para evitar duplicados
@@ -251,7 +256,14 @@ serve(async (req) => {
       });
 
     if (errorMarcar) {
-      console.error('Error al marcar carnet como generado:', errorMarcar);
+      console.error('Error al marcar carnet como generado:', {
+        error: errorMarcar,
+        profesional_id: idProfesional,
+        resultado: marcadoExitoso
+      });
+      // Don't return error here, carnet was still generated successfully
+    } else {
+      console.log('Carnet marcado como generado exitosamente:', marcadoExitoso);
     }
 
     await supabaseAdmin.from('logs_sistema').insert({
