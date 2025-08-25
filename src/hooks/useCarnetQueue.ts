@@ -147,14 +147,21 @@ export const useCarnetQueue = () => {
           }
         );
 
+        const responseText = await response.text();
+
         if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Error ${response.status}: ${errorText}`);
+          throw new Error(`Error ${response.status}: ${responseText}`);
         }
 
-        const result = await response.json();
+        let result;
+        try {
+          result = JSON.parse(responseText);
+        } catch (parseError) {
+          throw new Error(`Error parsing response: ${responseText}`);
+        }
+
         console.log('Resultado del procesamiento:', result);
-        
+
         return result;
 
       } catch (error) {
