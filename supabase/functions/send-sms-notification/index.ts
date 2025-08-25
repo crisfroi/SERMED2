@@ -40,24 +40,41 @@ serve(async (req) => {
 
     console.log(`Sending SMS to ${telefono} with message: ${mensaje.substring(0, 50)}...`)
 
-    // Enviar SMS usando Twilio
-    const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${btoa(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`)}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        From: TWILIO_PHONE_NUMBER,
-        To: telefono,
-        Body: mensaje,
-      }),
-    })
+    // Check if we're in development mode (demo credentials)
+    const isDevelopment = TWILIO_ACCOUNT_SID === 'demo_account_sid' ||
+                         TWILIO_AUTH_TOKEN === 'demo_auth_token'
 
-    const result = await response.json()
+    let result
+    if (isDevelopment) {
+      // Simulate SMS sending in development
+      console.log('Development mode: Simulating SMS send')
+      result = {
+        sid: `SM${Date.now()}${Math.random().toString(36).substr(2, 9)}`,
+        status: 'sent',
+        to: telefono,
+        from: TWILIO_PHONE_NUMBER,
+        body: mensaje
+      }
+    } else {
+      // Enviar SMS usando Twilio
+      const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${btoa(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`)}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          From: TWILIO_PHONE_NUMBER,
+          To: telefono,
+          Body: mensaje,
+        }),
+      })
 
-    if (!response.ok) {
-      throw new Error(`Twilio error: ${result.message}`)
+      result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(`Twilio error: ${result.message}`)
+      }
     }
 
     // Registrar la notificación en la base de datos
