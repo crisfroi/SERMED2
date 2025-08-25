@@ -29,7 +29,7 @@ export class SupabaseConnectivityTester {
         .limit(1);
 
       if (error) {
-        console.error('❌ Basic connection test failed:', error);
+        console.error('❌ Basic connection test failed:', getErrorMessage(error));
         return {
           success: false,
           error: error.message || 'Unknown Supabase error',
@@ -48,7 +48,7 @@ export class SupabaseConnectivityTester {
       };
 
     } catch (error: any) {
-      console.error('💥 Connection test exception:', error);
+      console.error('💥 Connection test exception:', getErrorMessage(error));
       return {
         success: false,
         error: error.message || error.toString(),
@@ -93,7 +93,7 @@ export class SupabaseConnectivityTester {
       };
 
     } catch (error: any) {
-      console.error('💥 Network connectivity test failed:', error);
+      console.error('💥 Network connectivity test failed:', getErrorMessage(error));
       return {
         success: false,
         error: error.message || error.toString(),
@@ -114,7 +114,7 @@ export class SupabaseConnectivityTester {
       const { data: session, error } = await supabase.auth.getSession();
 
       if (error) {
-        console.error('❌ Auth connection test failed:', error);
+        console.error('❌ Auth connection test failed:', getErrorMessage(error));
         return {
           success: false,
           error: error.message || 'Auth connection failed',
@@ -133,7 +133,7 @@ export class SupabaseConnectivityTester {
       };
 
     } catch (error: any) {
-      console.error('💥 Auth connection test exception:', error);
+      console.error('💥 Auth connection test exception:', getErrorMessage(error));
       return {
         success: false,
         error: error.message || error.toString(),
