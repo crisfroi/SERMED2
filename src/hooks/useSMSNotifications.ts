@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { sendSMSWithFallback, validateSMSParams, normalizePhoneNumber, type SMSParams } from '@/utils/smsService';
 
 export interface SMSNotification {
   id: string;
