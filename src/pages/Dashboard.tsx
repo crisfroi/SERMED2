@@ -727,12 +727,8 @@ const Dashboard = () => {
             <HealthCenters />
           </TabsContent>
 
-          <TabsContent value="users" className="space-y-6">
-            {hasPermission("manage_users") && <AdminPanel />}
-          </TabsContent>
-
           <TabsContent value="admin" className="space-y-6">
-            {hasPermission("system_configuration") && <AdminPanel />}
+            {(hasPermission("manage_users") || hasPermission("system_configuration")) && <AdminPanel />}
           </TabsContent>
         </Tabs>
       </div>
