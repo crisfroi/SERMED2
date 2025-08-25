@@ -172,9 +172,28 @@ serve(async (req) => {
     }
 
     const plantillaSVG = await plantillaData.text();
+    console.log(`Plantilla SVG cargada, tamaño: ${plantillaSVG.length} caracteres`);
 
     // Procesar SVG con los datos del profesional
-    const carnetSVG = await procesarSVGConReemplazo(plantillaSVG, profesional, supabaseAdmin);
+    let carnetSVG;
+    try {
+      carnetSVG = await procesarSVGConReemplazo(plantillaSVG, profesional, supabaseAdmin);
+      console.log(`SVG procesado exitosamente, tamaño final: ${carnetSVG.length} caracteres`);
+    } catch (processingError) {
+      console.error('Error al procesar SVG:', processingError);
+      return new Response(JSON.stringify({
+        error: 'Error al procesar la plantilla SVG',
+        categoria: categoria,
+        profesional_id: idProfesional,
+        details: processingError.message
+      }), {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      });
+    }
 
     const nombreArchivo = `${profesional.nombre_completo.replace(/[^a-zA-Z0-9]/g, '')}_${Date.now()}.svg`;
     const rutaCarnet = `carnets-generados/${nombreArchivo}`;
