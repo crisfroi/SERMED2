@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
 const corsHeaders = {
@@ -12,7 +11,24 @@ serve(async (req) => {
   }
 
   try {
-    const { profesionalId, telefono, tipoNotificacion, mensaje } = await req.json()
+    const requestBody = await req.json()
+    console.log('SMS Edge Function received:', requestBody)
+
+    const { profesionalId, telefono, tipoNotificacion, mensaje } = requestBody
+
+    // Validate required parameters
+    if (!profesionalId) {
+      throw new Error('Missing required parameter: profesionalId')
+    }
+    if (!telefono) {
+      throw new Error('Missing required parameter: telefono')
+    }
+    if (!tipoNotificacion) {
+      throw new Error('Missing required parameter: tipoNotificacion')
+    }
+    if (!mensaje) {
+      throw new Error('Missing required parameter: mensaje')
+    }
 
     const TWILIO_ACCOUNT_SID = Deno.env.get('TWILIO_ACCOUNT_SID')
     const TWILIO_AUTH_TOKEN = Deno.env.get('TWILIO_AUTH_TOKEN')
@@ -21,6 +37,8 @@ serve(async (req) => {
     if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_PHONE_NUMBER) {
       throw new Error('Twilio credentials not configured')
     }
+
+    console.log(`Sending SMS to ${telefono} with message: ${mensaje.substring(0, 50)}...`)
 
     // Enviar SMS usando Twilio
     const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`, {
