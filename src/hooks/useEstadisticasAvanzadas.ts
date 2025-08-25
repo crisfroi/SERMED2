@@ -176,7 +176,8 @@ export function useEstadisticasAvanzadas() {
         }
 
         if (error) {
-          logError("Error fetching estadísticas avanzadas", error);
+          console.error("Error fetching estadísticas avanzadas:", getErrorMessage(error));
+          console.error("Error fetching estadísticas avanzadas (full object):", error);
           const errorMessage = getErrorMessage(error);
 
           // If it's a fetch error, enable offline mode automatically
