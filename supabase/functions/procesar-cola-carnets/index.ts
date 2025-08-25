@@ -65,18 +65,18 @@ serve(async (req) => {
       .eq('id', queueItem.id);
 
     try {
-      // Llamar a la función de generación de carnet
-      const carnetResponse = await fetch(
-        `${Deno.env.get('SUPABASE_URL')}/functions/v1/generar-carnet-profesional?id=${queueItem.profesional_id}`,
-        {
-          headers: {
-            'Authorization': req.headers.get('Authorization') || '',
-            'apikey': req.headers.get('apikey') || ''
-          }
+      // Llamar a la función de generación de carnet usando supabase functions invoke
+      const { data: carnetResult, error: carnetError } = await supabaseAdmin.functions.invoke('generar-carnet-profesional', {
+        body: {},
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
         }
-      );
+      });
 
-      const carnetResult = await carnetResponse.json();
+      if (carnetError) {
+        throw new Error(`Error calling generar-carnet-profesional: ${carnetError.message}`);
+      }
 
       if (carnetResponse.ok && carnetResult.success) {
         // Marcar como completado
