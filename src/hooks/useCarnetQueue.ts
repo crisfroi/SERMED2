@@ -44,7 +44,7 @@ export const useCarnetQueue = () => {
         .order('created_at', { ascending: true });
 
       if (error) {
-        console.error('Error fetching professionals without carnet:', error);
+        console.error('Error fetching professionals without carnet:', getErrorMessage(error));
         throw new Error(getErrorMessage(error));
       }
 
