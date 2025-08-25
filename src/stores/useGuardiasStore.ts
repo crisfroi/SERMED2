@@ -2495,7 +2495,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
               .order('created_at', { ascending: false });
 
             if (error) {
-              console.error('❌ Supabase error in fetchPagos:', error);
+              console.error('❌ Supabase error in fetchPagos:', formatSupabaseError(error));
               throw error;
             }
 
