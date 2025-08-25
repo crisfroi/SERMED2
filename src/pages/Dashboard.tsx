@@ -69,6 +69,7 @@ import { FuncionariosStatsWidget } from "@/components/dashboard/FuncionariosStat
 import ResizeObserverTestIndicator from "@/components/dashboard/ResizeObserverTestIndicator";
 
 import type { Tables } from "@/integrations/supabase/types";
+import { sendSMSWithFallback, validateSMSParams, normalizePhoneNumber } from "@/utils/smsService";
 
 type Profesional = Tables<"profesionales_sanitarios">;
 
