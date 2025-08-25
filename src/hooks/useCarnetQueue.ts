@@ -125,6 +125,7 @@ export const useCarnetQueue = () => {
 
   // Mutación para procesar la cola usando la edge function
   const processQueueMutation = useMutation({
+    retry: false, // Disable retries to prevent "body stream already read" errors
     mutationFn: async (): Promise<QueueProcessResult> => {
       console.log('Procesando cola de carnets...');
 
