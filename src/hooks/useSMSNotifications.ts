@@ -59,74 +59,40 @@ export function useSendSMSNotification() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      profesionalId,
-      telefono,
-      tipoNotificacion,
-      mensaje
-    }: {
-      profesionalId: string;
-      telefono: string;
-      tipoNotificacion: string;
-      mensaje: string;
-    }) => {
-      console.log('SMS Hook: Sending SMS with params:', {
+    mutationFn: async (params: SMSParams) => {
+      const { profesionalId, telefono, tipoNotificacion, mensaje } = params;
+
+      // Validate parameters first
+      const validationError = validateSMSParams(params);
+      if (validationError) {
+        throw new Error(validationError);
+      }
+
+      // Normalize phone number
+      const normalizedTelefono = normalizePhoneNumber(telefono);
+
+      console.log('SMS Hook: Sending SMS with validated params:', {
         profesionalId,
-        telefono,
+        telefono: normalizedTelefono,
         tipoNotificacion,
         mensajeLength: mensaje.length
       });
 
-      try {
-        const { data, error } = await supabase.functions.invoke('send-sms-notification', {
-          body: {
-            profesionalId,
-            telefono,
-            tipoNotificacion,
-            mensaje
-          }
-        });
+      // Use the robust SMS service with fallback
+      const result = await sendSMSWithFallback({
+        ...params,
+        telefono: normalizedTelefono
+      });
 
-        if (error) {
-          console.error('SMS Hook: Edge Function error:', error);
-
-          // Create a more descriptive error
-          let errorMessage = error.message || 'Error desconocido al enviar SMS';
-
-          if (error.message?.includes('non-2xx status code')) {
-            errorMessage = 'El servicio de SMS está experimentando problemas técnicos. Por favor, inténtelo más tarde.';
-          } else if (error.message?.includes('credentials')) {
-            errorMessage = 'El servicio de SMS no está configurado correctamente.';
-          } else if (error.message?.includes('Missing required parameter')) {
-            errorMessage = 'Faltan parámetros requeridos para enviar el SMS.';
-          }
-
-          throw new Error(errorMessage);
-        }
-
-        if (data && !data.success) {
-          throw new Error(data.error || 'El SMS no se pudo enviar correctamente');
-        }
-
-        console.log('SMS Hook: Success:', data);
-        return data;
-
-      } catch (error: any) {
-        // Log failed attempt to database
-        try {
-          await supabase.from('notificaciones_sms').insert({
-            profesional_id: profesionalId,
-            telefono: telefono,
-            tipo_notificacion: tipoNotificacion,
-            estado: 'error_hook',
-            mensaje_sid: null
-          });
-        } catch (logError) {
-          console.warn('SMS Hook: Could not log failed attempt:', logError);
-        }
-
-        throw error;
+      if (!result.success) {
+        throw new Error(result.error || 'Error desconocido al enviar SMS');
       }
+
+      if (result.fallback) {
+        console.log('SMS Hook: Used fallback mode (simulation)');
+      }
+
+      return result;
     },
     onSuccess: (data) => {
       console.log('SMS Hook: Mutation successful, invalidating queries');
