@@ -16,7 +16,7 @@ serve(async (req) => {
   }
 
   try {
-    if (req.method !== 'GET') {
+    if (req.method !== 'POST') {
       return new Response('Método no permitido', {
         status: 405,
         headers: corsHeaders
