@@ -114,7 +114,7 @@ export const useCarnetQueue = () => {
       queryClient.invalidateQueries({ queryKey: ['professionals-without-carnet'] });
     },
     onError: (error) => {
-      console.error('Error adding to queue:', error);
+      console.error('Error adding to queue:', getErrorMessage(error));
       toast({
         title: "Error",
         description: getErrorMessage(error),
@@ -165,7 +165,7 @@ export const useCarnetQueue = () => {
         return result;
 
       } catch (error) {
-        console.error('Error procesando cola:', error);
+        console.error('Error procesando cola:', getErrorMessage(error));
         throw new Error(getErrorMessage(error));
       }
     },
@@ -188,7 +188,7 @@ export const useCarnetQueue = () => {
       queryClient.invalidateQueries({ queryKey: ['profesionales'] });
     },
     onError: (error) => {
-      console.error('Error in queue processing:', error);
+      console.error('Error in queue processing:', getErrorMessage(error));
       toast({
         title: "Error en Procesamiento",
         description: getErrorMessage(error),
@@ -211,7 +211,7 @@ export const useCarnetQueue = () => {
         }
       }
     } catch (error) {
-      console.error('Error in batch queue processing:', error);
+      console.error('Error in batch queue processing:', getErrorMessage(error));
     } finally {
       setIsProcessingQueue(false);
     }
@@ -240,7 +240,7 @@ export const useCarnetQueue = () => {
       }, 3000);
       
     } catch (error) {
-      console.error('Error in automated carnet generation:', error);
+      console.error('Error in automated carnet generation:', getErrorMessage(error));
     }
   };
 
