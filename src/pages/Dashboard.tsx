@@ -327,6 +327,13 @@ const Dashboard = () => {
     }
 
     try {
+      console.log('Attempting to send SMS with payload:', {
+        telefono,
+        mensaje: messageBody.substring(0, 50) + '...',
+        profesionalId,
+        tipoNotificacion
+      });
+
       const { data, error } = await supabase.functions.invoke(
         "send-sms-notification",
         {
@@ -341,17 +348,45 @@ const Dashboard = () => {
 
       if (error) {
         console.error("Error al invocar Edge Function para SMS:", error);
+
+        // Provide user-friendly error messages
+        let userMessage = `No se pudo enviar el SMS a ${nombreCompleto}.`;
+
+        if (error.message?.includes('credentials') || error.message?.includes('not configured')) {
+          userMessage += " El servicio de SMS no está configurado correctamente.";
+        } else if (error.message?.includes('Missing required parameter')) {
+          userMessage += " Error en los parámetros del mensaje.";
+        } else if (error.message?.includes('non-2xx status code')) {
+          userMessage += " El servicio de SMS está experimentando problemas técnicos.";
+        } else {
+          userMessage += ` Error: ${error.message}`;
+        }
+
         toast({
           title: "Error al Enviar SMS",
-          description: `No se pudo enviar el SMS a ${nombreCompleto}. Detalles: ${error.message}`,
+          description: userMessage,
           variant: "destructive",
         });
+
+        // Log failed attempt to database
+        try {
+          await supabase.from('notificaciones_sms').insert({
+            profesional_id: profesionalId,
+            telefono: telefono,
+            tipo_notificacion: tipoNotificacion,
+            estado: 'error',
+            mensaje_sid: null
+          });
+        } catch (logError) {
+          console.warn('Could not log failed SMS attempt:', logError);
+        }
+
       } else {
         console.log("Respuesta de Edge Function para SMS:", data);
         if (data && data.success) {
           toast({
             title: "SMS Enviado Exitosamente",
-            description: `Se ha enviado un SMS a ${nombreCompleto}.`,
+            description: `Se ha enviado un SMS a ${nombreCompleto} (${telefono}).`,
           });
         } else {
           toast({
@@ -363,9 +398,15 @@ const Dashboard = () => {
       }
     } catch (apiError: any) {
       console.error("Error general al enviar SMS:", apiError);
+
+      let errorMessage = "No se pudo conectar con el servicio de SMS.";
+      if (apiError.message?.includes('fetch') || apiError.message?.includes('network')) {
+        errorMessage = "Error de conexión. Verifique su conexión a internet e intente nuevamente.";
+      }
+
       toast({
         title: "Error de Conexión",
-        description: `No se pudo conectar con el servicio de SMS. ${apiError.message || ""}`,
+        description: errorMessage,
         variant: "destructive",
       });
     }
