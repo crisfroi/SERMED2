@@ -467,7 +467,7 @@ const Dashboard = () => {
             onValueChange={setActiveTab}
             className="space-y-0"
           >
-            <TabsList className="grid w-full grid-cols-5 md:grid-cols-10">
+            <TabsList className="flex w-full flex-wrap justify-start gap-1 h-auto p-1">
               {tabsConfig.map((tab) => {
                 const Icon = tab.icon;
                 return (
