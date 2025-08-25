@@ -147,8 +147,18 @@ export const useCarnetQueue = () => {
           },
         });
 
+        // Clone response for defensive programming (in case of unexpected retries)
+        const responseClone = response.clone();
+
         // Read response body once and handle both success and error cases
-        const responseText = await response.text();
+        let responseText;
+        try {
+          responseText = await response.text();
+        } catch (streamError) {
+          // If the stream was already read, try the clone
+          console.warn('Response stream already read, using clone:', streamError);
+          responseText = await responseClone.text();
+        }
 
         if (!response.ok) {
           console.error('Error response from Edge Function:', {
