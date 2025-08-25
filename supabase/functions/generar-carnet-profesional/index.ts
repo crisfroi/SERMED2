@@ -200,7 +200,7 @@ serve(async (req) => {
 
     console.log(`Guardando carnet en: ${rutaCarnet}`);
 
-    const { error: errorGuardar } = await supabaseAdmin.storage
+    const { data: uploadResult, error: errorGuardar } = await supabaseAdmin.storage
       .from('carnets')
       .upload(rutaCarnet, new Blob([carnetSVG], { type: 'image/svg+xml' }), {
         contentType: 'image/svg+xml',
@@ -208,9 +208,15 @@ serve(async (req) => {
       });
 
     if (errorGuardar) {
-      console.error('Error al guardar el carnet generado:', errorGuardar);
+      console.error('Error al guardar el carnet generado:', {
+        error: errorGuardar,
+        ruta: rutaCarnet,
+        profesional_id: idProfesional
+      });
       return new Response(JSON.stringify({
         error: 'Error al guardar el carnet generado',
+        ruta_archivo: rutaCarnet,
+        profesional_id: idProfesional,
         details: errorGuardar.message
       }), {
         status: 500,
@@ -220,6 +226,8 @@ serve(async (req) => {
         }
       });
     }
+
+    console.log('Carnet guardado exitosamente:', uploadResult);
 
     const { data: urlCarnet } = await supabaseAdmin.storage
       .from('carnets')
