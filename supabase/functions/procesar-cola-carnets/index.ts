@@ -30,6 +30,17 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
     );
 
+    // Primero limpiar items que han estado "procesando" por más de 10 minutos
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    await supabaseAdmin
+      .from('cola_generacion_carnets')
+      .update({
+        estado: 'pendiente',
+        updated_at: new Date().toISOString()
+      })
+      .eq('estado', 'procesando')
+      .lt('updated_at', tenMinutesAgo);
+
     // Buscar el primer item pendiente en la cola
     const { data: queueItem, error: queueError } = await supabaseAdmin
       .from('cola_generacion_carnets')
