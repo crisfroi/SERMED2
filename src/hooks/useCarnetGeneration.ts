@@ -55,9 +55,14 @@ export const useCarnetGeneration = () => {
         }
 
         const result = await response.json();
-        
+
         if (!result.success) {
-          throw new Error(result.error || result.details || "Error desconocido en generación de carnet");
+          // Provide detailed error information from the Edge Function response
+          const errorMessage = result.error || result.message || result.details || "Error desconocido en generación de carnet";
+          const details = result.details ? ` - ${result.details}` : '';
+          const profesionalId = result.profesional_id ? ` (ID: ${result.profesional_id})` : '';
+
+          throw new Error(`${errorMessage}${details}${profesionalId}`);
         }
 
         console.log(`Carnet generado exitosamente para profesional ${profesionalId}:`, result);
