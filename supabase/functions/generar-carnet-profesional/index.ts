@@ -141,16 +141,22 @@ serve(async (req) => {
       .download(rutaPlantilla);
 
     if (errorPlantilla || !data) {
-      console.error('Error al obtener plantilla SVG:', errorPlantilla);
-      const { data: plantillaGeneralData, error: errorPlantillaGeneral } = await supabaseAdmin.storage
-        .from('carnets')
-        .download('plantillas-carnets/general.svg');
+      console.error(`Error al obtener plantilla SVG para categoría "${categoria}":`, errorPlantilla);
 
-      if (errorPlantillaGeneral || !plantillaGeneralData) {
+      // Try to use auxiliar.svg as fallback instead of general.svg
+      const { data: plantillaFallbackData, error: errorPlantillaFallback } = await supabaseAdmin.storage
+        .from('carnets')
+        .download('plantillas-carnets/auxiliar.svg');
+
+      if (errorPlantillaFallback || !plantillaFallbackData) {
+        console.error('Error al obtener plantilla fallback (auxiliar.svg):', errorPlantillaFallback);
         return new Response(JSON.stringify({
           error: 'No se encontró ninguna plantilla válida',
-          categoria: categoria,
-          detalles: errorPlantilla?.message
+          categoria_solicitada: categoria,
+          plantilla_original: rutaPlantilla,
+          error_original: errorPlantilla?.message,
+          error_fallback: errorPlantillaFallback?.message,
+          profesional_id: idProfesional
         }), {
           status: 404,
           headers: {
@@ -159,7 +165,8 @@ serve(async (req) => {
           }
         });
       }
-      plantillaData = plantillaGeneralData;
+      console.log(`Usando plantilla fallback (auxiliar.svg) para categoría "${categoria}"`);
+      plantillaData = plantillaFallbackData;
     } else {
       plantillaData = data;
     }
