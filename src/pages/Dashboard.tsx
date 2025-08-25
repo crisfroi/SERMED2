@@ -330,13 +330,12 @@ const Dashboard = () => {
       const { data, error } = await supabase.functions.invoke(
         "send-sms-notification",
         {
-          body: JSON.stringify({
-            to: telefono,
-            body: messageBody,
+          body: {
+            telefono: telefono,
+            mensaje: messageBody,
             profesionalId: profesionalId,
-            notificationType: tipoNotificacion,
-          }),
-          method: "POST",
+            tipoNotificacion: tipoNotificacion,
+          }
         },
       );
 
