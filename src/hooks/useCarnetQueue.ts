@@ -127,42 +127,17 @@ export const useCarnetQueue = () => {
   const processQueueMutation = useMutation({
     mutationFn: async (): Promise<QueueProcessResult> => {
       console.log('Procesando cola de carnets...');
-      
+
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        const headers: Record<string, string> = {
-          "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkaWV5bmVuZGZqYmtiaGZvdnJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3ODI5MjEsImV4cCI6MjA2NjM1ODkyMX0.yFnLHavy8wzVjlg3sAI2mEG-XGDCV5FSr7OQsMefxL8",
-        };
+        const { data, error } = await supabase.functions.invoke('procesar-cola-carnets');
 
-        if (session?.access_token) {
-          headers["Authorization"] = `Bearer ${session.access_token}`;
+        if (error) {
+          console.error('Error procesando cola:', getErrorMessage(error));
+          throw new Error(getErrorMessage(error));
         }
 
-        const response = await fetch(
-          "https://wdieynendfjbkbhfovrx.supabase.co/functions/v1/procesar-cola-carnets",
-          {
-            method: "GET",
-            headers,
-          }
-        );
-
-        const responseText = await response.text();
-
-        if (!response.ok) {
-          throw new Error(`Error ${response.status}: ${responseText}`);
-        }
-
-        let result;
-        try {
-          result = JSON.parse(responseText);
-        } catch (parseError) {
-          throw new Error(`Error parsing response: ${responseText}`);
-        }
-
-        console.log('Resultado del procesamiento:', result);
-
-        return result;
+        console.log('Resultado del procesamiento:', data);
+        return data as QueueProcessResult;
 
       } catch (error) {
         console.error('Error procesando cola:', getErrorMessage(error));
