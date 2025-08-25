@@ -889,7 +889,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
 
             // Validate duration (must be between 12 and 24 hours)
             const durationHours = (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60);
-            console.log('⏱️ Calculated single guardia duration:', durationHours, 'hours');
+            console.log('��️ Calculated single guardia duration:', durationHours, 'hours');
 
             if (durationHours < 12) {
               throw new Error(`La duración de la guardia debe ser de al menos 12 horas. Duración actual: ${durationHours.toFixed(1)} horas`);
@@ -2753,7 +2753,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
               .order('fecha');
 
             if (error) {
-              console.error('❌ Supabase error in fetchDiasFestivos:', error);
+              console.error('❌ Supabase error in fetchDiasFestivos:', formatSupabaseError(error));
               throw error;
             }
 
@@ -2859,7 +2859,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
             const { data, error } = await query;
 
             if (error) {
-              console.error('❌ Supabase error in fetchAjustesBaremos:', error);
+              console.error('❌ Supabase error in fetchAjustesBaremos:', formatSupabaseError(error));
               throw error;
             }
 
@@ -2977,7 +2977,7 @@ export const useGuardiasStore = create<GuardiasStoreState>()(
             const { data, error } = await query.limit(500); // Limitar a 500 registros por rendimiento
 
             if (error) {
-              console.error('❌ Supabase error in fetchBitacora:', error);
+              console.error('❌ Supabase error in fetchBitacora:', formatSupabaseError(error));
               throw error;
             }
 
