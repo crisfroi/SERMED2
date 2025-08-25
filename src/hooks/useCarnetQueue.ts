@@ -146,17 +146,27 @@ export const useCarnetQueue = () => {
           },
         });
 
+        // Read response body once and handle both success and error cases
+        const responseText = await response.text();
+
         if (!response.ok) {
-          const errorText = await response.text();
           console.error('Error response from Edge Function:', {
             status: response.status,
             statusText: response.statusText,
-            body: errorText
+            body: responseText
           });
-          throw new Error(`Edge Function error (${response.status}): ${errorText}`);
+          throw new Error(`Edge Function error (${response.status}): ${responseText}`);
         }
 
-        const data = await response.json();
+        // Parse the successful response as JSON
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('Error parsing response JSON:', parseError);
+          throw new Error(`Invalid JSON response from Edge Function: ${responseText}`);
+        }
+
         console.log('Resultado del procesamiento:', data);
         return data as QueueProcessResult;
 
