@@ -137,11 +137,11 @@ export const useCarnetQueue = () => {
         }
 
         // Make direct HTTP request to the Edge Function
-        const response = await fetch(`${supabase.supabaseUrl}/functions/v1/procesar-cola-carnets`, {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/procesar-cola-carnets`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${session.session.access_token}`,
-            'apikey': supabase.supabaseKey,
+            'apikey': SUPABASE_PUBLISHABLE_KEY,
             'Content-Type': 'application/json',
           },
         });
