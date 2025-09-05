@@ -83,9 +83,15 @@ export interface NavigationFilters {
   institucion?: string;
 }
 
+import { useAuth } from "@/contexts/AuthContext";
+import { useContextFilters } from "./useContextFilters";
+
 export function useProfesionales(filtros: Filtros = {}) {
+  const { userRole } = useAuth();
+  const { restrictToCenter, centerName } = useContextFilters();
+
   return useQuery({
-    queryKey: ["profesionales", filtros],
+    queryKey: ["profesionales", filtros, restrictToCenter ? centerName : null],
     queryFn: async () => {
       console.log("Fetching profesionales with filters:", filtros);
 
@@ -93,6 +99,11 @@ export function useProfesionales(filtros: Filtros = {}) {
         .from("profesionales_sanitarios")
         .select("*")
         .order("created_at", { ascending: false });
+
+      // Restricción por centro si aplica
+      if (restrictToCenter && centerName) {
+        query = query.eq('nombre_centro', centerName);
+      }
 
       // Aplicar filtros existentes
       if (filtros.area_profesional && filtros.area_profesional !== "todos") {
