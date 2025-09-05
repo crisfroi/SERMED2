@@ -37,6 +37,9 @@ import {
   Plus
 } from 'lucide-react';
 import { UserRole } from '@/types/roles';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface TrasladosProfesionalesPanelProps {
   userRole: UserRole;
