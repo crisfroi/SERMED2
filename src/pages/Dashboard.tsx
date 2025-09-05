@@ -487,7 +487,10 @@ const Dashboard = () => {
     ...(userRole && canAccessTab("health-centers") ? [{ id: "health-centers", label: "Centros", icon: MapPin }] : []),
     ...(userRole && hasPermission("manage_users") ? [{ id: "users", label: "Usuarios", icon: UserCog }] : []),
     ...(userRole && hasPermission("system_configuration") ? [{ id: "admin", label: "Admin", icon: Settings }] : []),
-  ].filter(tab => userRole ? canAccessTab(tab.id) : tab.id === "overview" || tab.id === "professionals");
+  ].filter(tab => {
+    const roleAllows = userRole ? canAccessTab(tab.id) : (tab.id === "overview" || tab.id === "professionals");
+    return canViewTab(tab.id, roleAllows);
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
