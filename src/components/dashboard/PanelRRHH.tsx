@@ -319,6 +319,13 @@ const PanelRRHH: React.FC<PanelRRHHProps> = ({ userRole }) => {
                   </Card>
                 ))}
               </div>
+
+              {/* Gestor granular de permisos por pestaña */}
+              <div className="mt-6">
+                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                {/* @ts-ignore */}
+                <SelectorPermisosPestanas />
+              </div>
             </TabsContent>
 
             <TabsContent value="centros" className="space-y-4">
