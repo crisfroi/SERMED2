@@ -111,7 +111,6 @@ const Dashboard = () => {
 
   const userName = user?.full_name || user?.email?.split('@')[0] || "Usuario";
   const { canViewTab } = useTabPermissions();
-  useTrasladosNotifications();
 
   const handleSelectProfessional = (professional: Profesional) => {
     console.log(
