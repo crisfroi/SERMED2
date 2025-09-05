@@ -495,6 +495,10 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <OfflineNotification />
+      {/* Subscribe to traslado notifications */}
+      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+      {/* @ts-ignore */}
+      <TrasladosNotificationsSubscriber />
       <div className="sticky top-0 z-50 bg-gray-50 shadow-md">
         <div className="container mx-auto p-4">
           <Tabs
