@@ -40,6 +40,7 @@ import {
   XCircle
 } from 'lucide-react';
 import { UserRole, ROLE_DEFINITIONS } from '@/types/roles';
+import SelectorPermisosPestanas from '@/components/dashboard/SelectorPermisosPestanas';
 
 interface PanelRRHHProps {
   userRole: UserRole;
