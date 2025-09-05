@@ -71,7 +71,7 @@ import { GuardiasStatsWidget } from "@/components/guardias/GuardiasStatsWidget";
 import { FuncionariosStatsWidget } from "@/components/dashboard/FuncionariosStatsWidget";
 import ResizeObserverTestIndicator from "@/components/dashboard/ResizeObserverTestIndicator";
 import { useTabPermissions } from "@/hooks/useTabPermissions";
-import { useTrasladosNotifications } from "@/hooks/useTrasladosNotifications";
+import TrasladosNotificationsSubscriber from "@/components/dashboard/TrasladosNotificationsSubscriber";
 
 import type { Tables } from "@/integrations/supabase/types";
 
