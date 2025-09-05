@@ -70,6 +70,8 @@ import { GuardiasDashboard } from "@/components/guardias/GuardiasDashboard";
 import { GuardiasStatsWidget } from "@/components/guardias/GuardiasStatsWidget";
 import { FuncionariosStatsWidget } from "@/components/dashboard/FuncionariosStatsWidget";
 import ResizeObserverTestIndicator from "@/components/dashboard/ResizeObserverTestIndicator";
+import { useTabPermissions } from "@/hooks/useTabPermissions";
+import { useTrasladosNotifications } from "@/hooks/useTrasladosNotifications";
 
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -424,7 +426,7 @@ const Dashboard = () => {
               Acceso Requerido
             </h1>
             <p className="text-gray-600">
-              Necesitas iniciar sesión para acceder al dashboard.
+              Necesitas iniciar sesi��n para acceder al dashboard.
             </p>
           </div>
           <Button
