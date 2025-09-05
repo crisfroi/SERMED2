@@ -110,6 +110,8 @@ const Dashboard = () => {
   const { currentRole, isAdmin, isRevisor, isMinisterial, isObserver, isCenterDirector } = useRole();
 
   const userName = user?.full_name || user?.email?.split('@')[0] || "Usuario";
+  const { canViewTab } = useTabPermissions();
+  useTrasladosNotifications();
 
   const handleSelectProfessional = (professional: Profesional) => {
     console.log(
@@ -426,7 +428,7 @@ const Dashboard = () => {
               Acceso Requerido
             </h1>
             <p className="text-gray-600">
-              Necesitas iniciar sesi��n para acceder al dashboard.
+              Necesitas iniciar sesión para acceder al dashboard.
             </p>
           </div>
           <Button
