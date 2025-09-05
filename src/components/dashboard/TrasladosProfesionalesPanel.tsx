@@ -115,27 +115,55 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
     { id: 'clin-1', nombre: 'Clínica Especializada', distrito: 'Ebebiyín' }
   ];
 
-  const handleCreateSolicitud = () => {
-    console.log('Creating traslado solicitud:', newTraslado);
-    // Aquí iría la lógica para crear la solicitud
-    setIsCreateOpen(false);
-    setNewTraslado({
-      profesionalIds: [],
-      centroDestino: '',
-      motivo: '',
-      observaciones: ''
-    });
-    setSelectedProfesionals([]);
+  const { toast } = useToast();
+  const { user } = useAuth();
+
+  const handleCreateSolicitud = async () => {
+    try {
+      if (!user?.id) return;
+      if (!newTraslado.centroDestino || !newTraslado.motivo || selectedProfesionals.length === 0) return;
+      const rows = selectedProfesionals.map((profId) => ({
+        profesional_id: profId,
+        centro_destino_id: newTraslado.centroDestino,
+        motivo: newTraslado.motivo,
+        observaciones: newTraslado.observaciones || null,
+        solicitante_id: user.id
+      }));
+      const { error } = await supabase.from('solicitudes_traslado').insert(rows);
+      if (error) throw error;
+      toast({ title: 'Solicitud enviada', description: 'Se envió la solicitud de traslado.' });
+      setIsCreateOpen(false);
+      setNewTraslado({ profesionalIds: [], centroDestino: '', motivo: '', observaciones: '' });
+      setSelectedProfesionals([]);
+    } catch (e: any) {
+      toast({ title: 'Error', description: e.message, variant: 'destructive' });
+    }
   };
 
-  const handleApproveTraslado = (solicitudId: string) => {
-    console.log('Approving traslado:', solicitudId);
-    // Aquí iría la lógica para aprobar el traslado
+  const handleApproveTraslado = async (solicitudId: string) => {
+    try {
+      const { error } = await supabase
+        .from('solicitudes_traslado')
+        .update({ estado: 'aprobado', fecha_aprobacion: new Date().toISOString(), aprobado_por: user?.id || null })
+        .eq('id', solicitudId);
+      if (error) throw error;
+      toast({ title: 'Traslado aprobado', description: 'La solicitud ha sido aprobada.' });
+    } catch (e: any) {
+      toast({ title: 'Error', description: e.message, variant: 'destructive' });
+    }
   };
 
-  const handleRejectTraslado = (solicitudId: string) => {
-    console.log('Rejecting traslado:', solicitudId);
-    // Aquí iría la lógica para rechazar el traslado
+  const handleRejectTraslado = async (solicitudId: string) => {
+    try {
+      const { error } = await supabase
+        .from('solicitudes_traslado')
+        .update({ estado: 'rechazado', fecha_aprobacion: new Date().toISOString(), aprobado_por: user?.id || null })
+        .eq('id', solicitudId);
+      if (error) throw error;
+      toast({ title: 'Traslado rechazado', description: 'La solicitud ha sido rechazada.' });
+    } catch (e: any) {
+      toast({ title: 'Error', description: e.message, variant: 'destructive' });
+    }
   };
 
   const getStatusBadge = (estado: string) => {
