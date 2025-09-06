@@ -149,7 +149,7 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
       setNewTraslado({ centroDestinoId: '', motivo: '', observaciones: '' });
       setSelectedProfessionals([]);
       setProfessionalQuery('');
-      setProfessionalCenterFilterId('');
+      setProfessionalCenterFilterId('all');
     }
   };
 
