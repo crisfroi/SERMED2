@@ -25,6 +25,23 @@ console.log('✅ Supabase client initialized with:', {
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
+const nativeFetch = typeof window !== 'undefined' ? window.fetch.bind(window) : fetch;
+
+async function safeFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const res = await nativeFetch(input, { ...(init || {}), signal: controller.signal });
+    clearTimeout(timeout);
+    return res;
+  } catch (e: any) {
+    clearTimeout(timeout);
+    console.warn('🌐 Supabase fetch network error (converted to 503):', e?.message || e);
+    const body = JSON.stringify({ error: 'network_error', message: 'Network unavailable', details: e?.message || String(e) });
+    return new Response(body, { status: 503, headers: { 'Content-Type': 'application/json' } });
+  }
+}
+
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
     autoRefreshToken: true,
@@ -35,6 +52,7 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     flowType: 'pkce',
   },
   global: {
+    fetch: safeFetch,
     headers: {
       'X-Client-Info': 'guinea-salud-dashboard',
     },
