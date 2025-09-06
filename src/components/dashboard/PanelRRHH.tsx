@@ -43,6 +43,7 @@ import { UserRole, ROLE_DEFINITIONS } from '@/types/roles';
 import { useUserManagement } from '@/hooks/useUserManagement';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBuscarCentros } from '@/hooks/useCentrosSalud';
+import { useAdvancedRoleManagement } from '@/hooks/useAdvancedRoleManagement';
 import type { UserProfile } from '@/types/database';
 
 interface PanelRRHHProps {
@@ -64,6 +65,7 @@ const PanelRRHH: React.FC<PanelRRHHProps> = ({ userRole }) => {
   const { inviteUser, getUserProfiles, updateUserRole, deleteUser, isLoading } = useUserManagement();
   const { user: currentUser } = useAuth();
   const { data: centrosSalud = [] } = useBuscarCentros({});
+  const { traslados, processTrasladoSolicitud, loading: loadingTraslados } = useAdvancedRoleManagement();
   const [usuarios, setUsuarios] = useState<UserProfile[]>([]);
   const [viewUser, setViewUser] = useState<UserProfile | null>(null);
   const [editUser, setEditUser] = useState<UserProfile | null>(null);
@@ -547,12 +549,67 @@ const PanelRRHH: React.FC<PanelRRHHProps> = ({ userRole }) => {
             <TabsContent value="solicitudes" className="space-y-4">
               <h3 className="text-lg font-medium">Solicitudes de Traslado</h3>
               <Card>
-                <CardContent className="p-6">
-                  <div className="text-center text-gray-500">
-                    <FileText className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                    <p>No hay solicitudes de traslado pendientes</p>
-                    <p className="text-sm">Las nuevas solicitudes aparecerán aquí para su revisión</p>
-                  </div>
+                <CardContent className="p-0">
+                  {loadingTraslados ? (
+                    <div className="p-6 text-sm text-gray-500">Cargando solicitudes...</div>
+                  ) : (traslados && traslados.filter((s: any) => s.estado === 'pendiente').length > 0) ? (
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Profesional</TableHead>
+                            <TableHead>Centro Origen</TableHead>
+                            <TableHead>Centro Destino</TableHead>
+                            <TableHead>Motivo</TableHead>
+                            <TableHead>Fecha</TableHead>
+                            <TableHead>Acciones</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {traslados.filter((s: any) => s.estado === 'pendiente').map((s: any) => (
+                            <TableRow key={s.id}>
+                              <TableCell>
+                                <div className="font-medium">{s.profesional?.nombre_completo || 'Profesional'}</div>
+                                <div className="text-xs text-gray-500">{s.profesional?.area_profesional || ''}</div>
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <Building className="w-4 h-4 text-gray-400" />
+                                  {s.centro_origen?.nombre || '—'}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <Building className="w-4 h-4 text-blue-400" />
+                                  {s.centro_destino?.nombre || '—'}
+                                </div>
+                              </TableCell>
+                              <TableCell className="max-w-xs truncate" title={s.motivo}>{s.motivo}</TableCell>
+                              <TableCell>
+                                {new Date(s.fecha_solicitud).toLocaleDateString()}
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <Button size="sm" variant="outline" className="text-green-600 border-green-200 hover:bg-green-50" onClick={() => processTrasladoSolicitud(s.id, 'aprobado')}>
+                                    <CheckCircle className="w-4 h-4" />
+                                  </Button>
+                                  <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50" onClick={() => processTrasladoSolicitud(s.id, 'rechazado')}>
+                                    <XCircle className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  ) : (
+                    <div className="p-6 text-center text-gray-500">
+                      <FileText className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                      <p>No hay solicitudes de traslado pendientes</p>
+                      <p className="text-sm">Las nuevas solicitudes aparecerán aquí para su revisión</p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
