@@ -910,6 +910,47 @@ const MinisterialPanel = () => {
             </Card>
           </div>
         </TabsContent>
+
+        <TabsContent value="statistics">
+          <div className="mt-6 p-4 border rounded-md bg-white">
+            <h3 className="font-semibold mb-2">Establecimientos Pendientes de Firma</h3>
+            {loadingFacilities ? (
+              <div className="text-sm text-gray-500">Cargando...</div>
+            ) : facilityRequests.length === 0 ? (
+              <div className="text-sm text-gray-500">No hay solicitudes de establecimientos pendientes de firma.</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm">
+                  <thead>
+                    <tr className="text-left border-b">
+                      <th className="py-2 px-2">Número</th>
+                      <th className="py-2 px-2">Nombre</th>
+                      <th className="py-2 px-2">Ubicación</th>
+                      <th className="py-2 px-2">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {facilityRequests.map((r: any) => (
+                      <tr key={r.id} className="border-b">
+                        <td className="py-2 px-2 font-mono">{r.numero_solicitud || '—'}</td>
+                        <td className="py-2 px-2">{r.nombre_establecimiento}</td>
+                        <td className="py-2 px-2">{r.distrito}, {r.provincia}</td>
+                        <td className="py-2 px-2">
+                          <button
+                            className="px-3 py-1 text-green-700 border border-green-200 rounded"
+                            onClick={() => aprobarEstablecimiento.mutate({ solicitud: r, aprobadorId: '' })}
+                          >
+                            Aprobar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </TabsContent>
       </Tabs>
 
       {/* Review Dialog - Enhanced Professional Detail */}
