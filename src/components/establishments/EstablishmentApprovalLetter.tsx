@@ -126,10 +126,18 @@ export default function EstablishmentApprovalLetter({ solicitud }: Props) {
               </div>
             </div>
 
-            <div className="mt-8 text-xs text-gray-600 text-center border-t pt-4">
-              <p>Ministerio de Sanidad y Bienestar Social - República de Guinea Ecuatorial</p>
-              <p>Registro Nacional de Centros de Salud</p>
-              <p>Generado el {today}</p>
+            <div className="mt-8 grid grid-cols-3 gap-4 items-end">
+              <div className="col-span-2 text-xs text-gray-600 border-t pt-4 text-center">
+                <p>Ministerio de Sanidad y Bienestar Social - República de Guinea Ecuatorial</p>
+                <p>Registro Nacional de Centros de Salud</p>
+                <p>Generado el {today}</p>
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                {qrDataUrl && (
+                  <img src={qrDataUrl} alt="QR Verificación" className="w-24 h-24" />
+                )}
+                <span className="text-[10px] text-gray-500 mt-1">Verificación</span>
+              </div>
             </div>
           </div>
         </CardContent>
