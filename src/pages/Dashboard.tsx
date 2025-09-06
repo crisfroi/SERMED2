@@ -778,6 +778,10 @@ const Dashboard = () => {
           <TabsContent value="traslados" className="space-y-6">
             <TrasladosProfesionalesPanel userRole={userRole} />
           </TabsContent>
+
+          <TabsContent value="facility-requests" className="space-y-6">
+            <FacilityRequestsPanel />
+          </TabsContent>
         </Tabs>
       </div>
 
