@@ -57,6 +57,7 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
     motivo: '',
     observaciones: ''
   });
+  const [viewFilter, setViewFilter] = useState<'pendientes' | 'historial'>('pendientes');
 
   // Filtros UI
   const [centerFilterId, setCenterFilterId] = useState<string>('all');
@@ -106,13 +107,16 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
     return (approvedFuncionarios || []) as Profesional[];
   }, [approvedFuncionarios, professionalsFromCenterFiltered, professionalCenterFilterId]);
 
-  // Filtrar solicitudes por centro (origen o destino)
+  // Filtrar solicitudes por centro (origen o destino) y estado (pendientes/historial)
   const filteredTraslados = useMemo(() => {
-    if (!centerFilterId || centerFilterId === 'all') return traslados || [];
-    return (traslados || []).filter((t: any) =>
-      t.centro_origen_id === centerFilterId || t.centro_destino_id === centerFilterId
-    );
-  }, [traslados, centerFilterId]);
+    let base = (traslados || []) as any[];
+    if (centerFilterId && centerFilterId !== 'all') {
+      base = base.filter((t) => t.centro_origen_id === centerFilterId || t.centro_destino_id === centerFilterId);
+    }
+    if (viewFilter === 'pendientes') base = base.filter((t) => t.estado === 'pendiente');
+    else base = base.filter((t) => t.estado !== 'pendiente');
+    return base;
+  }, [traslados, centerFilterId, viewFilter]);
 
   const pendingCount = useMemo(() => (filteredTraslados || []).filter((s: any) => s.estado === 'pendiente').length, [filteredTraslados]);
 
@@ -188,6 +192,11 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
             </CardTitle>
             <div className="flex items-center gap-2">
               <Badge variant="outline">{pendingCount} pendientes</Badge>
+
+              <div className="flex rounded-md border overflow-hidden">
+                <Button variant={viewFilter === 'pendientes' ? 'default' : 'ghost'} size="sm" onClick={() => setViewFilter('pendientes')}>Pendientes</Button>
+                <Button variant={viewFilter === 'historial' ? 'default' : 'ghost'} size="sm" onClick={() => setViewFilter('historial')}>Historial</Button>
+              </div>
 
               {/* Filtro por centro para la lista */}
               <Select value={centerFilterId} onValueChange={setCenterFilterId}>
