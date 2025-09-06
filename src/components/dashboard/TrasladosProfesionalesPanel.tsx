@@ -192,7 +192,7 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
               Traslados de Profesionales
             </CardTitle>
             <div className="flex items-center gap-2">
-              <Badge variant="outline">{pendingCount} pendientes</Badge>
+              <Badge variant="outline">{viewFilter === 'pendientes' ? `${pendingCount} pendientes` : `${transferredCount} trasladados`}</Badge>
 
               <div className="flex rounded-md border overflow-hidden">
                 <Button variant={viewFilter === 'pendientes' ? 'default' : 'ghost'} size="sm" onClick={() => setViewFilter('pendientes')}>Pendientes</Button>
