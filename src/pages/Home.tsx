@@ -184,6 +184,27 @@ const Home = () => {
               </Link>
             </CardContent>
           </Card>
+
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <FileText className="w-12 h-12 text-orange-600 mb-4" />
+              <CardTitle>Alta de Establecimiento</CardTitle>
+              <CardDescription>
+                Solicita alta o renovación de un centro sanitario
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">
+                Registra la información del establecimiento, adjunta fotos y envía para revisión.
+              </p>
+              <Link to="/establecimiento/solicitud">
+                <Button variant="outline" className="w-full">
+                  Solicitar Alta
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
         </div>
 
         {/* CTA Section */}
