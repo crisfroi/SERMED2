@@ -118,7 +118,8 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
     return base;
   }, [traslados, centerFilterId, viewFilter]);
 
-  const pendingCount = useMemo(() => (filteredTraslados || []).filter((s: any) => s.estado === 'pendiente').length, [filteredTraslados]);
+  const pendingCount = useMemo(() => (traslados || []).filter((s: any) => s.estado === 'pendiente').length, [traslados]);
+  const transferredCount = useMemo(() => (traslados || []).filter((s: any) => s.estado === 'aprobado').length, [traslados]);
 
   const canCreateTraslado = hasCreateTrasladosPermission();
   const canApproveTraslado = hasApproveTrasladosPermission();
