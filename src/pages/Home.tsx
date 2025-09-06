@@ -41,6 +41,11 @@ const Home = () => {
                   Verificar Profesional
                 </Button>
               </Link>
+              <Link to="/establecimiento/solicitud">
+                <Button variant="outline">
+                  Solicitar Alta Establecimiento
+                </Button>
+              </Link>
               <Link to="/auth">
                 <Button variant="outline">Panel de Control</Button>
               </Link>
