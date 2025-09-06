@@ -62,6 +62,8 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useSolicitudesEstablecimientos, useAprobarEstablecimiento } from "@/hooks/useEstablecimientosSolicitudes";
+import EstablishmentApprovalLetter from "@/components/establishments/EstablishmentApprovalLetter";
+import { useAuth } from "@/contexts/AuthContext";
 import * as XLSX from 'xlsx';
 
 // Import the new hooks
@@ -103,6 +105,9 @@ const MinisterialPanel = () => {
 
   const { data: facilityRequests = [], isLoading: loadingFacilities, refetch: refetchFacilities } = useSolicitudesEstablecimientos('Pendiente de Firma');
   const aprobarEstablecimiento = useAprobarEstablecimiento();
+  const { user } = useAuth();
+  const [selectedFacility, setSelectedFacility] = useState<any | null>(null);
+  const [isFacilityDialogOpen, setIsFacilityDialogOpen] = useState(false);
 
   // UI state
   const [selectedProfessional, setSelectedProfessional] =
@@ -936,12 +941,20 @@ const MinisterialPanel = () => {
                         <td className="py-2 px-2">{r.nombre_establecimiento}</td>
                         <td className="py-2 px-2">{r.distrito}, {r.provincia}</td>
                         <td className="py-2 px-2">
-                          <button
-                            className="px-3 py-1 text-green-700 border border-green-200 rounded"
-                            onClick={() => aprobarEstablecimiento.mutate({ solicitud: r, aprobadorId: '' })}
-                          >
-                            Aprobar
-                          </button>
+                          <div className="flex items-center gap-2">
+                            <button
+                              className="px-3 py-1 border rounded"
+                              onClick={() => { setSelectedFacility(r); setIsFacilityDialogOpen(true); }}
+                            >
+                              Carta
+                            </button>
+                            <button
+                              className="px-3 py-1 text-green-700 border border-green-200 rounded"
+                              onClick={() => aprobarEstablecimiento.mutate({ solicitud: r, aprobadorId: user?.id || '' })}
+                            >
+                              Aprobar
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -952,6 +965,19 @@ const MinisterialPanel = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      <Dialog open={isFacilityDialogOpen} onOpenChange={setIsFacilityDialogOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Resolución de Aprobación de Establecimiento</DialogTitle>
+          </DialogHeader>
+          {selectedFacility && (
+            <div className="space-y-4">
+              <EstablishmentApprovalLetter solicitud={selectedFacility} />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Review Dialog - Enhanced Professional Detail */}
       <Dialog
