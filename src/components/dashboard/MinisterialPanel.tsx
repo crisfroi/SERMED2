@@ -101,6 +101,9 @@ const MinisterialPanel = () => {
   const signMultipleMutation = useSignMultipleProfessionals();
   const rejectProfessionalMutation = useRejectProfessional();
 
+  const { data: facilityRequests = [], isLoading: loadingFacilities, refetch: refetchFacilities } = useSolicitudesEstablecimientos('Pendiente de Firma');
+  const aprobarEstablecimiento = useAprobarEstablecimiento();
+
   // UI state
   const [selectedProfessional, setSelectedProfessional] =
     useState<PendingSignature | null>(null);
