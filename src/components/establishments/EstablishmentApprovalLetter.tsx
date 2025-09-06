@@ -25,6 +25,24 @@ export default function EstablishmentApprovalLetter({ solicitud }: Props) {
     day: "numeric",
   });
 
+  const [qrDataUrl, setQrDataUrl] = useState<string>("");
+
+  useEffect(() => {
+    const payload = {
+      tipo: "ResolucionEstablecimiento",
+      numero: solicitud.numero_solicitud || null,
+      nombre: solicitud.nombre_establecimiento,
+      categoria: solicitud.categoria,
+      sector: solicitud.sector,
+      ubicacion: `${solicitud.distrito}, ${solicitud.provincia}`,
+      generado: new Date().toISOString(),
+    };
+    const text = JSON.stringify(payload);
+    QRCode.toDataURL(text, { width: 256, margin: 1, errorCorrectionLevel: 'M' })
+      .then(setQrDataUrl)
+      .catch(() => setQrDataUrl(""));
+  }, [solicitud]);
+
   const downloadPDF = async () => {
     const element = document.getElementById("facility-approval-letter");
     if (!element) return;
