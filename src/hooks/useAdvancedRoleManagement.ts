@@ -177,13 +177,38 @@ export const useAdvancedRoleManagement = () => {
     centro_origen_id?: string;
   }) => {
     try {
+      let origenId = trasladoData.centro_origen_id;
+
+      if (!origenId) {
+        const { data: prof, error: profErr } = await supabase
+          .from('profesionales_sanitarios')
+          .select('centro_salud_id, nombre_centro')
+          .eq('id', trasladoData.profesional_id)
+          .single();
+        if (profErr) throw profErr;
+
+        if (prof?.centro_salud_id) {
+          origenId = prof.centro_salud_id as unknown as string;
+        } else if (prof?.nombre_centro) {
+          const { data: centro, error: cErr } = await supabase
+            .from('centros_salud')
+            .select('id')
+            .eq('nombre', prof.nombre_centro)
+            .single();
+          if (!cErr && centro) origenId = centro.id;
+        }
+      }
+
+      const payload = {
+        ...trasladoData,
+        centro_origen_id: origenId || null,
+        solicitante_id: user?.id,
+        estado: 'pendiente' as const,
+      };
+
       const { data, error } = await supabase
         .from('solicitudes_traslado')
-        .insert([{
-          ...trasladoData,
-          solicitante_id: user?.id,
-          estado: 'pendiente'
-        }])
+        .insert([payload])
         .select()
         .single();
 
