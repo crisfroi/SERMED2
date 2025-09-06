@@ -61,6 +61,7 @@ import {
   X,
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useSolicitudesEstablecimientos, useAprobarEstablecimiento } from "@/hooks/useEstablecimientosSolicitudes";
 import * as XLSX from 'xlsx';
 
 // Import the new hooks
