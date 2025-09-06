@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,113 +26,127 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { 
-  Users, 
+import {
   ArrowRight,
   Building,
   FileText,
   CheckCircle,
   XCircle,
   Clock,
-  Plus
+  Plus,
+  Search,
+  Filter
 } from 'lucide-react';
 import { UserRole } from '@/types/roles';
+import { useAdvancedRoleManagement } from '@/hooks/useAdvancedRoleManagement';
+import { useBuscarCentros, useProfesionalesPorCentro } from '@/hooks/useCentrosSalud';
+import { useProfesionales, type Profesional } from '@/hooks/useProfesionales';
 
 interface TrasladosProfesionalesPanelProps {
   userRole: UserRole;
   centroAsignado?: string;
 }
 
-interface SolicitudTraslado {
-  id: string;
-  profesionalId: string;
-  nombreProfesional: string;
-  areaProfesional: string;
-  centroOrigen: string;
-  centroDestino: string;
-  motivo: string;
-  observaciones?: string;
-  estado: 'pendiente' | 'aprobado' | 'rechazado';
-  fechaSolicitud: string;
-  fechaRespuesta?: string;
-  solicitantePor: string;
-}
-
-const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = ({ 
-  userRole, 
-  centroAsignado 
+const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = ({
+  userRole,
 }) => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [selectedProfesionals, setSelectedProfesionals] = useState<string[]>([]);
+  const [selectedProfessionals, setSelectedProfessionals] = useState<string[]>([]);
   const [newTraslado, setNewTraslado] = useState({
-    profesionalIds: [] as string[],
-    centroDestino: '',
+    centroDestinoId: '',
     motivo: '',
     observaciones: ''
   });
 
-  // Mock data para demostración
-  const solicitudesTraslado: SolicitudTraslado[] = [
-    {
-      id: '1',
-      profesionalId: 'prof-1',
-      nombreProfesional: 'Dr. Juan Pérez',
-      areaProfesional: 'Medicina General',
-      centroOrigen: 'Centro Malabo',
-      centroDestino: 'Hospital Nacional',
-      motivo: 'Necesidad de especialización',
-      estado: 'pendiente',
-      fechaSolicitud: '2024-01-15',
-      solicitantePor: 'Admin Centro Malabo'
-    },
-    {
-      id: '2',
-      profesionalId: 'prof-2',
-      nombreProfesional: 'Dra. María García',
-      areaProfesional: 'Enfermería',
-      centroOrigen: 'Hospital Nacional',
-      centroDestino: 'Clínica Bata',
-      motivo: 'Cobertura de emergencias',
-      estado: 'aprobado',
-      fechaSolicitud: '2024-01-10',
-      fechaRespuesta: '2024-01-12',
-      solicitantePor: 'RRHH Ministerio'
+  // Filtros UI
+  const [centerFilterId, setCenterFilterId] = useState<string>('');
+  const [professionalQuery, setProfessionalQuery] = useState<string>('');
+  const [professionalCenterFilterId, setProfessionalCenterFilterId] = useState<string>('');
+
+  // Hooks de datos reales
+  const {
+    traslados,
+    loading,
+    createTrasladoSolicitud,
+    processTrasladoSolicitud,
+    hasApproveTrasladosPermission,
+    hasCreateTrasladosPermission,
+  } = useAdvancedRoleManagement();
+
+  const { data: centros = [] } = useBuscarCentros({});
+
+  // Profesionales aprobados y de función pública (para búsqueda global)
+  const { data: approvedFuncionarios = [], isLoading: loadingApproved } = useProfesionales({
+    estado_solicitud: 'Aprobado',
+    funcion_publica: true,
+    search: professionalQuery || undefined,
+  });
+
+  // Profesionales por centro (para filtrar por centro en el selector)
+  const { data: professionalsFromCenter = [], isLoading: loadingByCenter } = useProfesionalesPorCentro(
+    professionalCenterFilterId,
+    undefined,
+    'Aprobado'
+  );
+
+  const professionalsFromCenterFiltered: Profesional[] = useMemo(() => {
+    const base = (professionalsFromCenter || []) as Profesional[];
+    const filteredByFuncion = base.filter((p) => (p as any).funcion_publica === true);
+    if (!professionalQuery.trim()) return filteredByFuncion;
+    const q = professionalQuery.trim().toLowerCase();
+    return filteredByFuncion.filter((p) =>
+      (p.nombre_completo || '').toLowerCase().includes(q) ||
+      (p.area_profesional || '').toLowerCase().includes(q) ||
+      (p.id_profesional_unico || '').toLowerCase().includes(q)
+    );
+  }, [professionalsFromCenter, professionalQuery]);
+
+  const availableProfessionals: Profesional[] = useMemo(() => {
+    if (professionalCenterFilterId) return professionalsFromCenterFiltered;
+    return (approvedFuncionarios || []) as Profesional[];
+  }, [approvedFuncionarios, professionalsFromCenterFiltered, professionalCenterFilterId]);
+
+  // Filtrar solicitudes por centro (origen o destino)
+  const filteredTraslados = useMemo(() => {
+    if (!centerFilterId) return traslados || [];
+    return (traslados || []).filter((t: any) =>
+      t.centro_origen_id === centerFilterId || t.centro_destino_id === centerFilterId
+    );
+  }, [traslados, centerFilterId]);
+
+  const pendingCount = useMemo(() => (filteredTraslados || []).filter((s: any) => s.estado === 'pendiente').length, [filteredTraslados]);
+
+  const canCreateTraslado = hasCreateTrasladosPermission();
+  const canApproveTraslado = hasApproveTrasladosPermission();
+
+  const toggleProfessional = (id: string) => {
+    setSelectedProfessionals((prev) =>
+      prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
+    );
+  };
+
+  const handleCreateSolicitud = async () => {
+    if (selectedProfessionals.length === 0 || !newTraslado.centroDestinoId || !newTraslado.motivo.trim()) return;
+
+    const results = await Promise.allSettled(
+      selectedProfessionals.map((profId) =>
+        createTrasladoSolicitud({
+          profesional_id: profId,
+          centro_destino_id: newTraslado.centroDestinoId,
+          motivo: newTraslado.motivo,
+          observaciones: newTraslado.observaciones || undefined,
+        })
+      )
+    );
+
+    const anySuccess = results.some((r) => r.status === 'fulfilled' && (r as PromiseFulfilledResult<any>).value?.success);
+    if (anySuccess) {
+      setIsCreateOpen(false);
+      setNewTraslado({ centroDestinoId: '', motivo: '', observaciones: '' });
+      setSelectedProfessionals([]);
+      setProfessionalQuery('');
+      setProfessionalCenterFilterId('');
     }
-  ];
-
-  const profesionalesDisponibles = [
-    { id: 'prof-1', nombre: 'Dr. Juan Pérez', area: 'Medicina General', centro: 'Centro Malabo' },
-    { id: 'prof-2', nombre: 'Dra. Ana López', area: 'Pediatría', centro: 'Centro Malabo' },
-    { id: 'prof-3', nombre: 'Enf. Carlos Ruiz', area: 'Enfermería', centro: 'Centro Malabo' }
-  ];
-
-  const centrosDestino = [
-    { id: 'hosp-1', nombre: 'Hospital Nacional', distrito: 'Malabo' },
-    { id: 'cent-1', nombre: 'Centro Bata', distrito: 'Bata' },
-    { id: 'clin-1', nombre: 'Clínica Especializada', distrito: 'Ebebiyín' }
-  ];
-
-  const handleCreateSolicitud = () => {
-    console.log('Creating traslado solicitud:', newTraslado);
-    // Aquí iría la lógica para crear la solicitud
-    setIsCreateOpen(false);
-    setNewTraslado({
-      profesionalIds: [],
-      centroDestino: '',
-      motivo: '',
-      observaciones: ''
-    });
-    setSelectedProfesionals([]);
-  };
-
-  const handleApproveTraslado = (solicitudId: string) => {
-    console.log('Approving traslado:', solicitudId);
-    // Aquí iría la lógica para aprobar el traslado
-  };
-
-  const handleRejectTraslado = (solicitudId: string) => {
-    console.log('Rejecting traslado:', solicitudId);
-    // Aquí iría la lógica para rechazar el traslado
   };
 
   const getStatusBadge = (estado: string) => {
@@ -163,26 +177,31 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
     }
   };
 
-  const canCreateTraslado = userRole === 'ADMIN_CENTRO_SANITARIO' || 
-                           userRole === 'RRHH_MINISTERIO' || 
-                           userRole === 'SUPER_ADMINISTRADOR';
-
-  const canApproveTraslado = userRole === 'RRHH_MINISTERIO' || 
-                            userRole === 'SUPER_ADMINISTRADOR';
-
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
             <CardTitle className="flex items-center gap-2">
               <ArrowRight className="w-5 h-5 text-blue-600" />
               Traslados de Profesionales
             </CardTitle>
             <div className="flex items-center gap-2">
-              <Badge variant="outline">
-                {solicitudesTraslado.filter(s => s.estado === 'pendiente').length} pendientes
-              </Badge>
+              <Badge variant="outline">{pendingCount} pendientes</Badge>
+
+              {/* Filtro por centro para la lista */}
+              <Select value={centerFilterId} onValueChange={setCenterFilterId}>
+                <SelectTrigger className="w-[220px]">
+                  <SelectValue placeholder="Filtrar por centro" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Todos los centros</SelectItem>
+                  {centros.map((c: any) => (
+                    <SelectItem key={c.id} value={c.id}>{c.nombre}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
               {canCreateTraslado && (
                 <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
                   <DialogTrigger asChild>
@@ -195,45 +214,70 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
                     <DialogHeader>
                       <DialogTitle>Solicitar Traslado de Profesionales</DialogTitle>
                     </DialogHeader>
+
                     <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">
-                          Seleccionar Profesionales
-                        </label>
-                        <div className="max-h-32 overflow-y-auto border rounded p-2 space-y-2">
-                          {profesionalesDisponibles.map((prof) => (
-                            <label key={prof.id} className="flex items-center space-x-2 text-sm">
+                      {/* Selector y buscador de profesionales */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium block">Seleccionar Profesionales</label>
+                        <div className="flex gap-2">
+                          <div className="relative flex-1">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                            <Input
+                              placeholder="Buscar profesional aprobado (función pública)"
+                              value={professionalQuery}
+                              onChange={(e) => setProfessionalQuery(e.target.value)}
+                              className="pl-9"
+                            />
+                          </div>
+                          <Select value={professionalCenterFilterId} onValueChange={setProfessionalCenterFilterId}>
+                            <SelectTrigger className="w-[240px]">
+                              <SelectValue placeholder="Filtrar por centro actual" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="">Todos los centros</SelectItem>
+                              {centros.map((c: any) => (
+                                <SelectItem key={c.id} value={c.id}>{c.nombre}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="max-h-56 overflow-y-auto border rounded p-2 space-y-2">
+                          {(professionalCenterFilterId ? loadingByCenter : loadingApproved) && (
+                            <div className="text-sm text-gray-500 p-2 flex items-center gap-2"><Filter className="w-4 h-4" />Cargando profesionales...</div>
+                          )}
+                          {(availableProfessionals || []).map((prof) => (
+                            <label key={prof.id} className="flex items-center gap-2 text-sm">
                               <input
                                 type="checkbox"
-                                checked={selectedProfesionals.includes(prof.id)}
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setSelectedProfesionals([...selectedProfesionals, prof.id]);
-                                  } else {
-                                    setSelectedProfesionals(selectedProfesionals.filter(id => id !== prof.id));
-                                  }
-                                }}
+                                checked={selectedProfessionals.includes(prof.id)}
+                                onChange={() => toggleProfessional(prof.id)}
                               />
-                              <span>{prof.nombre} - {prof.area}</span>
+                              <span className="flex-1 truncate">{prof.nombre_completo} • {prof.area_profesional || 'Sin área'}</span>
                             </label>
                           ))}
+                          {(availableProfessionals || []).length === 0 && !loadingApproved && !loadingByCenter && (
+                            <div className="text-sm text-gray-500 p-2">Sin resultados</div>
+                          )}
                         </div>
                         <p className="text-xs text-gray-500 mt-1">
-                          {selectedProfesionals.length} profesionales seleccionados
+                          {selectedProfessionals.length} profesionales seleccionados
                         </p>
                       </div>
 
+                      {/* Centro de destino */}
                       <div>
                         <label className="text-sm font-medium mb-1 block">Centro de Destino</label>
-                        <Select value={newTraslado.centroDestino} onValueChange={(value) => 
-                          setNewTraslado({...newTraslado, centroDestino: value})}>
+                        <Select
+                          value={newTraslado.centroDestinoId}
+                          onValueChange={(value) => setNewTraslado({ ...newTraslado, centroDestinoId: value })}
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Seleccionar centro destino" />
                           </SelectTrigger>
                           <SelectContent>
-                            {centrosDestino.map((centro) => (
+                            {centros.map((centro: any) => (
                               <SelectItem key={centro.id} value={centro.id}>
-                                {centro.nombre} - {centro.distrito}
+                                {centro.nombre}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -244,7 +288,7 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
                         <label className="text-sm font-medium mb-1 block">Motivo del Traslado</label>
                         <Textarea
                           value={newTraslado.motivo}
-                          onChange={(e) => setNewTraslado({...newTraslado, motivo: e.target.value})}
+                          onChange={(e) => setNewTraslado({ ...newTraslado, motivo: e.target.value })}
                           placeholder="Explique el motivo del traslado..."
                           rows={3}
                         />
@@ -254,7 +298,7 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
                         <label className="text-sm font-medium mb-1 block">Observaciones (Opcional)</label>
                         <Textarea
                           value={newTraslado.observaciones}
-                          onChange={(e) => setNewTraslado({...newTraslado, observaciones: e.target.value})}
+                          onChange={(e) => setNewTraslado({ ...newTraslado, observaciones: e.target.value })}
                           placeholder="Observaciones adicionales..."
                           rows={2}
                         />
@@ -264,9 +308,9 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
                         <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
                           Cancelar
                         </Button>
-                        <Button 
+                        <Button
                           onClick={handleCreateSolicitud}
-                          disabled={selectedProfesionals.length === 0 || !newTraslado.centroDestino || !newTraslado.motivo}
+                          disabled={selectedProfessionals.length === 0 || !newTraslado.centroDestinoId || !newTraslado.motivo.trim()}
                         >
                           Enviar Solicitud
                         </Button>
@@ -279,7 +323,7 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
           </div>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -293,40 +337,39 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {solicitudesTraslado.length === 0 ? (
+                {(!filteredTraslados || filteredTraslados.length === 0) ? (
                   <TableRow>
                     <TableCell colSpan={canApproveTraslado ? 7 : 6} className="text-center py-8">
                       <div className="flex flex-col items-center justify-center text-gray-500">
                         <ArrowRight className="w-12 h-12 mb-4 text-gray-400" />
                         <p className="text-lg font-medium">No hay solicitudes de traslado</p>
                         <p className="text-sm">
-                          {canCreateTraslado 
+                          {canCreateTraslado
                             ? 'Crea una nueva solicitud para comenzar'
-                            : 'Las solicitudes aparecerán aquí cuando sean creadas'
-                          }
+                            : 'Las solicitudes aparecerán aquí cuando sean creadas'}
                         </p>
                       </div>
                     </TableCell>
                   </TableRow>
                 ) : (
-                  solicitudesTraslado.map((solicitud) => (
+                  filteredTraslados.map((solicitud: any) => (
                     <TableRow key={solicitud.id}>
                       <TableCell>
                         <div>
-                          <div className="font-medium">{solicitud.nombreProfesional}</div>
-                          <div className="text-sm text-gray-500">{solicitud.areaProfesional}</div>
+                          <div className="font-medium">{solicitud.profesional?.nombre_completo || 'Profesional'}</div>
+                          <div className="text-sm text-gray-500">{solicitud.profesional?.area_profesional || ''}</div>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <Building className="w-4 h-4 text-gray-400" />
-                          {solicitud.centroOrigen}
+                          {solicitud.centro_origen?.nombre || '—'}
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <Building className="w-4 h-4 text-blue-400" />
-                          {solicitud.centroDestino}
+                          {solicitud.centro_destino?.nombre || '—'}
                         </div>
                       </TableCell>
                       <TableCell>
@@ -339,10 +382,10 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
                       </TableCell>
                       <TableCell>
                         <div className="text-sm">
-                          <div>Sol: {new Date(solicitud.fechaSolicitud).toLocaleDateString()}</div>
-                          {solicitud.fechaRespuesta && (
+                          <div>Sol: {new Date(solicitud.fecha_solicitud).toLocaleDateString()}</div>
+                          {solicitud.fecha_aprobacion && (
                             <div className="text-gray-500">
-                              Resp: {new Date(solicitud.fechaRespuesta).toLocaleDateString()}
+                              Resp: {new Date(solicitud.fecha_aprobacion).toLocaleDateString()}
                             </div>
                           )}
                         </div>
@@ -355,7 +398,7 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
                                 size="sm"
                                 variant="outline"
                                 className="text-green-600 border-green-200 hover:bg-green-50"
-                                onClick={() => handleApproveTraslado(solicitud.id)}
+                                onClick={() => processTrasladoSolicitud(solicitud.id, 'aprobado')}
                               >
                                 <CheckCircle className="w-4 h-4" />
                               </Button>
@@ -363,7 +406,7 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
                                 size="sm"
                                 variant="outline"
                                 className="text-red-600 border-red-200 hover:bg-red-50"
-                                onClick={() => handleRejectTraslado(solicitud.id)}
+                                onClick={() => processTrasladoSolicitud(solicitud.id, 'rechazado')}
                               >
                                 <XCircle className="w-4 h-4" />
                               </Button>
@@ -380,7 +423,6 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
         </CardContent>
       </Card>
 
-      {/* Información de ayuda */}
       <Card>
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
