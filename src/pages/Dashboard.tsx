@@ -59,6 +59,7 @@ import IAChatOrchestrator from "@/components/dashboard/IAChatOrchestrator";
 import MinisterialPanel from "@/components/dashboard/MinisterialPanel";
 import IncidentManagement from "@/components/dashboard/IncidentManagement";
 import HealthCenters from "@/components/dashboard/HealthCenters";
+import FacilityRequestsPanel from "@/components/dashboard/FacilityRequestsPanel";
 import AdminPanel from "@/components/dashboard/AdminPanel";
 import AdvancedAnalyticsDashboard from "@/components/dashboard/AdvancedAnalyticsDashboard";
 import ProfessionalSearch from "@/components/dashboard/ProfessionalSearch";
