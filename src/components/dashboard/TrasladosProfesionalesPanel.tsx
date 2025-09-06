@@ -59,9 +59,9 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
   });
 
   // Filtros UI
-  const [centerFilterId, setCenterFilterId] = useState<string>('');
+  const [centerFilterId, setCenterFilterId] = useState<string>('all');
   const [professionalQuery, setProfessionalQuery] = useState<string>('');
-  const [professionalCenterFilterId, setProfessionalCenterFilterId] = useState<string>('');
+  const [professionalCenterFilterId, setProfessionalCenterFilterId] = useState<string>('all');
 
   // Hooks de datos reales
   const {
@@ -84,7 +84,7 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
 
   // Profesionales por centro (para filtrar por centro en el selector)
   const { data: professionalsFromCenter = [], isLoading: loadingByCenter } = useProfesionalesPorCentro(
-    professionalCenterFilterId,
+    professionalCenterFilterId === 'all' ? '' : professionalCenterFilterId,
     undefined,
     'Aprobado'
   );
@@ -102,13 +102,13 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
   }, [professionalsFromCenter, professionalQuery]);
 
   const availableProfessionals: Profesional[] = useMemo(() => {
-    if (professionalCenterFilterId) return professionalsFromCenterFiltered;
+    if (professionalCenterFilterId && professionalCenterFilterId !== 'all') return professionalsFromCenterFiltered;
     return (approvedFuncionarios || []) as Profesional[];
   }, [approvedFuncionarios, professionalsFromCenterFiltered, professionalCenterFilterId]);
 
   // Filtrar solicitudes por centro (origen o destino)
   const filteredTraslados = useMemo(() => {
-    if (!centerFilterId) return traslados || [];
+    if (!centerFilterId || centerFilterId === 'all') return traslados || [];
     return (traslados || []).filter((t: any) =>
       t.centro_origen_id === centerFilterId || t.centro_destino_id === centerFilterId
     );
@@ -195,7 +195,7 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
                   <SelectValue placeholder="Filtrar por centro" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos los centros</SelectItem>
+                  <SelectItem value="all">Todos los centros</SelectItem>
                   {centros.map((c: any) => (
                     <SelectItem key={c.id} value={c.id}>{c.nombre}</SelectItem>
                   ))}
@@ -234,7 +234,7 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
                               <SelectValue placeholder="Filtrar por centro actual" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="">Todos los centros</SelectItem>
+                              <SelectItem value="all">Todos los centros</SelectItem>
                               {centros.map((c: any) => (
                                 <SelectItem key={c.id} value={c.id}>{c.nombre}</SelectItem>
                               ))}
@@ -242,7 +242,7 @@ const TrasladosProfesionalesPanel: React.FC<TrasladosProfesionalesPanelProps> = 
                           </Select>
                         </div>
                         <div className="max-h-56 overflow-y-auto border rounded p-2 space-y-2">
-                          {(professionalCenterFilterId ? loadingByCenter : loadingApproved) && (
+                          {((professionalCenterFilterId && professionalCenterFilterId !== 'all') ? loadingByCenter : loadingApproved) && (
                             <div className="text-sm text-gray-500 p-2 flex items-center gap-2"><Filter className="w-4 h-4" />Cargando profesionales...</div>
                           )}
                           {(availableProfessionals || []).map((prof) => (
