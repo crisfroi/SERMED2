@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Download } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import QRCode from "qrcode";
+import { useEffect, useState } from "react";
 
 interface Props {
   solicitud: {
