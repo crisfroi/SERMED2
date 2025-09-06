@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import ProfessionalRegistration from "./pages/ProfessionalRegistration";
 import PublicSearch from "./pages/PublicSearch";
+import EstablishmentRequest from "./pages/EstablishmentRequest";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import "./utils/authErrorHandler"; // Initialize global auth error handling
