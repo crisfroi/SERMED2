@@ -59,6 +59,7 @@ import IAChatOrchestrator from "@/components/dashboard/IAChatOrchestrator";
 import MinisterialPanel from "@/components/dashboard/MinisterialPanel";
 import IncidentManagement from "@/components/dashboard/IncidentManagement";
 import HealthCenters from "@/components/dashboard/HealthCenters";
+import FacilityRequestsPanel from "@/components/dashboard/FacilityRequestsPanel";
 import AdminPanel from "@/components/dashboard/AdminPanel";
 import AdvancedAnalyticsDashboard from "@/components/dashboard/AdvancedAnalyticsDashboard";
 import ProfessionalSearch from "@/components/dashboard/ProfessionalSearch";
@@ -483,6 +484,7 @@ const Dashboard = () => {
     ...(userRole && canAccessTab("incidents") ? [{ id: "incidents", label: "Incidencias", icon: Activity }] : []),
     ...(userRole && canAccessTab("health-centers") ? [{ id: "health-centers", label: "Centros", icon: MapPin }] : []),
     ...(userRole && canAccessTab("traslados") ? [{ id: "traslados", label: "Traslados", icon: ArrowRight }] : []),
+    ...(userRole ? [{ id: "facility-requests", label: "Establecimientos", icon: Building2 }] : []),
     ...(userRole && hasPermission("manage_users") ? [{ id: "users", label: "Usuarios", icon: UserCog }] : []),
     ...(userRole && hasPermission("system_configuration") ? [{ id: "admin", label: "Admin", icon: Settings }] : []),
   ].filter(tab => userRole ? canAccessTab(tab.id) : tab.id === "overview" || tab.id === "professionals");
@@ -775,6 +777,10 @@ const Dashboard = () => {
 
           <TabsContent value="traslados" className="space-y-6">
             <TrasladosProfesionalesPanel userRole={userRole} />
+          </TabsContent>
+
+          <TabsContent value="facility-requests" className="space-y-6">
+            <FacilityRequestsPanel />
           </TabsContent>
         </Tabs>
       </div>
