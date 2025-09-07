@@ -131,16 +131,33 @@ export default function EstablishmentRequest() {
       if (url) urls.push(url);
     }
 
-    const payload = {
-      ...form,
-      documentos_adjuntos: urls,
-      justificacion: '',
-    } as any;
+    const documentoCompuesto = `${form.tipo_documento_responsable} ${form.documento_responsable}` +
+      (form.nif ? ` • NIF ${form.nif}` : '') +
+      (form.nacionalidad_responsable ? ` • ${form.nacionalidad_responsable}` : '');
 
-    // Limpiar dependencias: si no es HOSPITAL, ignorar categoria; si es LABORATORIO, sin camas
-    if (form.tipo_establecimiento !== 'HOSPITAL') payload.categoria = '';
-    if (form.tipo_establecimiento === 'LABORATORIO') payload.numero_camas = null;
-    if (form.tipo_establecimiento !== 'CONSULTORIO' && form.tipo_establecimiento !== 'CENTRO DE SALUD') payload.numero_consultorios = null;
+    const payload = {
+      nombre_establecimiento: form.nombre_establecimiento,
+      tipo_establecimiento: form.tipo_establecimiento,
+      categoria: form.tipo_establecimiento === 'HOSPITAL' ? form.categoria : 'N/A',
+      sector: form.sector,
+      provincia: form.provincia,
+      distrito: form.distrito,
+      distrito_sanitario: form.distrito_sanitario || null,
+      direccion_completa: form.direccion_completa,
+      telefono: form.telefono,
+      email_contacto: form.email_contacto,
+      nombre_responsable: form.nombre_responsable,
+      cargo_responsable: form.cargo_responsable,
+      documento_responsable: documentoCompuesto.trim(),
+      servicios_ofrecidos: form.servicios_ofrecidos,
+      especialidades: form.especialidades,
+      numero_camas: form.tipo_establecimiento === 'LABORATORIO' ? 0 : (form.numero_camas ?? 0),
+      numero_consultorios: (form.tipo_establecimiento === 'CONSULTORIO' || form.tipo_establecimiento === 'CENTRO DE SALUD') ? (form.numero_consultorios ?? 0) : 0,
+      equipamiento_basico: form.equipamiento_basico,
+      justificacion: '',
+      poblacion_beneficiada: form.poblacion_beneficiada ?? null,
+      documentos_adjuntos: urls,
+    } as any;
 
     await createMutation.mutateAsync(payload);
     setPhotos([]);
