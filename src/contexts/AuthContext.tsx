@@ -221,7 +221,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           email: email.trim().toLowerCase(),
           password: pwd
         }),
-        15000
+        20000
       ) as any;
 
       let { data, error } = await attempt(password);
@@ -235,6 +235,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         let friendlyError = error.message || 'Error al iniciar sesión';
         if (friendlyError.includes('Email not confirmed')) {
           friendlyError = 'Email no confirmado. Revise su bandeja de entrada.';
+        } else if (/Failed to fetch|NetworkError|TypeError/i.test(friendlyError)) {
+          friendlyError = 'Problema de conexión con el servidor. Intente nuevamente en unos segundos.';
         }
         return { success: false, error: friendlyError };
       }
@@ -247,6 +249,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       if (AuthErrorHandler.isRefreshTokenError(error)) {
         await AuthErrorHandler.handleRefreshTokenError();
         return { success: false, error: 'Sesión expirada. Intente iniciar sesión nuevamente.' };
+      }
+      const msg = error?.message || '';
+      if (/Tiempo de espera agotado|timeout/i.test(msg)) {
+        return { success: false, error: 'Tiempo de espera agotado. Revise su conexión e intente nuevamente.' };
       }
       return { success: false, error: 'Error de conexión. Intente nuevamente.' };
     } finally {
