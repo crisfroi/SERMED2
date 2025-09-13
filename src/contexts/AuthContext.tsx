@@ -221,7 +221,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           email: email.trim().toLowerCase(),
           password: pwd
         }),
-        15000
+        8000
       ) as any;
 
       let { data, error } = await attempt(password);
