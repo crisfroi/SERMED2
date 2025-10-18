@@ -18,6 +18,8 @@ import ErrorBoundary from "@/components/ui/error-boundary";
 import "./utils/authErrorHandler"; // Initialize global auth error handling
 import "./utils/storageCleanup"; // Initialize storage cleanup
 import { initResizeObserverErrorHandling } from "./utils/resizeObserverHandler";
+import { useOfflineSync } from "@/hooks/useOfflineSync";
+import { useOfflineAutostart } from "@/hooks/useOfflineAutostart";
 
 // Initialize ResizeObserver error handling
 initResizeObserverErrorHandling();
@@ -66,6 +68,32 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  // Start offline sync engine globally
+  useOfflineSync({
+    intervalMs: 90_000,
+    tables: [
+      // core
+      "profesionales_sanitarios",
+      "centros_salud",
+      // asistencia
+      "dispositivos",
+      "empleado_dispositivo_map",
+      "turnos_biometricos",
+      "cuadrantes_biometricos",
+      "cuadrantes_maestros",
+      "horarios_base_profesional",
+      "attendance_logs",
+      // admin/extra
+      "incidencias_hospitalarias",
+      "profesional_centro_asignado",
+      "distrito_sanitario",
+      "areas_profesionales",
+      "nacionalidades_mundo",
+      "user_profiles",
+      "role_permissions"
+    ]
+  });
+  useOfflineAutostart();
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary>

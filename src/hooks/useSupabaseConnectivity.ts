@@ -36,25 +36,28 @@ export function useSupabaseConnectivity() {
           !!session.data.session,
         );
 
-        // Test 4: Try simplest possible database query
-        console.log("Testing database access...");
-        const { data, error } = await supabase
-          .from("profesionales_sanitarios")
-          .select("id")
-          .limit(1);
+        // Test 4: Try simplest possible database query when online
+        if (typeof navigator === 'undefined' || navigator.onLine) {
+          console.log("Testing database access (online)...");
+          const { data, error } = await supabase
+            .from("profesionales_sanitarios")
+            .select("id")
+            .limit(1);
 
-        if (error) {
-          console.log("Database query error:", {
-            message: error.message,
-            details: error.details,
-            hint: error.hint,
-            code: error.code,
-          });
-          throw error;
+          if (error) {
+            console.log("Database query error:", {
+              message: error.message,
+              details: error.details,
+              hint: error.hint,
+              code: error.code,
+            });
+            throw error;
+          }
+          console.log("✓ Database query successful");
+          console.log("- Records available:", data?.length || 0);
+        } else {
+          console.log("Offline mode: skipping remote DB test");
         }
-
-        console.log("✓ Database query successful");
-        console.log("- Records available:", data?.length || 0);
 
         return {
           status: "connected",

@@ -1,4 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
+import { enqueueOutbox } from "@/lib/localDb";
+import { v4 as uuidv4 } from 'uuid';
 
 export interface UpdateProfesionalParams {
   id: string;
