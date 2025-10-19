@@ -1,20 +1,12 @@
 from database import db
 
-# class Person:
-#     def __init__(self, id=None, name=None, roll_id=None):
-#         self.id = id
-#         self.name = name if name is not None else None
-#         self.roll_id = roll_id
-#
-#     def __str__(self):
-#         return f"Person [id={self.id}, name={self.name}, rollId={self.roll_id}]"
-#
-
-
 class Person(db.Model):
+    __tablename__ = 'persons'  # explicit table name works in both MySQL and PostgreSQL
+    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     roll_id = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     def __str__(self):
         return f"Person [id={self.id}, name={self.name}, rollId={self.roll_id}]"

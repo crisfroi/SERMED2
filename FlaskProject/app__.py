@@ -1,4 +1,19 @@
-# https://blog.miguelgrinberg.com/post/add-a-websocket-route-to-your-flask-2-x-application
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Try loading from /etc/secrets/.env first (Render secret files)
+render_env = Path("/etc/secrets/.env")
+if render_env.exists():
+    load_dotenv(render_env)
+else:
+    load_dotenv()  # fallback to local .env
+
+# ...existing code...
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# ...existing code...# https://blog.miguelgrinberg.com/post/add-a-websocket-route-to-your-flask-2-x-application
 # from flask import Flask
 #
 # app = Flask(__name__)

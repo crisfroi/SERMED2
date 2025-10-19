@@ -4,6 +4,7 @@ import os
 import uuid
 # from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from pathlib import Path
 
 import jsons
 from dotenv import load_dotenv
@@ -15,18 +16,23 @@ from config.readConf import readConf
 from database import db, get_database_uri
 from Helpers.log_conf import Logger
 from job.SendOrderJob import SendOrderJob
+from services.attendance_service import AttendanceService
 
 #
 # os.environ["FLASK_ENV"] = "development"
 # os.environ["FLASK_DEBUG"] = "1"
 app = Flask(__name__)
 sock = Sock(app)
-load_dotenv()
+
+# Try loading from /etc/secrets/.env first (Render secret files)
+render_env = Path("/etc/secrets/.env")
+if render_env.exists():
+    load_dotenv(render_env)
+else:
+    load_dotenv()  # fallback to local .env
 
 # Database configuration
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
-    "SQLALCHEMY_DATABASE_URI", get_database_uri()
-)
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Port configuration
@@ -597,261 +603,22 @@ def websock(sock):
         # sock.send(data)
 
 
-@sock.route("/pub/chat")
+attendance_service = AttendanceService()
+
+@sock.route('/pub/chat')
 def handler(sock):
     try:
         while True:
             message = sock.receive()
-            # print("sock:"+message)
-            # for message in data:
-            # dt=datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-            # reply = f"Data received as \"{message}\".  time: {dt}"
-            # print(reply)
             try:
-                # 对数据进行解析
-                try:
-                    jsonMsg = json.loads(message)
-                except:
-                    import traceback
-
-                    traceback.print_exc()
-
-                try:
-                    cmd = jsonMsg["cmd"]
-                except:
-                    cmd = ""
-                    # import traceback
-                    # traceback.print_exc()
-                try:
-                    ret = jsonMsg["ret"]
-                except:
-                    # import traceback
-                    # traceback.print_exc()
-                    ret = ""
-                print("cmd--:" + cmd)
-                print("ret--:" + ret)
-                if len(cmd) != 0:  # client active send data
-                    print("cmd--:" + cmd)
-
-                    if cmd == "reg":
-                        try:
-
-                            get_device_info_websocket(jsonMsg, sock)
-                        except Exception as err:
-                            print(err)
-                            import traceback
-
-                            traceback.print_exc()
-                            # sock.send(json.dumps({"ret": "reg", "result": False, "reason": 1}))
-                            sock.send('{"ret":"reg","result":false,"reason":1}')
-                    elif cmd == "sendlog":
-                        try:
-                            # print("sendlog:" + str(jsonMsg))
-                            get_attendance(jsonMsg, sock)
-                        except Exception as err:
-                            print(err)
-                            import traceback
-
-                            traceback.print_exc()
-                            # sock.send(json.dumps({"ret": "sendlog", "result": False, "reason": 1}))
-                            sock.send('{"ret":"sendlog","result":false,"reason":1}')
-                    elif cmd == "senduser":
-                        try:
-                            get_enroll_info(jsonMsg, sock)
-                        except Exception as err:
-                            print(err)
-                            import traceback
-
-                            traceback.print_exc()
-                            # sock.send(json.dumps({"ret": "senduser", "result": False, "reason": 1}))
-                            sock.send('{"ret":"senduser","result":false,"reason":1}')
-                    else:
-                        print("cmd未知:" + cmd)
-                elif len(ret) != 0:  # server send cmd and rec data
-                    print("ret--:" + ret)
-                    if ret == "getuserlist":
-                        print("getuserlist:" + str(jsonMsg))
-                        get_user_list(jsonMsg, sock)
-                    elif ret == "getuserinfo":
-                        print("getuserinfo:" + str(jsonMsg))
-                        get_user_info_websocket(jsonMsg, sock)
-                        sn = jsonMsg["sn"]
-                        deviceStatus = DeviceStatus()
-                        deviceStatus.device_sn = sn
-                        deviceStatus.websocket = sock
-                        deviceStatus.status = 1
-                        update_device_websocket(sn, deviceStatus)
-
-                    elif ret == "setuserinfo":
-                        print("下发数据" + str(jsonMsg))
-                        sn = jsonMsg["sn"]
-                        deviceStatus = DeviceStatus()
-                        deviceStatus.device_sn = sn
-                        deviceStatus.websocket = sock
-                        deviceStatus.status = 1
-                        update_device_websocket(sn, deviceStatus)
-                        update_command_status_websocket(sn, "setuserinfo")
-                    elif ret == "getalllog":
-                        print("获取所有打卡记录" + str(jsonMsg))
-                        try:
-                            get_all_log(jsonMsg, sock)
-                        except Exception as err:
-                            import traceback
-
-                            traceback.print_exc()
-                            print(err)
-                    elif ret == "getnewlog":
-
-                        print("获取所有打卡记录 getnewlog" + str(jsonMsg))
-                        try:
-                            get_new_log(jsonMsg, sock)
-                        except Exception as err:
-                            import traceback
-
-                            traceback.print_exc()
-                            print(err)
-
-                    # region 没有，在java中 2024年1月15日10:06:25
-                    # elif ret == "getallusers":
-                    #     result = jsonMsg["result"]
-                    #     if result == True:
-                    #         count = jsonMsg["count"]
-                    #         index = jsonMsg["index"]
-                    #         CloudDemo.WebSocketLoader.tmpuserinfo.enrollid = jsonMsg["enrollid"]
-                    #         CloudDemo.WebSocketLoader.tmpuserinfo.name = jsonMsg["name"]  # add version 1.1
-                    #         CloudDemo.WebSocketLoader.tmpuserinfo.backupnum = jsonMsg["backupnum"]
-                    #         CloudDemo.WebSocketLoader.tmpuserinfo.admin = jsonMsg["admin"]
-                    #         if CloudDemo.WebSocketLoader.tmpuserinfo.backupnum >= 0 and CloudDemo.WebSocketLoader.tmpuserinfo.backupnum < 10:  # is fp
-                    #             CloudDemo.WebSocketLoader.tmpuserinfo.fpdata = jsonMsg["record"]
-                    #         elif CloudDemo.WebSocketLoader.tmpuserinfo.backupnum == 10:  # card
-                    #             CloudDemo.WebSocketLoader.tmpuserinfo.password = jsonMsg["record"]
-                    #         elif CloudDemo.WebSocketLoader.tmpuserinfo.backupnum == 11:  # pwd
-                    #             CloudDemo.WebSocketLoader.tmpuserinfo.password = jsonMsg["record"]
-                    #         elif CloudDemo.WebSocketLoader.tmpuserinfo.backupnum == 50:  # is aiface base64
-                    #             CloudDemo.WebSocketLoader.tmpuserinfo.fpdata = jsonMsg["record"]
-                    #             rawjpg = Convert.FromBase64String(CloudDemo.WebSocketLoader.tmpuserinfo.fpdata)
-                    #             System.IO.File.WriteAllBytes("""C:\\\\EnrollPhoto\\""" + "LF" + str(
-                    #                 CloudDemo.WebSocketLoader.tmpuserinfo.enrollid).PadLeft(8, '0') + ".jpg", rawjpg)
-                    #         if index < (count - 1):
-                    #             cmdstring = None
-                    #             cmdstring = "{\"cmd\":\"getallusers\",\"stn\":false}"
-                    #             print(cmdstring)
-                    #             print("index:" + str(index) + ";count:" + str(count) + ";"]
-                    #             session.Send(cmdstring)
-                    #
-                    #     elif result == False:
-                    #         reasoncode = jsonMsg["reason"]
-                    # endregion
-                    elif ret == "deleteuser":
-                        print("删除人员" + str(jsonMsg))
-                        sn = jsonMsg["sn"]
-                        deviceStatus = DeviceStatus()
-                        deviceStatus.device_sn = sn
-                        deviceStatus.websocket = sock
-                        deviceStatus.status = 1
-                        update_device_websocket(sn, deviceStatus)
-                        update_command_status_websocket(sn, "deleteuser")
-                    elif ret == "initsys":
-                        print("初始化系统" + str(jsonMsg))
-                        sn = jsonMsg["sn"]
-                        deviceStatus = DeviceStatus()
-                        deviceStatus.device_sn = sn
-                        deviceStatus.websocket = sock
-                        deviceStatus.status = 1
-                        update_device_websocket(sn, deviceStatus)
-                        update_command_status_websocket(sn, "initsys")
-                    elif ret == "setdevlock":
-                        print("设置天时间段" + str(jsonMsg))
-                        sn = jsonMsg["sn"]
-                        deviceStatus = DeviceStatus()
-                        deviceStatus.device_sn = sn
-                        deviceStatus.websocket = sock
-                        deviceStatus.status = 1
-                        update_device_websocket(sn, deviceStatus)
-                        update_command_status_websocket(sn, "setdevlock")
-                    elif ret == "setuserlock":
-                        print("门禁授权" + str(jsonMsg))
-                        sn = jsonMsg["sn"]
-                        deviceStatus = DeviceStatus()
-                        deviceStatus.device_sn = sn
-                        deviceStatus.websocket = sock
-                        deviceStatus.status = 1
-                        update_device_websocket(sn, deviceStatus)
-                        update_command_status_websocket(sn, "setuserlock")
-
-                    elif ret == "getdevinfo":
-                        print("设备信息" + str(jsonMsg))
-                        sn = jsonMsg["sn"]
-                        deviceStatus = DeviceStatus()
-                        deviceStatus.device_sn = sn
-                        deviceStatus.websocket = sock
-                        deviceStatus.status = 1
-                        update_device_websocket(sn, deviceStatus)
-                        update_command_status_websocket(sn, "getdevinfo")
-                    elif ret == "setusername":
-                        print("下发姓名" + str(jsonMsg))
-                        sn = jsonMsg["sn"]
-                        deviceStatus = DeviceStatus()
-                        deviceStatus.device_sn = sn
-                        deviceStatus.websocket = sock
-                        deviceStatus.status = 1
-                        update_device_websocket(sn, deviceStatus)
-                        update_command_status_websocket(sn, "setusername")
-
-                    elif ret == "reboot":
-                        print("reboot:" + str(jsonMsg))
-                        sn = jsonMsg["sn"]
-                        deviceStatus = DeviceStatus()
-                        deviceStatus.device_sn = sn
-                        deviceStatus.websocket = sock
-                        deviceStatus.status = 1
-                        update_device_websocket(sn, deviceStatus)
-                        update_command_status_websocket(sn, "reboot")
-
-                    elif ret == "getdevlock":
-                        print("getdevlock:" + str(jsonMsg))
-                        sn = jsonMsg["sn"]
-                        deviceStatus = DeviceStatus()
-                        deviceStatus.device_sn = sn
-                        deviceStatus.websocket = sock
-                        deviceStatus.status = 1
-                        update_device_websocket(sn, deviceStatus)
-                        update_command_status_websocket(sn, "getdevlock")
-
-                    elif ret == "getuserlock":
-                        print("getuserlock:" + str(jsonMsg))
-                        sn = jsonMsg["sn"]
-                        deviceStatus = DeviceStatus()
-                        deviceStatus.device_sn = sn
-                        deviceStatus.websocket = sock
-                        deviceStatus.status = 1
-                        update_device_websocket(sn, deviceStatus)
-                        update_command_status_websocket(sn, "getuserlock")
-
-                    else:
-                        print("未知命令:" + ret)
-                        sn = jsonMsg["sn"]
-                        deviceStatus = DeviceStatus()
-                        deviceStatus.device_sn = sn
-                        deviceStatus.websocket = sock
-                        deviceStatus.status = 1
-                        update_device_websocket(sn, deviceStatus)
-                        update_command_status_websocket(sn, ret)
-
-            except Exception as ex:
-                print("error:" + str(ex))
-                import traceback
-
-                traceback.print_exc()
-                # Logger.logr.error(ex)
-
-            # await websocket.send(reply)
-    # except sock.exceptions.ProtocolError as e:
-    #     Logger.logr.error(e)
-    # except sock.exceptions.ConnectionClosedOK:
-    #     Logger.logr.error('Connection closed properly')
-    # except sock.exceptions.ConnectionClosedError:
-    #     Logger.logr.error('Connection closed with an error')
+                jsonMsg = json.loads(message)
+                if jsonMsg.get("cmd") == "sendlog":
+                    # Procesar registro del dispositivo
+                    await attendance_service.sync_attendance(jsonMsg)
+                    sock.send('{"ret":"sendlog","result":true}')
+            except Exception as err:
+                print(f"Error: {err}")
+                sock.send('{"ret":"sendlog","result":false,"reason":1}')
     except Exception as e:
         import traceback
 
