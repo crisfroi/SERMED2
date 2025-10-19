@@ -1,9 +1,11 @@
 import json
-from Models.AccessWeek import AccessWeek
-from Models.MachineCommand import MachineCommand
-from Models.Device import Device
-from database import db
 from datetime import datetime
+
+from database import db
+from Models.AccessWeek import AccessWeek
+from Models.Device import Device
+from Models.MachineCommand import MachineCommand
+
 
 class AccessWeekService:
     def __init__(self):
@@ -34,6 +36,7 @@ class AccessWeekService:
     def update_primary_key(self, record: AccessWeek):
         self.session.merge(record)
         self.session.commit()
+
     def select_all_access_week(self):
         return self.session.query(AccessWeek).all()
 
@@ -43,7 +46,16 @@ class AccessWeekService:
         access_weeks_temp = access_weeks[:]
 
         for i in range(len(access_weeks), 8):
-            access_week = AccessWeek(id=i+1, monday=0, tuesday=0, wednesday=0, thursday=0, friday=0, saturday=0, sunday=0)
+            access_week = AccessWeek(
+                id=i + 1,
+                monday=0,
+                tuesday=0,
+                wednesday=0,
+                thursday=0,
+                friday=0,
+                saturday=0,
+                sunday=0,
+            )
             access_weeks_temp.append(access_week)
 
         for i in range(len(access_weeks_temp)):
@@ -65,6 +77,13 @@ class AccessWeekService:
 
         devices = self.session.query(Device).all()
         for device in devices:
-            machine_command = MachineCommand(content=message_str, name="setdevlock", status=0, send_status=0, err_count=0, serial=device.serial_num)
+            machine_command = MachineCommand(
+                content=message_str,
+                name="setdevlock",
+                status=0,
+                send_status=0,
+                err_count=0,
+                serial=device.serial_num,
+            )
             self.session.add(machine_command)
         self.session.commit()

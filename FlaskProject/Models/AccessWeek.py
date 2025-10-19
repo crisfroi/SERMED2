@@ -1,10 +1,20 @@
 from database import db
+
+
 class AccessWeek:
-    def __init__(self, id=None, serial=None, name=None,
-                 monday=None, tuesday=None,
-                 wednesday=None, thursday=None,
-                 friday=None, saturday=None,
-                 sunday=None):
+    def __init__(
+        self,
+        id=None,
+        serial=None,
+        name=None,
+        monday=None,
+        tuesday=None,
+        wednesday=None,
+        thursday=None,
+        friday=None,
+        saturday=None,
+        sunday=None,
+    ):
         self.id = id
         self.serial = serial if serial is not None else None
         self.name = name if name is not None else None
@@ -17,11 +27,13 @@ class AccessWeek:
         self.sunday = sunday
 
     def __str__(self):
-        return f"AccessWeek [id={self.id}, serial={self.serial}, name={self.name}, " \
-               f"monday={self.monday}, tuesday={self.tuesday}, " \
-               f"wednesday={self.wednesday}, thursday={self.thursday}, " \
-               f"friday={self.friday}, saturday={self.saturday}, " \
-               f"sunday={self.sunday}]"
+        return (
+            f"AccessWeek [id={self.id}, serial={self.serial}, name={self.name}, "
+            f"monday={self.monday}, tuesday={self.tuesday}, "
+            f"wednesday={self.wednesday}, thursday={self.thursday}, "
+            f"friday={self.friday}, saturday={self.saturday}, "
+            f"sunday={self.sunday}]"
+        )
 
 
 # from sqlalchemy import create_engine, Column, Integer, String
@@ -34,7 +46,7 @@ class AccessWeek:
 
 
 class AccessWeek(db.Model):
-    __tablename__ = 'access_week'
+    __tablename__ = "access_week"
 
     id = db.Column(db.Integer, primary_key=True)
     serial = db.Column(db.String)
@@ -78,7 +90,9 @@ def insert_access_week(access_week):
 
 
 # 更新记录
-def update_access_week(id, serial, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday):
+def update_access_week(
+    id, serial, name, monday, tuesday, wednesday, thursday, friday, saturday, sunday
+):
 
     access_week = db.session.query(AccessWeek).get(id)
     if access_week:

@@ -1,15 +1,19 @@
 import json
 from datetime import datetime
-from sqlalchemy.orm import Session
+
 from sqlalchemy import create_engine
-from Models.AccessDay import AccessDay
-from Models.MachineCommand import MachineCommand
-from Models.Device import Device
+from sqlalchemy.orm import Session
+
 from database import db
+from Models.AccessDay import AccessDay
+from Models.Device import Device
+from Models.MachineCommand import MachineCommand
+
+
 class AccessDayService:
     def __init__(self):
 
-        self.session =db.session
+        self.session = db.session
 
     def delete_primary_key(self, id):
         self.session.query(AccessDay).filter(AccessDay.id == id).delete()
@@ -67,21 +71,61 @@ class AccessDayService:
             if isinstance(access_days_temp[i], dict):
                 day = {
                     "day": [
-                        {"section": access_days_temp[i]['start_time1'] + "~" + access_days_temp[i]['end_time1']},
-                        {"section": access_days_temp[i]['start_time2'] + "~" + access_days_temp[i]['end_time2']},
-                        {"section": access_days_temp[i]['start_time3'] + "~" + access_days_temp[i]['end_time3']},
-                        {"section": access_days_temp[i]['start_time4'] + "~" + access_days_temp[i]['end_time4']},
-                        {"section": access_days_temp[i]['start_time5'] + "~" + access_days_temp[i]['end_time5']},
+                        {
+                            "section": access_days_temp[i]["start_time1"]
+                            + "~"
+                            + access_days_temp[i]["end_time1"]
+                        },
+                        {
+                            "section": access_days_temp[i]["start_time2"]
+                            + "~"
+                            + access_days_temp[i]["end_time2"]
+                        },
+                        {
+                            "section": access_days_temp[i]["start_time3"]
+                            + "~"
+                            + access_days_temp[i]["end_time3"]
+                        },
+                        {
+                            "section": access_days_temp[i]["start_time4"]
+                            + "~"
+                            + access_days_temp[i]["end_time4"]
+                        },
+                        {
+                            "section": access_days_temp[i]["start_time5"]
+                            + "~"
+                            + access_days_temp[i]["end_time5"]
+                        },
                     ]
                 }
             else:
                 day = {
                     "day": [
-                        {"section": access_days_temp[i].start_time1 + "~" + access_days_temp[i].end_time1},
-                        {"section": access_days_temp[i].start_time2 + "~" + access_days_temp[i].end_time2},
-                        {"section": access_days_temp[i].start_time3 + "~" + access_days_temp[i].end_time3},
-                        {"section": access_days_temp[i].start_time4 + "~" + access_days_temp[i].end_time4},
-                        {"section": access_days_temp[i].start_time5 + "~" + access_days_temp[i].end_time5},
+                        {
+                            "section": access_days_temp[i].start_time1
+                            + "~"
+                            + access_days_temp[i].end_time1
+                        },
+                        {
+                            "section": access_days_temp[i].start_time2
+                            + "~"
+                            + access_days_temp[i].end_time2
+                        },
+                        {
+                            "section": access_days_temp[i].start_time3
+                            + "~"
+                            + access_days_temp[i].end_time3
+                        },
+                        {
+                            "section": access_days_temp[i].start_time4
+                            + "~"
+                            + access_days_temp[i].end_time4
+                        },
+                        {
+                            "section": access_days_temp[i].start_time5
+                            + "~"
+                            + access_days_temp[i].end_time5
+                        },
                     ]
                 }
             message["dayzone"].append(day)
@@ -91,13 +135,13 @@ class AccessDayService:
         # Add MachineCommand records
         devices = self.session.query(Device).all()
         for device in devices:
-            machine_command = MachineCommand(content=message_str,
-                                             name="setdevlock",
-                                             status=0,
-                                             send_status=0,
-                                             err_count=0,
-                                             serial=device.serial_num
-                                             )
+            machine_command = MachineCommand(
+                content=message_str,
+                name="setdevlock",
+                status=0,
+                send_status=0,
+                err_count=0,
+                serial=device.serial_num,
+            )
             self.session.add(machine_command)
         self.session.commit()
-

@@ -1,5 +1,7 @@
-from database import db
 from datetime import datetime
+
+from database import db
+
 # class Records:
 #     def __init__(self, id=None, enroll_id=None, records_time=None, mode=None,
 #                  intout=None, event=None, device_serial_num=None, temperature=None, image=None):
@@ -15,7 +17,7 @@ from datetime import datetime
 
 
 class Record(db.Model):
-    __tablename__ = 'records'
+    __tablename__ = "records"
     id = db.Column(db.Integer, primary_key=True)
     enroll_id = db.Column(db.BigInteger)
     records_time = db.Column(db.DateTime)
@@ -27,9 +29,11 @@ class Record(db.Model):
     image = db.Column(db.String)
 
     def __str__(self):
-        return f"Record [id={self.id}, enroll_id={self.enroll_id}, records_time={self.records_time}, mode={self.mode}, " \
-               f"intOut={self.intOut}, event={self.event}, device_serial_num={self.device_serial_num}, " \
-               f"temperature={self.temperature}, image={self.image}]"
+        return (
+            f"Record [id={self.id}, enroll_id={self.enroll_id}, records_time={self.records_time}, mode={self.mode}, "
+            f"intOut={self.intOut}, event={self.event}, device_serial_num={self.device_serial_num}, "
+            f"temperature={self.temperature}, image={self.image}]"
+        )
 
     def to_dict(self):
 
@@ -42,24 +46,27 @@ class Record(db.Model):
             "event": self.event,
             "device_serial_num": self.device_serial_num,
             "temperature": self.temperature,
-            "image": self.image
+            "image": self.image,
         }
 
-
-
-    def format_date(self,date_string):
+    def format_date(self, date_string):
         date = datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S%z")
         return date.strftime("%Y-%m-%d %H:%M:20")
+
+
 def insert_record(record):
     db.session.add(record)
     db.session.commit()
+
+
 def insert_record2(**record):
     record = Record(**record)
     db.session.add(record)
     db.session.commit()
 
+
 def select_record_by_id(id):
-    return  db.session.query(Record).get(id)
+    return db.session.query(Record).get(id)
 
 
 def delete_record_by_id(id):
@@ -74,8 +81,10 @@ def update_record_by_id(id, **kwargs):
         setattr(record, key, value)
     db.session.commit()
 
+
 def select_all_records():
     return db.session.query(Record).all()
+
 
 # def format_date(date_string):
 #     date = datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S%z")

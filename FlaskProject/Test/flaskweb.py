@@ -19,12 +19,12 @@ app = Flask(__name__)
 sock = Sock(app)
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@sock.route('/')
+@sock.route("/")
 def echo(sock):
     while True:
         data = sock.receive()

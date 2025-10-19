@@ -1,9 +1,12 @@
 import json
 from datetime import datetime
+
+from database import db
+from Models.Device import Device
 from Models.LockGroup import LockGroup
 from Models.MachineCommand import MachineCommand
-from Models.Device import Device
-from database import db
+
+
 class LockGroupService:
     def __init__(self):
         self.session = db.session
@@ -18,24 +21,30 @@ class LockGroupService:
         # ]
 
         groups = [
-            {"group": self.retNumber(lock_group['group1'])},
-            {"group": self.retNumber(lock_group['group2'])},
-            {"group": self.retNumber(lock_group['group3'])},
-            {"group": self.retNumber(lock_group['group4'])},
-            {"group": self.retNumber(lock_group['group5'])}
+            {"group": self.retNumber(lock_group["group1"])},
+            {"group": self.retNumber(lock_group["group2"])},
+            {"group": self.retNumber(lock_group["group3"])},
+            {"group": self.retNumber(lock_group["group4"])},
+            {"group": self.retNumber(lock_group["group5"])},
         ]
         message = {"cmd": "setdevlock", "lockgroup": groups}
         message_str = json.dumps(message)
 
         devices = self.session.query(Device).all()
         for device in devices:
-            machine_command = MachineCommand(content=message_str, name="setdevlock", status=0, send_status=0,
-                                             err_count=0, serial=device.serial_num)
+            machine_command = MachineCommand(
+                content=message_str,
+                name="setdevlock",
+                status=0,
+                send_status=0,
+                err_count=0,
+                serial=device.serial_num,
+            )
             self.session.add(machine_command)
         self.session.commit()
-    def retNumber(self,group):
+
+    def retNumber(self, group):
         try:
             return int(group)
         except:
             return 0
-

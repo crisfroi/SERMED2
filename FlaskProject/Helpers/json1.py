@@ -1,7 +1,7 @@
 import json
 
 # JSON格式字符串
-#json文本字符串
+# json文本字符串
 json_str = '{"name": "John Doe", "age": 30, "is_student": false}'
 json_str = '{"name": {"first": "John","last": "Doe"},"age": 30,"city": "New York"}'
 # 解析JSON字符串

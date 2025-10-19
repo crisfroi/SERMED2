@@ -1,4 +1,6 @@
 from Models.UserInfo import UserInfo
+
+
 class EnrollInfoService:
     def __init__(self, enroll_info, person):
         self.enroll_info_mapper = enroll_info
@@ -51,7 +53,9 @@ class EnrollInfoService:
         return self.enroll_info_mapper.select_by_enroll_id(enroll_id)
 
     def update_by_enroll_id_and_backup_num(self, signatures, enroll_id, backupnum):
-        return self.enroll_info_mapper.update_by_enroll_id_and_backup_num(signatures, enroll_id, backupnum)
+        return self.enroll_info_mapper.update_by_enroll_id_and_backup_num(
+            signatures, enroll_id, backupnum
+        )
 
     def delete_by_enroll_id(self, id):
         return self.enroll_info_mapper.delete_by_enroll_id(id)

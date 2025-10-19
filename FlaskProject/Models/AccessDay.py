@@ -1,4 +1,5 @@
 from database import db
+
 # class AccessDay(db.Model):
 #     def __init__(self, id=None, serial=None, name=None,
 #                  start_time1=None, end_time1=None,
@@ -31,9 +32,8 @@ from database import db
 #
 
 
-
 class AccessDay(db.Model):
-    __tablename__ = 'access_day'
+    __tablename__ = "access_day"
 
     id = db.Column(db.Integer, primary_key=True)
     serial = db.Column(db.String)
@@ -48,30 +48,35 @@ class AccessDay(db.Model):
     end_time4 = db.Column(db.String)
     start_time5 = db.Column(db.String)
     end_time5 = db.Column(db.String)
+
     def __str__(self):
-        return f"AccessDay [id={self.id}, serial={self.serial}, name={self.name}, " \
-               f"startTime1={self.start_time1}, endTime1={self.end_time1}, " \
-               f"startTime2={self.start_time2}, endTime2={self.end_time2}, " \
-               f"startTime3={self.start_time3}, endTime3={self.end_time3}, " \
-               f"startTime4={self.start_time4}, endTime4={self.end_time4}, " \
-               f"startTime5={self.start_time5}, endTime5={self.end_time5}]"
+        return (
+            f"AccessDay [id={self.id}, serial={self.serial}, name={self.name}, "
+            f"startTime1={self.start_time1}, endTime1={self.end_time1}, "
+            f"startTime2={self.start_time2}, endTime2={self.end_time2}, "
+            f"startTime3={self.start_time3}, endTime3={self.end_time3}, "
+            f"startTime4={self.start_time4}, endTime4={self.end_time4}, "
+            f"startTime5={self.start_time5}, endTime5={self.end_time5}]"
+        )
 
     def to_dict(self):
         return {
-            'id': self.id,
-            'serial': self.serial,
-            'name': self.name,
-            'startTime1': self.start_time1,
-            'endTime1': self.end_time1,
-            'startTime2': self.start_time2,
-            'endTime2': self.end_time2,
-            'startTime3': self.start_time3,
-            'endTime3': self.end_time3,
-            'startTime4': self.start_time4,
-            'endTime4': self.end_time4,
-            'startTime5': self.start_time5,
-            'endTime5': self.end_time5
+            "id": self.id,
+            "serial": self.serial,
+            "name": self.name,
+            "startTime1": self.start_time1,
+            "endTime1": self.end_time1,
+            "startTime2": self.start_time2,
+            "endTime2": self.end_time2,
+            "startTime3": self.start_time3,
+            "endTime3": self.end_time3,
+            "startTime4": self.start_time4,
+            "endTime4": self.end_time4,
+            "startTime5": self.start_time5,
+            "endTime5": self.end_time5,
         }
+
+
 # 查询记录
 def get_access_day_by_id(id):
 
@@ -90,8 +95,7 @@ def delete_access_day(id):
 
 
 def get_all_access_days():
-    return  db.session.query(AccessDay).all()
-
+    return db.session.query(AccessDay).all()
 
 
 # 插入记录
@@ -102,8 +106,21 @@ def insert_access_day(access_day):
 
 
 # 更新记录
-def update_access_day(id, serial, name, start_time1, end_time1, start_time2, end_time2, start_time3, end_time3,
-                      start_time4, end_time4, start_time5, end_time5):
+def update_access_day(
+    id,
+    serial,
+    name,
+    start_time1,
+    end_time1,
+    start_time2,
+    end_time2,
+    start_time3,
+    end_time3,
+    start_time4,
+    end_time4,
+    start_time5,
+    end_time5,
+):
 
     access_day = db.session.query(AccessDay).get(id)
     if access_day:

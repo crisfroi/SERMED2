@@ -1,5 +1,13 @@
 class PersonTemp:
-    def __init__(self, user_id=None, name=None, privilege=None, imagepath=None, password=None, card_num=None):
+    def __init__(
+        self,
+        user_id=None,
+        name=None,
+        privilege=None,
+        imagepath=None,
+        password=None,
+        card_num=None,
+    ):
         self.user_id = user_id
         self.name = name if name is not None else None
         self.privilege = privilege

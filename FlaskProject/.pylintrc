@@ -1,0 +1,11 @@
+[MASTER]
+init-hook='import sys; sys.path.append(".")'
+
+[MESSAGES CONTROL]
+disable=C0111,C0103,C0303,W0311,W0611,R0903,C0330,C0326,C0301
+
+[FORMAT]
+max-line-length=120
+
+[TYPECHECK]
+ignored-classes=SQLAlchemy,scoped_session

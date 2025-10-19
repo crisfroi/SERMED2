@@ -1,7 +1,9 @@
 gitimport asyncio
-import websockets
 import os
 from typing import Dict
+
+import websockets
+
 from Models.DeviceStatus import DeviceStatus
 
 ws_device: Dict[str, DeviceStatus] = {}

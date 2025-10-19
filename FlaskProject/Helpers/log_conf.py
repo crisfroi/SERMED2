@@ -1,8 +1,11 @@
+import datetime
+import logging
 import logging.config
-import  logging
-import  datetime
+
+
 def singleton(cls):
     instances = {}
+
     def get_instance():
         if cls not in instances:
             instances[cls] = cls()
@@ -10,8 +13,9 @@ def singleton(cls):
 
     return get_instance()
 
+
 @singleton
-class Logger():
+class Logger:
     def __init__(self):
         datetimestr = datetime.datetime.now().strftime("%Y-%m-%d")
         logging.basicConfig(
@@ -19,8 +23,7 @@ class Logger():
             format="%(asctime)s [%(levelname)s] %(message)s",
             handlers=[
                 logging.FileHandler(f"log{datetimestr}.log"),
-                logging.StreamHandler()
-            ]
+                logging.StreamHandler(),
+            ],
         )
-        self.logr = logging.getLogger('root')
-        
+        self.logr = logging.getLogger("root")

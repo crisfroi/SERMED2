@@ -1,21 +1,21 @@
+import base64
 import json
+import os
 import uuid
-import  jsons
-from flask import Flask, request, jsonify
-from  flask import render_template
 # from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import os
-from werkzeug.utils import secure_filename
-import base64
+
+import jsons
 from dotenv import load_dotenv
+from flask import Flask, jsonify, render_template, request
 from flask_sock import Sock
+from werkzeug.utils import secure_filename
 
 from config.readConf import readConf
-from Helpers.log_conf import Logger
-
 from database import db, get_database_uri
-from job.SendOrderJob import  SendOrderJob
+from Helpers.log_conf import Logger
+from job.SendOrderJob import SendOrderJob
+
 #
 # os.environ["FLASK_ENV"] = "development"
 # os.environ["FLASK_DEBUG"] = "1"
@@ -24,7 +24,9 @@ sock = Sock(app)
 load_dotenv()
 
 # Database configuration
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI", get_database_uri())
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+    "SQLALCHEMY_DATABASE_URI", get_database_uri()
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Port configuration
@@ -36,94 +38,110 @@ db.init_app(app)
 print("DEBUG: SQLALCHEMY_DATABASE_URI ->", app.config.get("SQLALCHEMY_DATABASE_URI"))
 # ---------------------   # <-- convertir en comentario (o eliminar)
 app.debug = True
-readConf_=readConf()
-url=readConf_.GetDBParam()
+readConf_ = readConf()
+url = readConf_.GetDBParam()
 print(url)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin.sun@121.40.201.85/fingerprint'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@127.0.0.1:3305/fingerprint'
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    "mysql+pymysql://root:123456@127.0.0.1:3305/fingerprint"
+)
 # db = SQLAlchemy(app)
 
-@app.route('/')
+
+@app.route("/")
 def index():  # put application's code here
     print(os.environ["FLASK_ENV"])
-    APP_PATH =  request.base_url[:-1]
+    APP_PATH = request.base_url[:-1]
     print(APP_PATH)
     return render_template("index.html", APP_PATH=APP_PATH)
 
-@app.route('/logRecords')
+
+@app.route("/logRecords")
 def logRecords():  # put application's code here
-    device_sn = request.args.get('deviceSn')
+    device_sn = request.args.get("deviceSn")
     print(os.environ["FLASK_ENV"])
-    APP_PATH =  request.base_url[:-10]
+    APP_PATH = request.base_url[:-10]
     print(APP_PATH)
-    return render_template("logRecords.html", APP_PATH=APP_PATH,deviceSn=device_sn)
+    return render_template("logRecords.html", APP_PATH=APP_PATH, deviceSn=device_sn)
 
 
-@app.route('/a')
+@app.route("/a")
 def index2():
-    data = {'key1': 'value1', 'key2': 'value2'}
+    data = {"key1": "value1", "key2": "value2"}
 
     # 使用jsonify函数将data转换为JSON格式并返回
     return jsonify(data)
 
-from Models.Device import Device, insert_device, get_all_devices, get_device_by_id, get_device_by_serial_num, update_device
-from Models.Person import Person, insert_person, select_person_by_id, delete_person_by_id, update_person_by_id,select_all
-from Models.MachineCommand import MachineCommand, insert_machine_command, select_machine_command_by_id
-from Models.EnrollInfo import EnrollInfo, insert_enroll_info, get_all_enroll_info,selectByBackupnum,update_enroll_info2
-from Models.AccessDay import AccessDay,insert_access_day,get_all_access_days,get_access_day_by_id
-from Models.AccessWeek import AccessWeek, insert_access_week, get_all_access_weeks, get_access_week_by_id
-from Models.LockGroup import LockGroup
-from Models.UserLock import UserLock
-from Models.Records import Record, insert_record,select_all_records,insert_record2
-from Models.Msg import Msg
 
-from Services.PersonService import PersonService,PersonServiceImpl
-from Services.EnrollInfoService import EnrollInfoService
+from Models.AccessDay import (AccessDay, get_access_day_by_id,
+                              get_all_access_days, insert_access_day)
+from Models.AccessWeek import (AccessWeek, get_access_week_by_id,
+                               get_all_access_weeks, insert_access_week)
+from Models.Device import (Device, get_all_devices, get_device_by_id,
+                           get_device_by_serial_num, insert_device,
+                           update_device)
+from Models.EnrollInfo import (EnrollInfo, get_all_enroll_info,
+                               insert_enroll_info, selectByBackupnum,
+                               update_enroll_info2)
+from Models.LockGroup import LockGroup
+from Models.MachineCommand import (MachineCommand, insert_machine_command,
+                                   select_machine_command_by_id)
+from Models.Msg import Msg
+from Models.Person import (Person, delete_person_by_id, insert_person,
+                           select_all, select_person_by_id,
+                           update_person_by_id)
+from Models.Records import (Record, insert_record, insert_record2,
+                            select_all_records)
+from Models.UserLock import UserLock
 from Services.AccessWeekService import AccessWeekService
+from Services.EnrollInfoService import EnrollInfoService
 from Services.LockService import LockGroupService
+from Services.PersonService import PersonService, PersonServiceImpl
 from Services.UserLockService import UserLockService
 
-
-person_=Person()
-enrollinfo=EnrollInfo()
-enrollinfoserive=EnrollInfoService( enroll_info=enrollinfo,person=person_)
+person_ = Person()
+enrollinfo = EnrollInfo()
+enrollinfoserive = EnrollInfoService(enroll_info=enrollinfo, person=person_)
 # machine_command_=MachineCommand()
 # machinecommandservice=MachineCommandService(machine_command=MachineCommand)
-personService = PersonServiceImpl(person=person_, enroll_info=enrollinfoserive, machine_command=MachineCommand())
+personService = PersonServiceImpl(
+    person=person_, enroll_info=enrollinfoserive, machine_command=MachineCommand()
+)
 
 
-
-@app.route('/device', methods=['POST'])
+@app.route("/device", methods=["POST"])
 def create_device():
 
     data = request.get_json()  # Get data from JSON body
-    serial_num = data.get('serial_num')
-    status = data.get('status')
+    serial_num = data.get("serial_num")
+    status = data.get("status")
     insert_device(serial_num, status)
     return jsonify({"message": "Device created successfully."}), 201
-@app.route('/device', methods=['GET'])
+
+
+@app.route("/device", methods=["GET"])
 def get_all_device():
     print("get all device")
     update_status_by_primary_key(62, 1)
     device_list = get_all_devices()
-    device_list = [device.to_dict() for device in device_list]  # Convert each Device to a dictionary
+    device_list = [
+        device.to_dict() for device in device_list
+    ]  # Convert each Device to a dictionary
     return jsons.dump(Msg.success().add("device", device_list))
 
 
-
-@app.route('/enrollInfo', methods=['GET'])
+@app.route("/enrollInfo", methods=["GET"])
 def get_all_enrollinfo():
-    enroll_infoes = get_all_enroll_info() # Person.query.all()
+    enroll_infoes = get_all_enroll_info()  # Person.query.all()
     enroll_infoes = [enroll_info.to_dict() for enroll_info in enroll_infoes]
     return jsons.dump(Msg.success().add("enrollInfo", enroll_infoes))
 
 
-
-@app.route('/sendWs', methods=['GET'])
+@app.route("/sendWs", methods=["GET"])
 def send_ws():
-    device_sn = request.args.get('deviceSn')
-    print(("device_sn:"+device_sn))
-    message = "{\"cmd\":\"getuserlist\",\"stn\":true}"
+    device_sn = request.args.get("deviceSn")
+    print(("device_sn:" + device_sn))
+    message = '{"cmd":"getuserlist","stn":true}'
 
     device_list = Device.query.all()
     for device in device_list:
@@ -135,7 +153,7 @@ def send_ws():
             serial=device.serial_num,
             gmt_crate=datetime.now(),
             gmt_modified=datetime.now(),
-            content=message
+            content=message,
         )
         print(machine_command)
         db.session.add(machine_command)
@@ -144,47 +162,44 @@ def send_ws():
     return jsons.dump(Msg.success())
 
 
-
-
-
-@app.route('/addPerson', methods=['POST'])
+@app.route("/addPerson", methods=["POST"])
 def add_person():
     person_temp = request.form
-    pic = request.files['pic']
+    pic = request.files["pic"]
     # path = "C:/dynamicface/picture/"
-    path=readConf().GetUploadParam()
+    path = readConf().GetUploadParam()
     photo_name = ""
     new_name = ""
     if pic:
         if pic.filename:
             photo_name = secure_filename(pic.filename)
-            new_name = str(uuid.uuid4()) + photo_name[photo_name.rfind('.'):]
+            new_name = str(uuid.uuid4()) + photo_name[photo_name.rfind(".") :]
             photo_file = os.path.join(path, new_name)
             pic.save(photo_file)
 
     person = {
-        'id': person_temp.get('userId'),
-        'name': person_temp.get('name'),
-        'roll_id': person_temp.get('privilege')
+        "id": person_temp.get("userId"),
+        "name": person_temp.get("name"),
+        "roll_id": person_temp.get("privilege"),
     }
-    existing_person = select_person_by_id(person_temp.get('userId'))
+    existing_person = select_person_by_id(person_temp.get("userId"))
 
     if not existing_person:
         insert_person(**person)
 
-    if person_temp.get('password'):
+    if person_temp.get("password"):
         enroll_info_temp2 = {
-            'backupnum': 10,
-            'enroll_id': person_temp.get('userId'),
-            'signatures': person_temp.get('password')
+            "backupnum": 10,
+            "enroll_id": person_temp.get("userId"),
+            "signatures": person_temp.get("password"),
         }
         insert_enroll_info(**enroll_info_temp2)
 
-    if person_temp.get('cardNum'):
+    if person_temp.get("cardNum"):
         enroll_info_temp3 = {
-            'backupnum': 11,
-            'enroll_id': person_temp.get('userId'),
-            'signatures': person_temp.get('cardNum')
+            "backupnum": 11,
+            "enroll_id": person_temp.get("userId"),
+            "signatures": person_temp.get("cardNum"),
         }
         insert_enroll_info(**enroll_info_temp3)
 
@@ -193,27 +208,27 @@ def add_person():
             base64_str = base64.b64encode(image_file.read()).decode()
 
         enroll_info_temp = {
-            'backupnum': 50,
-            'enroll_id': person_temp.get('userId'),
-            'imagepath': new_name,
-            'signatures': base64_str
+            "backupnum": 50,
+            "enroll_id": person_temp.get("userId"),
+            "imagepath": new_name,
+            "signatures": base64_str,
         }
         insert_enroll_info(**enroll_info_temp)
     else:
         enroll_info_temp = {
-            'backupnum': 50,
-            'enroll_id': person_temp.get('userId'),
-            'imagepath': "",
-            'signatures': ""
+            "backupnum": 50,
+            "enroll_id": person_temp.get("userId"),
+            "imagepath": "",
+            "signatures": "",
         }
         insert_enroll_info(**enroll_info_temp)
     return jsons.dump(Msg.success())
 
 
-@app.route('/getUserInfo', methods=['GET'])
+@app.route("/getUserInfo", methods=["GET"])
 def get_user_info():
     print("Get user info")
-    device_sn = request.args.get('deviceSn')
+    device_sn = request.args.get("deviceSn")
     persons = Person.query.all()
     enrolls_prepared = []
     for person in persons:
@@ -227,11 +242,11 @@ def get_user_info():
     return jsons.dump(Msg.success())
 
 
-@app.route('/sendGetUserInfo', methods=['GET'])
+@app.route("/sendGetUserInfo", methods=["GET"])
 def send_get_user_info():
-    enroll_id = request.args.get('enrollId', type=int)
-    backupnum = request.args.get('backupNum', type=int)
-    device_sn = request.args.get('deviceSn')
+    enroll_id = request.args.get("enrollId", type=int)
+    backupnum = request.args.get("backupNum", type=int)
+    device_sn = request.args.get("deviceSn")
 
     device_list = Device.query.all()
     print("Device info: ", device_list)
@@ -243,39 +258,46 @@ def send_get_user_info():
     return jsons.dump(Msg.success())
 
 
-@app.route('/setPersonToDevice', methods=['GET']) #2024年1月8日16:53:53
+@app.route("/setPersonToDevice", methods=["GET"])  # 2024年1月8日16:53:53
 def send_set_user_info():
-    device_sn = request.args.get('deviceSn')
+    device_sn = request.args.get("deviceSn")
 
     personService.setUserToDevice2(device_sn)
 
     return jsons.dump(Msg.success())
 
 
-@app.route('/setUsernameToDevice', methods=['GET']) #2024年1月8日18:06:22
+@app.route("/setUsernameToDevice", methods=["GET"])  # 2024年1月8日18:06:22
 def set_username_to_device():
-    device_sn = request.args.get('deviceSn')
+    device_sn = request.args.get("deviceSn")
 
     personService.set_username_to_device(device_sn)
 
     return jsons.dump(Msg.success())
 
 
-@app.route('/getDeviceInfo', methods=['GET']) #2024年1月8日18:06:22
+@app.route("/getDeviceInfo", methods=["GET"])  # 2024年1月8日18:06:22
 def get_device_info():
-    device_sn = request.args.get('deviceSn')
+    device_sn = request.args.get("deviceSn")
 
-    message ='{"cmd":"getdevinfo"}'
-    machine_command = MachineCommand(content=message, name="getdevinfo", status=0, send_status=0, err_count=0, serial = device_sn)
+    message = '{"cmd":"getdevinfo"}'
+    machine_command = MachineCommand(
+        content=message,
+        name="getdevinfo",
+        status=0,
+        send_status=0,
+        err_count=0,
+        serial=device_sn,
+    )
     machine_command.insert_machine_command(machine_command)
     return jsons.dump(Msg.success())
 
 
-@app.route('/setOneUser', methods=['GET']) #2024年1月8日18:06:22
+@app.route("/setOneUser", methods=["GET"])  # 2024年1月8日18:06:22
 def set_one_user_to():
-    enroll_id = request.args.get('enrollId', type=int)
-    backupnum = request.args.get('backupNum', type=int)
-    device_sn = request.args.get('deviceSn')
+    enroll_id = request.args.get("enrollId", type=int)
+    backupnum = request.args.get("backupNum", type=int)
+    device_sn = request.args.get("deviceSn")
 
     # print("Set one user to device: ", enroll_id, backupnum, device_sn)
     person = select_person_by_id(enroll_id)
@@ -283,19 +305,28 @@ def set_one_user_to():
     # print("Enroll info: ", enroll_info)
     # print("Enroll info: ", enroll_info.signatures)
     if enroll_info is not None:
-        personService.set_user_to_device(enroll_id, person.name, backupnum, person.roll_id, enroll_info.signatures,device_sn)
+        personService.set_user_to_device(
+            enroll_id,
+            person.name,
+            backupnum,
+            person.roll_id,
+            enroll_info.signatures,
+            device_sn,
+        )
         return jsons.dump(Msg.success())
     elif backupnum == -1:
-        personService.set_user_to_device(enroll_id, person.name, backupnum, 0, "", device_sn)
+        personService.set_user_to_device(
+            enroll_id, person.name, backupnum, 0, "", device_sn
+        )
         return jsons.dump(Msg.success())
     else:
         return jsons.dump(Msg.fail())
 
 
-@app.route('/deletePersonFromDevice', methods=['GET'])
+@app.route("/deletePersonFromDevice", methods=["GET"])
 def delete_device_user_info():
-    enroll_id = request.args.get('enrollId', type=int)
-    device_sn = request.args.get('deviceSn')
+    enroll_id = request.args.get("enrollId", type=int)
+    device_sn = request.args.get("deviceSn")
 
     print("Deleting user devicesn: ", device_sn)
     personService.delete_user_info_from_device(enroll_id, device_sn)
@@ -303,9 +334,9 @@ def delete_device_user_info():
     return jsons.dump(Msg.success())
 
 
-@app.route('/initSystem', methods=['GET']) #todo 2024年1月8日18:06:22 没有测试
+@app.route("/initSystem", methods=["GET"])  # todo 2024年1月8日18:06:22 没有测试
 def init_system():
-    device_sn = request.args.get('deviceSn')
+    device_sn = request.args.get("deviceSn")
 
     print("Initialization request")
     # 创建消息
@@ -317,16 +348,23 @@ def init_system():
     s6 = '{"cmd": "getusername", "enrollid": 1}'
     message = '{"cmd": "initsys"}'
 
-    machine_command = MachineCommand(content=message, name="initsys", status=0, send_status=0, err_count=0, serial=device_sn)
+    machine_command = MachineCommand(
+        content=message,
+        name="initsys",
+        status=0,
+        send_status=0,
+        err_count=0,
+        serial=device_sn,
+    )
 
     machine_command.insert_machine_command(machine_command)
 
     return jsons.dump(Msg.success())
 
 
-@app.route('/getAllLog', methods=['GET'])
+@app.route("/getAllLog", methods=["GET"])
 def getAllLog():
-    device_sn = request.args.get('deviceSn')
+    device_sn = request.args.get("deviceSn")
 
     message = '{"cmd":"getalllog","stn":true}'
     # messageTemp = '{"cmd":"getalllog","stn":true,"from":"2020-12-03","to":"2020-12-30"}'
@@ -344,33 +382,46 @@ def getAllLog():
     machine_command.insert_machine_command(machine_command)
     return jsons.dump(Msg.success())
 
-@app.route('/getNewLog', methods=['GET'])
+
+@app.route("/getNewLog", methods=["GET"])
 def get_new_log():
-    device_sn = request.args.get('deviceSn')
+    device_sn = request.args.get("deviceSn")
     message = '{"cmd": "getnewlog", "stn": true}'
-    machine_command = MachineCommand(content=message, name="getnewlog", status=0, send_status=0, err_count=0,serial=device_sn)
+    machine_command = MachineCommand(
+        content=message,
+        name="getnewlog",
+        status=0,
+        send_status=0,
+        err_count=0,
+        serial=device_sn,
+    )
     machine_command.insert_machine_command(machine_command)
     return jsons.dump(Msg.success())
 
-from  Services.AccessDayService import  AccessDayService
-@app.route('/setAccessDay', methods=['POST'])
+
+from Services.AccessDayService import AccessDayService
+
+
+@app.route("/setAccessDay", methods=["POST"])
 def set_access_day():
     access_day = request.form.to_dict()
     print(access_day)
-    if get_access_day_by_id(access_day['id']) is not None:
+    if get_access_day_by_id(access_day["id"]) is not None:
         return jsons.dump(Msg.fail())
     access_day_instance = AccessDay(**access_day)
     db.session.add(access_day_instance)
     # insert_access_day(access_day)
-    accessDayService=AccessDayService()
+    accessDayService = AccessDayService()
     accessDayService.set_access_day()
     return jsons.dump(Msg.success())
 
 
-@app.route('/setAccessWeek', methods=['POST'])
+@app.route("/setAccessWeek", methods=["POST"])
 def set_access_week():
-    access_week = request.form.to_dict()  # assumes you're receiving JSON data in the request body
-    if get_access_week_by_id(access_week['id']) is not None:
+    access_week = (
+        request.form.to_dict()
+    )  # assumes you're receiving JSON data in the request body
+    if get_access_week_by_id(access_week["id"]) is not None:
         return jsons.dump(Msg.fail())
     access_week_instance = AccessWeek(**access_week)
     db.session.add(access_week_instance)
@@ -378,130 +429,175 @@ def set_access_week():
     accessWeekService.set_access_week()
     return jsons.dump(Msg.success())
 
-from flask import send_from_directory  #2024年1月10日23:37:16
-@app.route('/img/<filename>', methods=['GET'])
+
+from flask import send_from_directory  # 2024年1月10日23:37:16
+
+
+@app.route("/img/<filename>", methods=["GET"])
 def upload_file(filename):
     path = readConf().GetUploadParam()
     return send_from_directory(path, filename)
 
-@app.route('/setLocckGroup', methods=['POST'])
+
+@app.route("/setLocckGroup", methods=["POST"])
 def set_lock_group():
-    lock_group =  request.form.to_dict()
+    lock_group = request.form.to_dict()
     lockGroupService = LockGroupService()
     lockGroupService.set_lock_group(lock_group)
     return jsons.dump(Msg.success())
 
 
-
-
-@app.route('/setUserLock', methods=['POST'])  #2024年1月10日23:37:16
+@app.route("/setUserLock", methods=["POST"])  # 2024年1月10日23:37:16
 def set_user_lock():
-    user_lock =  request.form.to_dict()
+    user_lock = request.form.to_dict()
     userLockService = UserLockService()
-    userLockService.set_user_lock(user_lock, user_lock['starttime'], user_lock['endtime'])
+    userLockService.set_user_lock(
+        user_lock, user_lock["starttime"], user_lock["endtime"]
+    )
     return jsons.dump(Msg.success())
 
+
 from Models.Page import PageInfo
-@app.route('/emps', methods=['GET'])
+
+
+@app.route("/emps", methods=["GET"])
 def get_all_person_from_db():
-    pn = request.args.get('pn', default=1, type=int)
+    pn = request.args.get("pn", default=1, type=int)
     person_list = select_all()
-    enroll_list = get_all_enroll_info()  #EnrollInfo.select_all()
+    enroll_list = get_all_enroll_info()  # EnrollInfo.select_all()
     emps = []
     for person in person_list:
         for enroll_info in enroll_list:
             if person.id == enroll_info.enroll_id and enroll_info.backupnum == 50:
-                emps.append({
-                    'enrollId': person.id,
-                    'admin': person.roll_id,
-                    'name': person.name,
-                    'imagePath': enroll_info.imagepath
-                })
-    page=PageInfo(emps,5)
+                emps.append(
+                    {
+                        "enrollId": person.id,
+                        "admin": person.roll_id,
+                        "name": person.name,
+                        "imagePath": enroll_info.imagepath,
+                    }
+                )
+    page = PageInfo(emps, 5)
     # return jsons.dump(success=True, pageInfo={'emps': emps, 'pn': pn})  # you'll need to implement your own paging
     return jsons.dump(Msg.success().add("pageInfo", page))
-#Msg.success().add("device", device_list)
 
-@app.route('/records', methods=['GET'])
+
+# Msg.success().add("device", device_list)
+
+
+@app.route("/records", methods=["GET"])
 def get_all_log_from_db():
-    pn = request.args.get('pn', default=1, type=int)
+    pn = request.args.get("pn", default=1, type=int)
     records = select_all_records()
 
     records = [record.to_dict() for record in records]
     print(records)
-    pageInfo=PageInfo(records,5)
+    pageInfo = PageInfo(records, 5)
     # print(pageInfo)
     return jsons.dump(Msg.success().add("pageInfo", pageInfo))
 
-@app.route('/accessDays', methods=['GET'])
+
+@app.route("/accessDays", methods=["GET"])
 def get_access_day_from_db():
     access_days = get_all_access_days()
-    access_days = [access_day.to_dict() for access_day in access_days]  # Convert each Device to a dictionary
+    access_days = [
+        access_day.to_dict() for access_day in access_days
+    ]  # Convert each Device to a dictionary
     # print(access_days)
     return jsons.dump(Msg.success().add("accessdays", access_days))
 
 
-
-@app.route('/uploadUserToDevice', methods=['POST']) #todo:这个可能没有用 2024年1月11日09:57:54
+@app.route(
+    "/uploadUserToDevice", methods=["POST"]
+)  # todo:这个可能没有用 2024年1月11日09:57:54
 def upload_user_to_device():
-    enroll_id = request.args.get('enrollId', type=int)
+    enroll_id = request.args.get("enrollId", type=int)
     person = Person.selectByPrimaryKey(enroll_id)
     # you'll need to implement the actual upload function
     return jsons.dump(Msg.success())
 
 
-
-
-@app.route('/openDoor', methods=['GET'])
+@app.route("/openDoor", methods=["GET"])
 def open_door():
-    door_num = request.args.get('doorNum', type=int)
-    device_sn = request.args.get('deviceSn')
-    message = json.dumps({'cmd': 'opendoor', 'doornum': door_num})
-    machine_command = MachineCommand(content=message, name="opendoor", status=0, send_status=0, err_count=0,serial=device_sn)
+    door_num = request.args.get("doorNum", type=int)
+    device_sn = request.args.get("deviceSn")
+    message = json.dumps({"cmd": "opendoor", "doornum": door_num})
+    machine_command = MachineCommand(
+        content=message,
+        name="opendoor",
+        status=0,
+        send_status=0,
+        err_count=0,
+        serial=device_sn,
+    )
     machine_command.insert_machine_command(machine_command)
     return jsons.dump(Msg.success())
 
 
-@app.route('/getDevLock', methods=['GET'])
+@app.route("/getDevLock", methods=["GET"])
 def get_dev_lock():
-    device_sn = request.args.get('deviceSn')
-    message =json.dumps({"cmd": "getdevlock"})
-    machine_command = MachineCommand(content=message, name="getdevlock", status=0, send_status=0, err_count=0,serial=device_sn)
+    device_sn = request.args.get("deviceSn")
+    message = json.dumps({"cmd": "getdevlock"})
+    machine_command = MachineCommand(
+        content=message,
+        name="getdevlock",
+        status=0,
+        send_status=0,
+        err_count=0,
+        serial=device_sn,
+    )
     machine_command.insert_machine_command(machine_command)
     return jsons.dump(Msg.success())
 
 
-@app.route('/getUserLock', methods=['GET'])
+@app.route("/getUserLock", methods=["GET"])
 def get_user_lock():
-    enroll_id = request.args.get('enrollId', type=int)
-    device_sn = request.args.get('deviceSn')
+    enroll_id = request.args.get("enrollId", type=int)
+    device_sn = request.args.get("deviceSn")
     message = json.dumps({"cmd": "getuserlock", "enrollid": enroll_id})
-    machine_command = MachineCommand(content=message, name="getuserlock", status=0, send_status=0, err_count=0, serial=device_sn)
+    machine_command = MachineCommand(
+        content=message,
+        name="getuserlock",
+        status=0,
+        send_status=0,
+        err_count=0,
+        serial=device_sn,
+    )
     machine_command.insert_machine_command(machine_command)
     return jsons.dump(Msg.success())
 
 
-@app.route('/cleanAdmin', methods=['GET'])
+@app.route("/cleanAdmin", methods=["GET"])
 def clean_admin():
-    device_sn = request.args.get('deviceSn')
-    message =json.dumps({"cmd": "cleanadmin"})
-    machine_command = MachineCommand(content=message, name="cleanadmin", status=0, send_status=0, err_count=0, serial=device_sn)
+    device_sn = request.args.get("deviceSn")
+    message = json.dumps({"cmd": "cleanadmin"})
+    machine_command = MachineCommand(
+        content=message,
+        name="cleanadmin",
+        status=0,
+        send_status=0,
+        err_count=0,
+        serial=device_sn,
+    )
     machine_command.insert_machine_command(machine_command)
     return jsons.dump(Msg.success())
 
-#endregion-----------web 处理结束---------------------------------------------
 
-#region-----------web socket处理开始---------------------------------------------
-@sock.route('/')
+# endregion-----------web 处理结束---------------------------------------------
+
+
+# region-----------web socket处理开始---------------------------------------------
+@sock.route("/")
 def websock(sock):
     while True:
         data = sock.receive()
-        #if not data is None:
-        print('收到消息/pub/chat:', data)
+        # if not data is None:
+        print("收到消息/pub/chat:", data)
         # sock.send(data[::-1])
-        #sock.send(data)
+        # sock.send(data)
 
-@sock.route('/pub/chat')
+
+@sock.route("/pub/chat")
 def handler(sock):
     try:
         while True:
@@ -512,40 +608,42 @@ def handler(sock):
             # reply = f"Data received as \"{message}\".  time: {dt}"
             # print(reply)
             try:
-                #对数据进行解析
+                # 对数据进行解析
                 try:
                     jsonMsg = json.loads(message)
                 except:
                     import traceback
+
                     traceback.print_exc()
 
                 try:
                     cmd = jsonMsg["cmd"]
-                except :
-                    cmd=""
+                except:
+                    cmd = ""
                     # import traceback
                     # traceback.print_exc()
-                try :
+                try:
                     ret = jsonMsg["ret"]
-                except :
+                except:
                     # import traceback
                     # traceback.print_exc()
-                    ret=""
+                    ret = ""
                 print("cmd--:" + cmd)
                 print("ret--:" + ret)
-                if len(cmd) != 0 :  # client active send data
+                if len(cmd) != 0:  # client active send data
                     print("cmd--:" + cmd)
 
                     if cmd == "reg":
                         try:
 
-                            get_device_info_websocket(jsonMsg,sock)
+                            get_device_info_websocket(jsonMsg, sock)
                         except Exception as err:
                             print(err)
                             import traceback
+
                             traceback.print_exc()
                             # sock.send(json.dumps({"ret": "reg", "result": False, "reason": 1}))
-                            sock.send("{\"ret\":\"reg\",\"result\":false,\"reason\":1}")
+                            sock.send('{"ret":"reg","result":false,"reason":1}')
                     elif cmd == "sendlog":
                         try:
                             # print("sendlog:" + str(jsonMsg))
@@ -553,21 +651,23 @@ def handler(sock):
                         except Exception as err:
                             print(err)
                             import traceback
+
                             traceback.print_exc()
-                            #sock.send(json.dumps({"ret": "sendlog", "result": False, "reason": 1}))
-                            sock.send("{\"ret\":\"sendlog\",\"result\":false,\"reason\":1}")
+                            # sock.send(json.dumps({"ret": "sendlog", "result": False, "reason": 1}))
+                            sock.send('{"ret":"sendlog","result":false,"reason":1}')
                     elif cmd == "senduser":
                         try:
                             get_enroll_info(jsonMsg, sock)
                         except Exception as err:
                             print(err)
                             import traceback
+
                             traceback.print_exc()
                             # sock.send(json.dumps({"ret": "senduser", "result": False, "reason": 1}))
-                            sock.send("{\"ret\":\"senduser\",\"result\":false,\"reason\":1}")
+                            sock.send('{"ret":"senduser","result":false,"reason":1}')
                     else:
                         print("cmd未知:" + cmd)
-                elif len(ret) != 0 :  # server send cmd and rec data
+                elif len(ret) != 0:  # server send cmd and rec data
                     print("ret--:" + ret)
                     if ret == "getuserlist":
                         print("getuserlist:" + str(jsonMsg))
@@ -576,7 +676,7 @@ def handler(sock):
                         print("getuserinfo:" + str(jsonMsg))
                         get_user_info_websocket(jsonMsg, sock)
                         sn = jsonMsg["sn"]
-                        deviceStatus=DeviceStatus()
+                        deviceStatus = DeviceStatus()
                         deviceStatus.device_sn = sn
                         deviceStatus.websocket = sock
                         deviceStatus.status = 1
@@ -590,13 +690,14 @@ def handler(sock):
                         deviceStatus.websocket = sock
                         deviceStatus.status = 1
                         update_device_websocket(sn, deviceStatus)
-                        update_command_status_websocket(sn,"setuserinfo")
+                        update_command_status_websocket(sn, "setuserinfo")
                     elif ret == "getalllog":
-                        print("获取所有打卡记录"+ str(jsonMsg))
+                        print("获取所有打卡记录" + str(jsonMsg))
                         try:
                             get_all_log(jsonMsg, sock)
                         except Exception as err:
                             import traceback
+
                             traceback.print_exc()
                             print(err)
                     elif ret == "getnewlog":
@@ -606,10 +707,11 @@ def handler(sock):
                             get_new_log(jsonMsg, sock)
                         except Exception as err:
                             import traceback
+
                             traceback.print_exc()
                             print(err)
 
-                    #region 没有，在java中 2024年1月15日10:06:25
+                    # region 没有，在java中 2024年1月15日10:06:25
                     # elif ret == "getallusers":
                     #     result = jsonMsg["result"]
                     #     if result == True:
@@ -739,10 +841,11 @@ def handler(sock):
             except Exception as ex:
                 print("error:" + str(ex))
                 import traceback
+
                 traceback.print_exc()
                 # Logger.logr.error(ex)
 
-            #await websocket.send(reply)
+            # await websocket.send(reply)
     # except sock.exceptions.ProtocolError as e:
     #     Logger.logr.error(e)
     # except sock.exceptions.ConnectionClosedOK:
@@ -751,14 +854,19 @@ def handler(sock):
     #     Logger.logr.error('Connection closed with an error')
     except Exception as e:
         import traceback
+
         traceback.print_exc()
         print(e)
 
     finally:
         pass
-#region 功能函数
+
+
+# region 功能函数
 from Models.DeviceStatus import DeviceStatus
 from web_socket.WebSocketPool import WebSocketPool
+
+
 def update_device_websocket(sn, device_status):
 
     if WebSocketPool.get_device_status(sn) is not None:
@@ -766,20 +874,25 @@ def update_device_websocket(sn, device_status):
     else:
         WebSocketPool.add_device_and_status(sn, device_status)
 
+
 def update_command_status_websocket(serial, command_type):
-    print("serial:"+str(serial) +" command_type:"+ command_type)
+    print("serial:" + str(serial) + " command_type:" + command_type)
     machine_command = find_pending_command(1, serial)
     print("update_command_status_websocket")
     print(machine_command)
     if len(machine_command) > 0 and machine_command[0].name == command_type:
-       update_command_status(1, 0, datetime.now(), machine_command[0].id)
+        update_command_status(1, 0, datetime.now(), machine_command[0].id)
 
-from Models.Device import Device,get_device_by_serial_num,insert_device,update_status_by_primary_key
 
-time_stamp =0
-time_stamp2=0
+from Models.Device import (Device, get_device_by_serial_num, insert_device,
+                           update_status_by_primary_key)
+
+time_stamp = 0
+time_stamp2 = 0
+
+
 def get_device_info_websocket(json_node, sock_):
-    sn = json_node.get('sn')
+    sn = json_node.get("sn")
 
     device_status = {}
     if sn:
@@ -793,33 +906,36 @@ def get_device_info_websocket(json_node, sock_):
         else:
             update_status_by_primary_key(d1.id, 1)
 
-        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        message = json.dumps({'ret': 'reg', 'result': True, 'cloudtime': current_time})
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        message = json.dumps({"ret": "reg", "result": True, "cloudtime": current_time})
         # emit('message', message, room=args1)
         sock_.send(message)
-        device_status = {'websocket': sock_, 'status': 1, 'device_sn': sn}
+        device_status = {"websocket": sock_, "status": 1, "device_sn": sn}
         update_device_websocket(sn, device_status)
         # print(cls.get_device_status(sn))
         # j_obj = {'SN': sn, 'currentTime': datetime.now().timestamp()}
         # RestTemplateUtil.post_device_info(j_obj)  # Implement this method in your way
     else:
-        message = json.dumps({'ret': 'reg', 'result': False, 'reason': 1})
+        message = json.dumps({"ret": "reg", "result": False, "reason": 1})
         # emit('message', message, room=args1)
         sock_.send(message)
-        device_status = {'websocket': sock_, 'status': 1, 'device_sn': sn}
+        device_status = {"websocket": sock_, "status": 1, "device_sn": sn}
         update_device_websocket(sn, device_status)
     global time_stamp
     global time_stamp2
     time_stamp = datetime.now().timestamp()
     time_stamp2 = time_stamp
-    #endregion-----------web socket处理结束---------------------------------------------
+    # endregion-----------web socket处理结束---------------------------------------------
 
 
 import uuid
 
 # from collections import defaultdict
-from Models.Records import Record,insert_record,select_all_records,select_record_by_id,update_record_by_id
-from supabase_bridge import push_attendance_batch, resolve_device_id_by_tmno, update_device_last_seen
+from Models.Records import (Record, insert_record, select_all_records,
+                            select_record_by_id, update_record_by_id)
+from supabase_bridge import (push_attendance_batch, resolve_device_id_by_tmno,
+                             update_device_last_seen)
+
 
 def get_attendance(json_node, conn):
     sn = json_node["sn"]
@@ -830,7 +946,7 @@ def get_attendance(json_node, conn):
     flag = False
     if count > 0:
         for record in json_node["record"]:
-            obj = {} # todo: 现在没有用，这个 2024年1月11日18:40:14
+            obj = {}  # todo: 现在没有用，这个 2024年1月11日18:40:14
             enroll_id = record["enrollid"]
             time_str = record["time"]
             mode = record["mode"]
@@ -841,13 +957,13 @@ def get_attendance(json_node, conn):
                 temperature = round(record["temp"] / 10, 1)
                 obj["temperature"] = str(temperature)
             records = {
-                'device_serial_num': sn,
-                'enroll_id': enroll_id,
-                'event': event,
-                'intOut': in_out,
-                'mode': mode,
-                'records_time': time_str,
-                'temperature': temperature
+                "device_serial_num": sn,
+                "enroll_id": enroll_id,
+                "event": event,
+                "intOut": in_out,
+                "mode": mode,
+                "records_time": time_str,
+                "temperature": temperature,
             }
             if enroll_id == 99999999:
                 obj["resultStatus"] = 0
@@ -871,15 +987,29 @@ def get_attendance(json_node, conn):
             obj["userid"] = str(enroll_id)
             # Rest of your logic here
         if log_index >= 0:
-            conn.send(json.dumps({"ret":"sendlog","result":True,"count":count,"logindex":log_index,"cloudtime":str(datetime.now())}))
+            conn.send(
+                json.dumps(
+                    {
+                        "ret": "sendlog",
+                        "result": True,
+                        "count": count,
+                        "logindex": log_index,
+                        "cloudtime": str(datetime.now()),
+                    }
+                )
+            )
         elif log_index < 0:
-            conn.send(json.dumps({"ret":"sendlog","result":True,"cloudtime":str(datetime.now())}))
+            conn.send(
+                json.dumps(
+                    {"ret": "sendlog", "result": True, "cloudtime": str(datetime.now())}
+                )
+            )
         device_status.websocket = conn
         device_status.status = 1
         device_status.device_sn = sn
         update_device_websocket(sn, device_status)
     elif count == 0:
-        conn.send(json.dumps({"ret":"sendlog","result":False,"reason":1}))
+        conn.send(json.dumps({"ret": "sendlog", "result": False, "reason": 1}))
         device_status.websocket = conn
         device_status.status = 1
         device_status.device_sn = sn
@@ -887,7 +1017,7 @@ def get_attendance(json_node, conn):
     print(record_all)
     # Persist locally in MySQL (existing behavior)
     for record in record_all:
-        insert_record2(**record) # dict 保存 2024年1月22日13:25:02
+        insert_record2(**record)  # dict 保存 2024年1月22日13:25:02
     # Push to Supabase for realtime consumption
     try:
         push_attendance_batch(sn, record_all)
@@ -897,22 +1027,24 @@ def get_attendance(json_node, conn):
     global timestamp2
     timestamp2 = datetime.now()
 
+
 def base64_to_image(base64_string, pic_name):
     try:
         image_data = base64.b64decode(base64_string)
-        with open(os.path.join(readConf_.GetUploadParam(), pic_name + '.jpg'), 'wb') as f:
+        with open(
+            os.path.join(readConf_.GetUploadParam(), pic_name + ".jpg"), "wb"
+        ) as f:
             f.write(image_data)
         return True
     except Exception as e:
         print(f"Error occurred: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
 
 import json
-
-
 
 
 def get_enroll_info(json_node, conn):
@@ -935,21 +1067,17 @@ def get_enroll_info(json_node, conn):
         name = json_node["name"]
         roll_id = json_node["admin"]
         signatures = json_node["record"]
-        person= {
-            'id': enroll_id,
-            'name': name,
-            'roll_id': roll_id
-        }
+        person = {"id": enroll_id, "name": name, "roll_id": roll_id}
 
-        #person_service.select_by_primary_key(enroll_id)
+        # person_service.select_by_primary_key(enroll_id)
 
         if select_person_by_id(enroll_id) is None:
             insert_person(**person)
 
-        enroll_info ={
-            'enroll_id': enroll_id,
-            'backupnum': backupnum,
-            'signatures': signatures
+        enroll_info = {
+            "enroll_id": enroll_id,
+            "backupnum": backupnum,
+            "signatures": signatures,
         }
 
         if backupnum == 50:
@@ -960,10 +1088,19 @@ def get_enroll_info(json_node, conn):
         if selectByBackupnum(enroll_id, backupnum) is None:
             insert_enroll_info(**enroll_info)
         else:
-            update_enroll_info2(enroll_id,enroll_info["imagepath"],enroll_info["signatures"]) # 更新，2024年1月25日10:31:19 新加
+            update_enroll_info2(
+                enroll_id, enroll_info["imagepath"], enroll_info["signatures"]
+            )  # 更新，2024年1月25日10:31:19 新加
 
-        conn.send(json.dumps(
-            {"ret": "senduser", "result": True, "cloudtime": datetime.now().strftime('%Y-%m-%d %H:%M:%S')}))
+        conn.send(
+            json.dumps(
+                {
+                    "ret": "senduser",
+                    "result": True,
+                    "cloudtime": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                }
+            )
+        )
         device_status.websocket = conn
         device_status.status = 1
         device_status.device_sn = sn
@@ -973,7 +1110,9 @@ def get_enroll_info(json_node, conn):
     timestamp2 = datetime.now()
 
 
-from  Models.UserTemp import UserTemp
+from Models.UserTemp import UserTemp
+
+
 def get_user_list(json_node, conn):
     user_temps = []
 
@@ -984,17 +1123,19 @@ def get_user_list(json_node, conn):
     if result:
         count = jsonNode["count"]
         records = jsonNode["record"]
-        print("get_user_list:count "+str(count))
+        print("get_user_list:count " + str(count))
         if count > 0:
             for record in records:
                 enroll_id = record["enrollid"]
                 admin = record["admin"]
                 backupnum = record["backupnum"]
-                user_temp = UserTemp(enrollId = enroll_id, backupnum=backupnum, admin=admin)
+                user_temp = UserTemp(
+                    enrollId=enroll_id, backupnum=backupnum, admin=admin
+                )
                 user_temps.append(user_temp)
 
             # conn.send(json.dumps({"cmd": "getuserlist", "stn": False}))
-            conn.send("{\"cmd\":\"getuserlist\",\"stn\":false}")
+            conn.send('{"cmd":"getuserlist","stn":false}')
             print("get_user_list count > 0 send")
             print(conn)
             device_status.websocket = conn
@@ -1005,33 +1146,38 @@ def get_user_list(json_node, conn):
     for user_temp in user_temps:
         if select_person_by_id(user_temp.enrollId) is None:
             # person_temp = Person(id=user_temp.enrollId, name="", roll_id=user_temp.admin)
-            person_temp={
-                'id': user_temp.enrollId,
-                'name': "",
-                'roll_id': user_temp.admin
+            person_temp = {
+                "id": user_temp.enrollId,
+                "name": "",
+                "roll_id": user_temp.admin,
             }
             insert_person(**person_temp)
 
     for user_temp in user_temps:
         if selectByBackupnum(user_temp.enrollId, user_temp.backupnum) is None:
             # enroll_info = EnrollInfo(enroll_id=user_temp.enrollId, backupnum=user_temp.backupnum)
-            enroll_info={
-                'enroll_id': user_temp.enrollId,
-                'backupnum': user_temp.backupnum,
-                'imagepath':  "",
-                'signatures': ""
+            enroll_info = {
+                "enroll_id": user_temp.enrollId,
+                "backupnum": user_temp.backupnum,
+                "imagepath": "",
+                "signatures": "",
             }
             insert_enroll_info(**enroll_info)
 
     update_command_status_websocket(sn, "getuserlist")
     print("update_command_status_websocket")
-from Models.MachineCommand import MachineCommand,find_pending_command,update_command_status
+
+
+from Models.MachineCommand import (MachineCommand, find_pending_command,
+                                   update_command_status)
+from Models.Person import insert_person2, update_by_primary_key
+
 # def update_command_status_(serial, command_type):
 #     machine_command = find_pending_command(1, serial)
 #     if len(machine_command) > 0 and machine_command[0].name == command_type:
 #         update_command_status(1, 0, datetime.datetime.now(), machine_command[0].id)
 
-from Models.Person import insert_person2,update_by_primary_key
+
 def get_user_info_websocket(json_node, conn):
     result = json_node["result"]
     sn = json_node["sn"]
@@ -1060,15 +1206,16 @@ def get_user_info_websocket(json_node, conn):
             update_by_primary_key(person)
 
         if enroll_info is None:
-            enroll_info={
-                'enroll_id': 0,
-                'backupnum': None,
-                'signatures': None,
-                'imagepath': None,
+            enroll_info = {
+                "enroll_id": 0,
+                "backupnum": None,
+                "signatures": None,
+                "imagepath": None,
             }
             insert_enroll_info(**enroll_info)
         elif enroll_info is not None:
             from Models.EnrollInfo import update_by_primary_key_with_blobs
+
             enroll_info.signatures = signatures
             update_by_primary_key_with_blobs(enroll_info)
 
@@ -1098,8 +1245,15 @@ def get_all_log(json_node, conn):
                     temperature = temperature / 100
                     temperature = round(temperature, 1)
 
-                rec = Record(enroll_id=enroll_id, event=event, intOut=in_out, mode=mode, records_time=time_str,
-                              device_serial_num=sn, temperature=temperature)
+                rec = Record(
+                    enroll_id=enroll_id,
+                    event=event,
+                    intOut=in_out,
+                    mode=mode,
+                    records_time=time_str,
+                    device_serial_num=sn,
+                    temperature=temperature,
+                )
                 record_all.append(rec)
 
             conn.send(json.dumps({"cmd": "getalllog", "stn": False}))
@@ -1137,8 +1291,15 @@ def get_all_log(json_node, conn):
                     temperature = temperature / 100
                     temperature = round(temperature, 1)
 
-                rec = Record(enroll_id=enroll_id, event=event, intOut=in_out, mode=mode, records_time=time_str,
-                              device_serial_num=sn, temperature=temperature)
+                rec = Record(
+                    enroll_id=enroll_id,
+                    event=event,
+                    intOut=in_out,
+                    mode=mode,
+                    records_time=time_str,
+                    device_serial_num=sn,
+                    temperature=temperature,
+                )
                 record_all.append(rec)
 
             conn.send(json.dumps({"cmd": "getalllog", "stn": False}))
@@ -1176,8 +1337,15 @@ def get_new_log(json_node, conn):
                     temperature = temperature / 100
                     temperature = round(temperature, 1)
 
-                rec = Record(enroll_id=enroll_id, event=event, intOut=in_out, mode=mode, records_time=time_str,
-                              device_serial_num=sn, temperature=temperature)
+                rec = Record(
+                    enroll_id=enroll_id,
+                    event=event,
+                    intOut=in_out,
+                    mode=mode,
+                    records_time=time_str,
+                    device_serial_num=sn,
+                    temperature=temperature,
+                )
                 record_all.append(rec)
 
             conn.send(json.dumps({"cmd": "getnewlog", "stn": False}))
@@ -1192,9 +1360,9 @@ def get_new_log(json_node, conn):
         update_command_status_websocket(sn, "getnewlog")
 
 
-#endregion -----------功能函数结束---------------------------------------------
-#endregion -----------web socket处理结束---------------------------------------------
-#region -----------启动job服务--------------------------------------------- todo:舍弃 2024年1月16日11:07:11
+# endregion -----------功能函数结束---------------------------------------------
+# endregion -----------web socket处理结束---------------------------------------------
+# region -----------启动job服务--------------------------------------------- todo:舍弃 2024年1月16日11:07:11
 # import threading
 # import time
 # from Models.MachineCommand import MachineCommand,find_pending_command,update_command_status,update_machine_command
@@ -1246,12 +1414,11 @@ def get_new_log(json_node, conn):
 #         self.stop()
 
 
-#endregion -----------启动job服务---------------------------------------------
+# endregion -----------启动job服务---------------------------------------------
 # python.exe -m flask run --port=7700
 # python.exe -m flask run  --host=0.0.0.0 --port=7788
-#python.exe -m flask run  --host=192.168.0.118 --port=7788
+# python.exe -m flask run  --host=192.168.0.118 --port=7788
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-

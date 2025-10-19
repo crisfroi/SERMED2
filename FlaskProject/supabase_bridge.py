@@ -1,9 +1,10 @@
-import os
 import json
+import os
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
-import requests
 from urllib.parse import quote_plus
+
+import requests
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
 SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
@@ -48,14 +49,18 @@ def _to_iso(dt: Optional[str]) -> str:
         return datetime.now(timezone.utc).isoformat()
 
 
-def resolve_device_id_by_tmno(tm_no: Optional[str], serial: Optional[str] = None) -> str:
+def resolve_device_id_by_tmno(
+    tm_no: Optional[str], serial: Optional[str] = None
+) -> str:
     """Find or create device. Prefer tm_no if supported; fallback to name-only."""
     h = _headers()
     name = f"Terminal {tm_no or serial or 'unknown'}"
     # Try GET by device SN field if provided
     # Normalize tm_no to numeric if applicable (schema uses integer)
     tm_no_str = str(tm_no) if tm_no is not None else None
-    tm_no_numeric: Optional[str] = tm_no_str if (tm_no_str and tm_no_str.isdigit()) else None
+    tm_no_numeric: Optional[str] = (
+        tm_no_str if (tm_no_str and tm_no_str.isdigit()) else None
+    )
 
     if tm_no_numeric:
         try:
@@ -141,7 +146,9 @@ def fetch_prof_mapping(device_id: str, en_nos: List[str]) -> Dict[str, str]:
 
 def push_attendance_batch(sn: str, records: List[Dict[str, Any]]) -> None:
     """Push a batch of attendance records to Supabase."""
-    device_id = resolve_device_id_by_tmno(str(sn) if sn is not None else None, str(sn) if sn is not None else None)
+    device_id = resolve_device_id_by_tmno(
+        str(sn) if sn is not None else None, str(sn) if sn is not None else None
+    )
 
     prepared: List[Dict[str, Any]] = []
     en_set: set[str] = set()

@@ -1,21 +1,24 @@
-import logging
-from logging import handlers
 import datetime
-from enum import Enum
+import logging
 import os
+from enum import Enum
+from logging import handlers
+
 from Helpers.log_conf import Logger
+
+
 class LogHelper:
 
     @staticmethod
     def Send(message, sn=""):
         print("Send:>>>>>>>>>>>>>>>>>>>>")
         datetimestr = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        sn_=""
+        sn_ = ""
         if sn is None or len(sn) == 0:
-            sn_=""
+            sn_ = ""
         else:
             sn_ = "[" + sn + "]"
-        msg=f"{datetimestr}[Info]{sn_}{message}"
+        msg = f"{datetimestr}[Info]{sn_}{message}"
         print(msg)
         LogHelper._FlowLog(FlowType.SEND, msg, sn)
 
@@ -43,20 +46,34 @@ class LogHelper:
         try:
             currentPath = os.getcwd()
             if sn is None or len(sn) == 0 == False:
-                currentPath = currentPath+'/'+sn+'/'
+                currentPath = currentPath + "/" + sn + "/"
             if not os.path.exists(currentPath):
                 os.mkdir(currentPath)
 
             if folowType == FlowType.SEND:
-                content = "Send:>>>>>>>>>>>>>>>>>>> \r\n" +  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + msg
+                content = (
+                    "Send:>>>>>>>>>>>>>>>>>>> \r\n"
+                    + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    + msg
+                )
             else:
-                content = "Recv:<<<<<<<<<<<<<<<<<<< \r\n" +  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + msg
+                content = (
+                    "Recv:<<<<<<<<<<<<<<<<<<< \r\n"
+                    + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    + msg
+                )
 
-            fileName=currentPath + "/Flow_" + datetime.datetime.now().strftime("%Y-%m-%d") + ".Log"
-            LogHelper.logger(fileName,content)
+            fileName = (
+                currentPath
+                + "/Flow_"
+                + datetime.datetime.now().strftime("%Y-%m-%d")
+                + ".Log"
+            )
+            LogHelper.logger(fileName, content)
 
         except:
             import traceback
+
             traceback.print_exc()
 
         finally:
@@ -72,7 +89,7 @@ class LogHelper:
         else:
             sn_ = "[" + sn + "]"
         msg = f"{datetimestr}[Info]{sn_}{message}"
-        #print(msg)
+        # print(msg)
         LogHelper._WriteLog(msg, sn)
 
     @staticmethod
@@ -84,7 +101,7 @@ class LogHelper:
         else:
             sn_ = "[" + sn + "]"
         msg = f"{datetimestr}[Info]{sn_}{message}"
-        #print(msg)
+        # print(msg)
         LogHelper._WriteLog(msg, sn)
 
     # / <summary>
@@ -98,14 +115,20 @@ class LogHelper:
         try:
             currentPath = os.getcwd()
             if sn is None or len(sn) == 0 == False:
-                currentPath = currentPath + '/' + sn + '/'
+                currentPath = currentPath + "/" + sn + "/"
             if not os.path.exists(currentPath):
                 os.mkdir(currentPath)
 
-            fileName = currentPath + "/Flow_" + datetime.datetime.now().strftime("%Y-%m-%d") + ".Log"
+            fileName = (
+                currentPath
+                + "/Flow_"
+                + datetime.datetime.now().strftime("%Y-%m-%d")
+                + ".Log"
+            )
             LogHelper.logger(fileName, msg)
         except:
             import traceback
+
             traceback.print_exc()
         finally:
             pass
@@ -113,8 +136,5 @@ class LogHelper:
 
 class FlowType(Enum):
 
-    SEND=0,
-    RECIVE=1
-
-
-
+    SEND = (0,)
+    RECIVE = 1

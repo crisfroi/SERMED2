@@ -1,6 +1,7 @@
 from sqlalchemy import text
-from sqlalchemy.orm import Session
 from sqlalchemy.engine import ResultProxy
+from sqlalchemy.orm import Session
+
 
 class PageHelper:
     def __init__(self, query, page_params):
@@ -12,8 +13,8 @@ class PageHelper:
         return self.query.count()
 
     def get_page(self):
-        page_number = self.page_params.get('pageNumber', 1)
-        page_size = self.page_params.get('pageSize', 10)
+        page_number = self.page_params.get("pageNumber", 1)
+        page_size = self.page_params.get("pageSize", 10)
         offset = (page_number - 1) * page_size
         return self.query.limit(page_size).offset(offset).all()
 
@@ -22,8 +23,8 @@ class PageHelper:
         return parameter_object
 
     def get_page_sql(self, sql, page_params):
-        page_number = page_params.get('pageNumber', 1)
-        page_size = page_params.get('pageSize', 10)
+        page_number = page_params.get("pageNumber", 1)
+        page_size = page_params.get("pageSize", 10)
         offset = (page_number - 1) * page_size
         page_sql = text(sql).limit(page_size).offset(offset)
         return page_sql

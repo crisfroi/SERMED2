@@ -1,15 +1,18 @@
-from flask import Flask, render_template
-from channels.auth import AuthMiddlewareStack
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.db import database_sync_to_async
 import yourapp.routing  # 替换为您的应用路由模块
+from channels.auth import AuthMiddlewareStack
+from channels.db import database_sync_to_async
+from channels.routing import ProtocolTypeRouter, URLRouter
 from django.urls import path
+from flask import Flask, render_template
+
 app = Flask(__name__)
 
+
 # Flask的HTTP路由
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
+
 
 # WebSocket路由
 websocket_urlpatterns = [
@@ -18,12 +21,13 @@ websocket_urlpatterns = [
 ]
 
 # 创建WebSocket应用
-websocket_application = ProtocolTypeRouter({
-    "websocket": AuthMiddlewareStack(
-        URLRouter(websocket_urlpatterns)
-    ),
-})
+websocket_application = ProtocolTypeRouter(
+    {
+        "websocket": AuthMiddlewareStack(URLRouter(websocket_urlpatterns)),
+    }
+)
 
 # 异步运行WebSocket应用
 import asyncio
+
 asyncio.run(database_sync_to_async(websocket_application))

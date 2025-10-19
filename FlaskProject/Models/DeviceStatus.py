@@ -9,4 +9,3 @@ class DeviceStatus:
 
     def __str__(self):
         return f"DeviceStatus [deviceSn={self.device_sn}, webSocket={self.websocket}, status={self.status}]"
-

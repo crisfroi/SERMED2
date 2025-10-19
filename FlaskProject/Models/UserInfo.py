@@ -1,5 +1,13 @@
 class UserInfo:
-    def __init__(self, enroll_id=None, name=None, backupnum=None, admin=None, imagepath=None, record=None):
+    def __init__(
+        self,
+        enroll_id=None,
+        name=None,
+        backupnum=None,
+        admin=None,
+        imagepath=None,
+        record=None,
+    ):
         self.enroll_id = enroll_id
         self.name = name
         self.backupnum = backupnum

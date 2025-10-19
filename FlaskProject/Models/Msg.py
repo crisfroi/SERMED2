@@ -1,17 +1,16 @@
 import json
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
+
 class Msg:
-    def __init__(self, code=0, msg='', extend=None):
+    def __init__(self, code=0, msg="", extend=None):
         self.code = code
         self.msg = msg
         self.extend = extend if extend is not None else {}
 
     def to_dict(self):
-        return {
-            'code': self.code,
-            'msg': self.msg,
-            'extend': self.extend
-        }
+        return {"code": self.code, "msg": self.msg, "extend": self.extend}
+
     @staticmethod
     def success():
         return Msg(100, "Success!")

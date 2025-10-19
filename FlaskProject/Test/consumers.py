@@ -1,5 +1,7 @@
 import json
+
 from channels.generic.websocket import AsyncWebsocketConsumer
+
 
 class MyWebsocketConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -12,8 +14,5 @@ class MyWebsocketConsumer(AsyncWebsocketConsumer):
         # 处理接收到的消息
         message = json.loads(text_data)
         # ...处理消息...
-        response = {
-            "message": message,
-            "success": True
-        }
+        response = {"message": message, "success": True}
         await self.send(text_data=json.dumps(response))

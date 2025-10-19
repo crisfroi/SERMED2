@@ -24,8 +24,9 @@ class PageSerializable:
         self._list = list
 
     def __str__(self):
-        return "PageSerializable{{'total': {}, 'list': {}}}".format(self.total, self.list)
-
+        return "PageSerializable{{'total': {}, 'list': {}}}".format(
+            self.total, self.list
+        )
 
 
 class PageInfo(PageSerializable):
@@ -57,12 +58,18 @@ class PageInfo(PageSerializable):
 
     def calcNavigatepageNums(self):
         # Simplified for brevity. Add more complex logic if needed.
-        self.navigatepageNums = list(range(1, min(self.pages + 1, self.navigate_pages + 1)))
+        self.navigatepageNums = list(
+            range(1, min(self.pages + 1, self.navigate_pages + 1))
+        )
 
     def calcPage(self):
         # Simplified for brevity. Add more complex logic if needed.
-        self.navigateFirstPage = self.navigatepageNums[0] if self.navigatepageNums else None
-        self.navigateLastPage = self.navigatepageNums[-1] if self.navigatepageNums else None
+        self.navigateFirstPage = (
+            self.navigatepageNums[0] if self.navigatepageNums else None
+        )
+        self.navigateLastPage = (
+            self.navigatepageNums[-1] if self.navigatepageNums else None
+        )
         self.prePage = self.pageNum - 1 if self.pageNum > 1 else None
         self.nextPage = self.pageNum + 1 if self.pageNum < self.pages else None
 
@@ -74,4 +81,23 @@ class PageInfo(PageSerializable):
         self.hasNextPage = self.pageNum < self.pages
 
     def __str__(self):
-        return "PageInfo{{'pageNum': {}, 'pageSize': {}, 'size': {}, 'startRow': {}, 'endRow': {}, 'total': {}, 'pages': {}, 'list': {}, 'prePage': {}, 'nextPage': {}, 'isFirstPage': {}, 'isLastPage': {}, 'hasPreviousPage': {}, 'hasNextPage': {}, 'navigatePages': {}, 'navigateFirstPage': {}, 'navigateLastPage': {}, 'navigatePageNums': {}}}".format(self.pageNum, self.pageSize, self.size, self.startRow, self.endRow, self.total, self.pages, self.list, self.prePage, self.nextPage, self.isFirstPage, self.isLastPage, self.hasPreviousPage, self.hasNextPage, self.navigate_pages, self.navigateFirstPage, self.navigateLastPage, self.navigatepageNums)
+        return "PageInfo{{'pageNum': {}, 'pageSize': {}, 'size': {}, 'startRow': {}, 'endRow': {}, 'total': {}, 'pages': {}, 'list': {}, 'prePage': {}, 'nextPage': {}, 'isFirstPage': {}, 'isLastPage': {}, 'hasPreviousPage': {}, 'hasNextPage': {}, 'navigatePages': {}, 'navigateFirstPage': {}, 'navigateLastPage': {}, 'navigatePageNums': {}}}".format(
+            self.pageNum,
+            self.pageSize,
+            self.size,
+            self.startRow,
+            self.endRow,
+            self.total,
+            self.pages,
+            self.list,
+            self.prePage,
+            self.nextPage,
+            self.isFirstPage,
+            self.isLastPage,
+            self.hasPreviousPage,
+            self.hasNextPage,
+            self.navigate_pages,
+            self.navigateFirstPage,
+            self.navigateLastPage,
+            self.navigatepageNums,
+        )
