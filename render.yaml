@@ -1,0 +1,25 @@
+services:
+  # React frontend
+  - type: web
+    name: sermed-frontend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+  # Flask backend
+  - type: web
+    name: sermed-flask
+    env: python
+    buildCommand: cd FlaskProject && pip install -r requirements.txt
+    startCommand: cd FlaskProject && gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.7
+      - key: PORT
+        value: 5000
+      - key: FLASK_ENV
+        value: production
+      - fromGroup: supabase-config

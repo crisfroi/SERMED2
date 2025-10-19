@@ -40,3 +40,5 @@ def echo2(sock):
         print('收到消息/pub/chat:', data)
         # sock.send(data[::-1])
         #sock.send(data)
+        if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=7788, debug=True)

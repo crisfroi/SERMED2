@@ -1,11 +1,14 @@
-import asyncio
+gitimport asyncio
 import websockets
+import os
 from typing import Dict
 from Models.DeviceStatus import DeviceStatus
 
 ws_device: Dict[str, DeviceStatus] = {}
 
 class WebSocketPool:
+
+    WS_PORT = int(os.getenv("WS_PORT", 7788))
 
     @staticmethod
     async def get_device_socket_by_sn(device_sn):

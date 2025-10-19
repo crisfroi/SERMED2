@@ -8,38 +8,41 @@ from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
 import base64
+from dotenv import load_dotenv
+from flask_sock import Sock
 
 from config.readConf import readConf
-from flask_sock import Sock
 from Helpers.log_conf import Logger
 
-from database import db,app
+from database import db, get_database_uri
 from job.SendOrderJob import  SendOrderJob
 #
 # os.environ["FLASK_ENV"] = "development"
 # os.environ["FLASK_DEBUG"] = "1"
-# app = Flask(__name__)
-# app.debug = True
+app = Flask(__name__)
 sock = Sock(app)
+load_dotenv()
+
+# Database configuration
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI", get_database_uri())
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# Port configuration
+PORT = int(os.getenv("PORT", 5000))
+WS_PORT = int(os.getenv("WS_PORT", 7788))  # For device websocket
+
+# inicializar la única instancia de SQLAlchemy aquí (una sola vez)
+db.init_app(app)
+print("DEBUG: SQLALCHEMY_DATABASE_URI ->", app.config.get("SQLALCHEMY_DATABASE_URI"))
+# ---------------------   # <-- convertir en comentario (o eliminar)
+app.debug = True
 readConf_=readConf()
 url=readConf_.GetDBParam()
 print(url)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin.sun@121.40.201.85/fingerprint'
-app.config['SQLALCHEMY_DATABASE_URI'] = url
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@127.0.0.1:3305/fingerprint'
 # db = SQLAlchemy(app)
-db.init_app(app)
-#region -----------长时任务开始---------------------------------------------
-import atexit
-send_order_job = SendOrderJob()
-@app.before_request
-def start_thread_once():
-    if not send_order_job.is_running():
-        print("start----------")
-        send_order_job.start_thread()
 
-atexit.register(send_order_job.stop_thread)
-#endregion -----------长时任务结束---------------------------------------------
-#region-----------web 处理开始---------------------------------------------
 @app.route('/')
 def index():  # put application's code here
     print(os.environ["FLASK_ENV"])
@@ -816,6 +819,7 @@ import uuid
 
 # from collections import defaultdict
 from Models.Records import Record,insert_record,select_all_records,select_record_by_id,update_record_by_id
+from supabase_bridge import push_attendance_batch, resolve_device_id_by_tmno, update_device_last_seen
 
 def get_attendance(json_node, conn):
     sn = json_node["sn"]
@@ -881,8 +885,15 @@ def get_attendance(json_node, conn):
         device_status.device_sn = sn
         update_device_websocket(sn, device_status)
     print(record_all)
+    # Persist locally in MySQL (existing behavior)
     for record in record_all:
         insert_record2(**record) # dict 保存 2024年1月22日13:25:02
+    # Push to Supabase for realtime consumption
+    try:
+        push_attendance_batch(sn, record_all)
+    except Exception as e:
+        # Non-fatal: keep device session alive even if remote push fails
+        print("Supabase push failed:", e)
     global timestamp2
     timestamp2 = datetime.now()
 
@@ -971,8 +982,8 @@ def get_user_list(json_node, conn):
     device_status = DeviceStatus()
 
     if result:
-        count = json_node["count"]
-        records = json_node["record"]
+        count = jsonNode["count"]
+        records = jsonNode["record"]
         print("get_user_list:count "+str(count))
         if count > 0:
             for record in records:
@@ -1142,7 +1153,6 @@ def get_all_log(json_node, conn):
     update_command_status_websocket(sn, "getalllog")
 
 
-
 def get_new_log(json_node, conn):
     result = json_node["result"]
     record_all = []
@@ -1241,12 +1251,7 @@ def get_new_log(json_node, conn):
 # python.exe -m flask run  --host=0.0.0.0 --port=7788
 #python.exe -m flask run  --host=192.168.0.118 --port=7788
 
-if __name__ == '__main__':
-    print("start")
-
-    try:
-        app.run(debug=True)
-    finally:
-        pass
-        # Stop the thread when the app is shut down
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
 
