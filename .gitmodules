@@ -1,0 +1,3 @@
+[submodule "FlaskProject"]
+	path = FlaskProject
+	url = https://gitee.com/sunnf8888/flaskProject.git
