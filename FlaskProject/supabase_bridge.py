@@ -3,6 +3,7 @@ import json
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 import requests
+from urllib.parse import quote_plus
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
 SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
@@ -46,31 +47,62 @@ def _to_iso(dt: Optional[str]) -> str:
 
 
 def resolve_device_id_by_tmno(tm_no: Optional[str], serial: Optional[str] = None) -> str:
-    """Find or create device by tm_no (SN) and return its id."""
+    """Find or create device. Prefer tm_no if supported; fallback to name-only."""
     h = _headers()
+    name = f"Terminal {tm_no or serial or 'unknown'}"
+    # Try GET by tm_no if column exists
     if tm_no:
+        try:
+            r = requests.get(
+                f"{SUPABASE_URL}/rest/v1/dispositivos?select=id&tm_no=eq.{tm_no}&limit=1",
+                headers=h,
+                timeout=10,
+            )
+            if r.ok:
+                data = r.json()
+                if isinstance(data, list) and data:
+                    return data[0]["id"]
+        except requests.RequestException:
+            pass
+    # Try GET by nombre as fallback (best-effort)
+    try:
         r = requests.get(
-            f"{SUPABASE_URL}/rest/v1/dispositivos?select=id&tm_no=eq.{tm_no}&limit=1",
+            f"{SUPABASE_URL}/rest/v1/dispositivos?select=id&nombre=eq.{quote_plus(name)}&limit=1",
             headers=h,
             timeout=10,
         )
-        if r.ok and isinstance(r.json(), list) and r.json():
-            return r.json()[0]["id"]
-    # Create device if not found
-    payload = {
-        "nombre": f"Terminal {tm_no or serial or 'unknown'}",
-        "activo": True,
-        "tm_no": tm_no,
-    }
-    r = requests.post(
-        f"{SUPABASE_URL}/rest/v1/dispositivos",
-        headers=_headers({"Prefer": "return=representation"}),
-        data=json.dumps(payload),
-        timeout=10,
-    )
-    r.raise_for_status()
-    data = r.json()
-    return data[0]["id"]
+        if r.ok:
+            data = r.json()
+            if isinstance(data, list) and data:
+                return data[0]["id"]
+    except requests.RequestException:
+        pass
+    # Create device. First attempt with tm_no; on 400 retry without tm_no
+    payload = {"nombre": name, "activo": True}
+    if tm_no:
+        payload["tm_no"] = tm_no
+    try:
+        r = requests.post(
+            f"{SUPABASE_URL}/rest/v1/dispositivos",
+            headers=_headers({"Prefer": "return=representation"}),
+            data=json.dumps(payload),
+            timeout=10,
+        )
+        r.raise_for_status()
+        return r.json()[0]["id"]
+    except requests.HTTPError:
+        # Retry without tm_no in case column doesn't exist
+        if "tm_no" in payload:
+            payload.pop("tm_no", None)
+            r2 = requests.post(
+                f"{SUPABASE_URL}/rest/v1/dispositivos",
+                headers=_headers({"Prefer": "return=representation"}),
+                data=json.dumps(payload),
+                timeout=10,
+            )
+            r2.raise_for_status()
+            return r2.json()[0]["id"]
+        raise
 
 
 def update_device_last_seen(device_id: str) -> None:
@@ -141,13 +173,28 @@ def push_attendance_batch(sn: str, records: List[Dict[str, Any]]) -> None:
             row["id_profesional"] = en_map[row["en_no"]]
 
     # Insert with conflict resolution to avoid duplicates on reconnects
-    r = requests.post(
-        f"{SUPABASE_URL}/rest/v1/attendance_logs?on_conflict=id_dispositivo,en_no,fecha_hora",
-        headers=_headers({"Prefer": "return=minimal, resolution=merge-duplicates"}),
-        data=json.dumps(prepared),
-        timeout=20,
-    )
-    r.raise_for_status()
+    try:
+        r = requests.post(
+            f"{SUPABASE_URL}/rest/v1/attendance_logs?on_conflict=id_dispositivo,en_no,fecha_hora",
+            headers=_headers({"Prefer": "return=minimal, resolution=merge-duplicates"}),
+            data=json.dumps(prepared),
+            timeout=20,
+        )
+        r.raise_for_status()
+    except requests.HTTPError:
+        # Retry without tm_no field if schema doesn't support it
+        stripped = []
+        for row in prepared:
+            row2 = dict(row)
+            row2.pop("tm_no", None)
+            stripped.append(row2)
+        r2 = requests.post(
+            f"{SUPABASE_URL}/rest/v1/attendance_logs?on_conflict=id_dispositivo,en_no,fecha_hora",
+            headers=_headers({"Prefer": "return=minimal, resolution=merge-duplicates"}),
+            data=json.dumps(stripped),
+            timeout=20,
+        )
+        r2.raise_for_status()
 
     # Mark device as seen
     update_device_last_seen(device_id)

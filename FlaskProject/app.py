@@ -899,7 +899,9 @@ def get_attendance(json_node, conn):
 def base64_to_image(base64_string, pic_name):
     try:
         image_data = base64.b64decode(base64_string)
-        with open(os.path.join(readConf_.GetUploadParam(), pic_name + '.jpg'), 'wb') as f:
+        upload_dir = readConf_.GetUploadParam()
+        os.makedirs(upload_dir, exist_ok=True)
+        with open(os.path.join(upload_dir, pic_name + '.jpg'), 'wb') as f:
             f.write(image_data)
         return True
     except Exception as e:
