@@ -7,6 +7,8 @@ from urllib.parse import quote_plus
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
 SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
+DEVICE_TABLE = os.environ.get("SUPABASE_DEVICE_TABLE", "dispositivos")
+DEVICE_SN_FIELD = "sn" if DEVICE_TABLE == "asistencia_dispositivos" else "tm_no"
 
 if not SUPABASE_URL:
     raise RuntimeError("SUPABASE_URL environment variable is required")
@@ -50,11 +52,11 @@ def resolve_device_id_by_tmno(tm_no: Optional[str], serial: Optional[str] = None
     """Find or create device. Prefer tm_no if supported; fallback to name-only."""
     h = _headers()
     name = f"Terminal {tm_no or serial or 'unknown'}"
-    # Try GET by tm_no if column exists
+    # Try GET by device SN field if provided
     if tm_no:
         try:
             r = requests.get(
-                f"{SUPABASE_URL}/rest/v1/dispositivos?select=id&tm_no=eq.{tm_no}&limit=1",
+                f"{SUPABASE_URL}/rest/v1/{DEVICE_TABLE}?select=id&{DEVICE_SN_FIELD}=eq.{tm_no}&limit=1",
                 headers=h,
                 timeout=10,
             )
@@ -67,7 +69,7 @@ def resolve_device_id_by_tmno(tm_no: Optional[str], serial: Optional[str] = None
     # Try GET by nombre as fallback (best-effort)
     try:
         r = requests.get(
-            f"{SUPABASE_URL}/rest/v1/dispositivos?select=id&nombre=eq.{quote_plus(name)}&limit=1",
+            f"{SUPABASE_URL}/rest/v1/{DEVICE_TABLE}?select=id&nombre=eq.{quote_plus(name)}&limit=1",
             headers=h,
             timeout=10,
         )
@@ -80,10 +82,10 @@ def resolve_device_id_by_tmno(tm_no: Optional[str], serial: Optional[str] = None
     # Create device. First attempt with tm_no; on 400 retry without tm_no
     payload = {"nombre": name, "activo": True}
     if tm_no:
-        payload["tm_no"] = tm_no
+        payload[DEVICE_SN_FIELD] = tm_no
     try:
         r = requests.post(
-            f"{SUPABASE_URL}/rest/v1/dispositivos",
+            f"{SUPABASE_URL}/rest/v1/{DEVICE_TABLE}",
             headers=_headers({"Prefer": "return=representation"}),
             data=json.dumps(payload),
             timeout=10,
@@ -92,10 +94,10 @@ def resolve_device_id_by_tmno(tm_no: Optional[str], serial: Optional[str] = None
         return r.json()[0]["id"]
     except requests.HTTPError:
         # Retry without tm_no in case column doesn't exist
-        if "tm_no" in payload:
-            payload.pop("tm_no", None)
+        if DEVICE_SN_FIELD in payload:
+            payload.pop(DEVICE_SN_FIELD, None)
             r2 = requests.post(
-                f"{SUPABASE_URL}/rest/v1/dispositivos",
+                f"{SUPABASE_URL}/rest/v1/{DEVICE_TABLE}",
                 headers=_headers({"Prefer": "return=representation"}),
                 data=json.dumps(payload),
                 timeout=10,
@@ -107,12 +109,15 @@ def resolve_device_id_by_tmno(tm_no: Optional[str], serial: Optional[str] = None
 
 def update_device_last_seen(device_id: str) -> None:
     now_iso = datetime.now(timezone.utc).isoformat()
-    requests.patch(
-        f"{SUPABASE_URL}/rest/v1/dispositivos?id=eq.{device_id}",
-        headers=_headers({"Prefer": "return=minimal"}),
-        data=json.dumps({"last_seen_at": now_iso}),
-        timeout=10,
-    )
+    try:
+        requests.patch(
+            f"{SUPABASE_URL}/rest/v1/{DEVICE_TABLE}?id=eq.{device_id}",
+            headers=_headers({"Prefer": "return=minimal"}),
+            data=json.dumps({"last_seen_at": now_iso}),
+            timeout=10,
+        )
+    except requests.RequestException:
+        pass
 
 
 def fetch_prof_mapping(device_id: str, en_nos: List[str]) -> Dict[str, str]:
@@ -157,7 +162,8 @@ def push_attendance_batch(sn: str, records: List[Dict[str, Any]]) -> None:
             {
                 "id_dispositivo": device_id,
                 "en_no": en_no,
-                "tm_no": str(sn) if sn is not None else None,
+                # include SN using selected field name for downstream auditing
+                DEVICE_SN_FIELD: str(sn) if sn is not None else None,
                 "inout": inout,
                 "mode": rec.get("mode"),
                 "fecha_hora": _to_iso(rec.get("records_time") or rec.get("time")),
@@ -173,28 +179,21 @@ def push_attendance_batch(sn: str, records: List[Dict[str, Any]]) -> None:
             row["id_profesional"] = en_map[row["en_no"]]
 
     # Insert with conflict resolution to avoid duplicates on reconnects
-    try:
-        r = requests.post(
-            f"{SUPABASE_URL}/rest/v1/attendance_logs?on_conflict=id_dispositivo,en_no,fecha_hora",
-            headers=_headers({"Prefer": "return=minimal, resolution=merge-duplicates"}),
-            data=json.dumps(prepared),
-            timeout=20,
-        )
-        r.raise_for_status()
-    except requests.HTTPError:
-        # Retry without tm_no field if schema doesn't support it
-        stripped = []
-        for row in prepared:
-            row2 = dict(row)
-            row2.pop("tm_no", None)
-            stripped.append(row2)
-        r2 = requests.post(
-            f"{SUPABASE_URL}/rest/v1/attendance_logs?on_conflict=id_dispositivo,en_no,fecha_hora",
-            headers=_headers({"Prefer": "return=minimal, resolution=merge-duplicates"}),
-            data=json.dumps(stripped),
-            timeout=20,
-        )
-        r2.raise_for_status()
+    # Ensure we don't send the synthetic DEVICE_SN_FIELD to attendance_logs if schema lacks it
+    cleaned = []
+    for row in prepared:
+        row2 = dict(row)
+        # attendance_logs usually has tm_no; if no such column, Supabase will 400. To be safe, drop both potential names.
+        row2.pop("tm_no", None)
+        row2.pop("sn", None)
+        cleaned.append(row2)
+    r = requests.post(
+        f"{SUPABASE_URL}/rest/v1/attendance_logs?on_conflict=id_dispositivo,en_no,fecha_hora",
+        headers=_headers({"Prefer": "return=minimal, resolution=merge-duplicates"}),
+        data=json.dumps(cleaned),
+        timeout=20,
+    )
+    r.raise_for_status()
 
     # Mark device as seen
     update_device_last_seen(device_id)
