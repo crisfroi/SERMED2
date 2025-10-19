@@ -2,11 +2,22 @@ services:
   - type: web
     name: sermed-flask
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
-    plan: free
+    buildCommand: |
+      cd FlaskProject
+      pip install -r requirements.txt
+    startCommand: cd FlaskProject && gunicorn app:app
     envVars:
       - key: PYTHON_VERSION
         value: 3.7
       - key: FLASK_ENV
         value: production
+      - key: PORT
+        value: 5000
+      - key: WS_PORT
+        value: 7788
+      - key: SQLALCHEMY_DATABASE_URI
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
