@@ -8,6 +8,7 @@ from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
 import base64
+from dotenv import load_dotenv
 
 from config.readConf import readConf
 from flask_sock import Sock
@@ -20,6 +21,7 @@ from job.SendOrderJob import  SendOrderJob
 # os.environ["FLASK_DEBUG"] = "1"
 # app = Flask(__name__)
 # app.debug = True
+load_dotenv()
 sock = Sock(app)
 readConf_=readConf()
 url=readConf_.GetDBParam()
