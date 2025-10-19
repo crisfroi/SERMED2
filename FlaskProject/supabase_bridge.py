@@ -53,10 +53,14 @@ def resolve_device_id_by_tmno(tm_no: Optional[str], serial: Optional[str] = None
     h = _headers()
     name = f"Terminal {tm_no or serial or 'unknown'}"
     # Try GET by device SN field if provided
-    if tm_no:
+    # Normalize tm_no to numeric if applicable (schema uses integer)
+    tm_no_str = str(tm_no) if tm_no is not None else None
+    tm_no_numeric: Optional[str] = tm_no_str if (tm_no_str and tm_no_str.isdigit()) else None
+
+    if tm_no_numeric:
         try:
             r = requests.get(
-                f"{SUPABASE_URL}/rest/v1/{DEVICE_TABLE}?select=id&{DEVICE_SN_FIELD}=eq.{tm_no}&limit=1",
+                f"{SUPABASE_URL}/rest/v1/{DEVICE_TABLE}?select=id&{DEVICE_SN_FIELD}=eq.{tm_no_numeric}&limit=1",
                 headers=h,
                 timeout=10,
             )
@@ -81,8 +85,8 @@ def resolve_device_id_by_tmno(tm_no: Optional[str], serial: Optional[str] = None
         pass
     # Create device. First attempt with tm_no; on 400 retry without tm_no
     payload = {"nombre": name, "activo": True}
-    if tm_no:
-        payload[DEVICE_SN_FIELD] = tm_no
+    if tm_no_numeric:
+        payload[DEVICE_SN_FIELD] = int(tm_no_numeric)
     try:
         r = requests.post(
             f"{SUPABASE_URL}/rest/v1/{DEVICE_TABLE}",
