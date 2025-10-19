@@ -65,18 +65,26 @@ const pwaConfig = {
 // --- Fin de Configuración PWA ---
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   server: {
     host: "::",
     port: 8080,
   },
   plugins: [
     react(),
-    mode === 'development' &&
     componentTagger(),
     // Añade el plugin PWA, activo solo en modo de producción (npm run build)
-    mode === 'production' && VitePWA(pwaConfig),
-  ].filter(Boolean),
+    VitePWA({
+      ...pwaConfig,
+      // ensure the register helper virtual module is injected
+      injectRegister: 'auto', // or 'inline' / 'script' per your needs
+      registerType: 'autoUpdate',
+      workbox: {
+        // keep your existing workbox settings (example shown)
+        maximumFileSizeToCacheInBytes: 10485760
+      }
+    })
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -89,4 +97,4 @@ export default defineConfig(({ mode }) => ({
       '@hookform/resolvers/zod',
     ],
   },
-}));
+});
