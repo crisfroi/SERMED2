@@ -816,6 +816,7 @@ import uuid
 
 # from collections import defaultdict
 from Models.Records import Record,insert_record,select_all_records,select_record_by_id,update_record_by_id
+from supabase_bridge import push_attendance_batch, resolve_device_id_by_tmno, update_device_last_seen
 
 def get_attendance(json_node, conn):
     sn = json_node["sn"]
@@ -881,8 +882,15 @@ def get_attendance(json_node, conn):
         device_status.device_sn = sn
         update_device_websocket(sn, device_status)
     print(record_all)
+    # Persist locally in MySQL (existing behavior)
     for record in record_all:
         insert_record2(**record) # dict 保存 2024年1月22日13:25:02
+    # Push to Supabase for realtime consumption
+    try:
+        push_attendance_batch(sn, record_all)
+    except Exception as e:
+        # Non-fatal: keep device session alive even if remote push fails
+        print("Supabase push failed:", e)
     global timestamp2
     timestamp2 = datetime.now()
 

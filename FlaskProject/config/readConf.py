@@ -4,23 +4,21 @@ class readConf(object):
 
     def GetwebsocketParam(self):
         current_directory = os.getcwd()
-        config = configparser.ConfigParser()   # 创建对象
-        config.read(f"{current_directory}\\config\\set.conf", encoding="utf-8")  # 读取配置文件，如果配置文件不存在则创建
-        val = config.get('websocket', 'port')  # 获取指定节点的指定key的value
-        return  val
+        config = configparser.ConfigParser()
+        conf_path = os.path.join(current_directory, 'config', 'set.conf')
+        config.read(conf_path, encoding="utf-8")
+        val = config.get('websocket', 'port')
+        return val
     def GetDBParam(self):
         current_directory = os.getcwd()
-        print(current_directory)
-        config = configparser.ConfigParser()   # 创建对象
-        config.read(f"{current_directory}\\config\\set.conf", encoding="utf-8")  # 读取配置文件，如果配置文件不存在则创建
-        url = config.get('db', 'url')  # 获取指定节点的指定key的value
-        print(url)
-        # username = config.get('db', 'username')
-        # password = config.get('db', 'password')
-        return  url
+        config = configparser.ConfigParser()
+        conf_path = os.path.join(current_directory, 'config', 'set.conf')
+        config.read(conf_path, encoding="utf-8")
+        url = config.get('db', 'url')
+        return url
     def GetUploadParam(self):
-        path_="C:/dynamicface/picture/"
-        return  path_
+        # Default upload path; override with UPLOAD_PATH env if present
+        return os.environ.get('UPLOAD_PATH', os.path.join(os.getcwd(), 'uploads'))
 if __name__ == "__main__":
     # config = configparser.ConfigParser()  # 创建对象
     # config.read("set.conf", encoding="utf-8")  # 读取配置文件，如果配置文件不存在则创建
