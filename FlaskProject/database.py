@@ -1,7 +1,5 @@
-# database.py
+# database.py (CORREGIDO)
 import os
-from typing import Optional
-from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
@@ -9,24 +7,29 @@ load_dotenv()
 
 db = SQLAlchemy()
 
-
 def get_database_uri() -> str:
-    """Get database URI based on environment."""
-    # Check if we're in production (Render)
-    if os.getenv('RENDER'):
-        # Use Supabase PostgreSQL connection
-        return f"postgresql://{os.getenv('SUPABASE_DB_USER')}:{os.getenv('SUPABASE_DB_PASSWORD')}@{os.getenv('SUPABASE_DB_HOST')}/{os.getenv('SUPABASE_DB_NAME')}"
+    """Obtiene la URI de la base de datos de Supabase."""
     
-    # Local development - MySQL
+    # ⚠️ Asegúrate de que estas variables estén definidas en Render
+    if not all([os.getenv('SUPABASE_DB_USER'), os.getenv('SUPABASE_DB_HOST')]):
+        # Si no están las variables, lanzamos un error para que el despliegue falle claramente.
+        raise ValueError("Las variables de entorno de Supabase no están definidas en Render.")
+
+    # Conexión exclusiva a Supabase PostgreSQL
     return (
-        os.getenv('SQLALCHEMY_DATABASE_URI') or
-        f"mysql+pymysql://{os.getenv('DB_USER', 'root')}:{os.getenv('DB_PASS', '123456')}"
-        f"@{os.getenv('DB_HOST', '127.0.0.1')}:{os.getenv('DB_PORT', '33050')}"
-        f"/{os.getenv('DB_NAME', 'fingerprint')}"
+        f"postgresql://{os.getenv('SUPABASE_DB_USER')}:{os.getenv('SUPABASE_DB_PASSWORD')}@"
+        f"{os.getenv('SUPABASE_DB_HOST')}/{os.getenv('SUPABASE_DB_NAME')}"
     )
 
+def init_db(app):
+    """Inicializa la extensión de SQLAlchemy en la aplicación Flask."""
+    
+    # 1. ASIGNA LA URI a la configuración de la aplicación
+    app.config["SQLALCHEMY_DATABASE_URI"] = get_database_uri()
+    
+    # 2. Inicializa la extensión de la BD
+    db.init_app(app) 
+    
+    return db
 
-os.environ["FLASK_ENV"] = "development"
-os.environ["FLASK_DEBUG"] = "1"
-app = Flask(__name__)
-app.debug = True
+# ELIMINAMOS las líneas 'app = Flask(__name__)' y 'os.environ...' de este archivo.

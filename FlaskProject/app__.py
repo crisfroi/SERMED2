@@ -1,59 +1,72 @@
+# app.py (VERSIÓN LIMPIA Y UNIFICADA)
+
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from flask import Flask, render_template
+from flask_sock import Sock
+# Importa tu lógica de DB
+from database import init_db 
+# Importa tus clases de servicio (solo si las necesitas aquí)
+# from services.attendance_service import AttendanceService 
+# from web_socket.WebSocketPool import WebSocketPool 
+# ----------------------------------------------------------------------
+# 1. Configuración de Entorno (Debe ser lo primero)
+# ----------------------------------------------------------------------
 
-# Try loading from /etc/secrets/.env first (Render secret files)
+# Esto es correcto: carga variables de Render o localmente
 render_env = Path("/etc/secrets/.env")
 if render_env.exists():
     load_dotenv(render_env)
 else:
-    load_dotenv()  # fallback to local .env
+    load_dotenv() 
 
-# ...existing code...
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-# ...existing code...# https://blog.miguelgrinberg.com/post/add-a-websocket-route-to-your-flask-2-x-application
-# from flask import Flask
-#
-# app = Flask(__name__)
-#
-#
-# @app.route('/')
-# def hello_world():  # put application's code here
-#     return 'Hello World!'
-#
-#
-# if __name__ == '__main__':
-#     app.run()
-# python.exe -m flask run  --host=0.0.0.0 --port=7788
-from flask import Flask, render_template
-from flask_sock import Sock
+# ----------------------------------------------------------------------
+# 2. Application Factory (para que Gunicorn sepa qué ejecutar)
+# ----------------------------------------------------------------------
 
-app = Flask(__name__)
-sock = Sock(app)
+def create_app():
+    app = Flask(__name__)
+    app.debug = os.getenv("FLASK_DEBUG", "0") == "1"
+    
+    # Configuración y conexión de la Base de Datos (llama a tu función corregida)
+    # Esto llama a database.init_db(app) y establece SQLALCHEMY_DATABASE_URI
+    init_db(app) 
+    
+    # Inicialización de WebSockets
+    sock = Sock(app)
+    
+    # ----------------------------------------------------------------------
+    # RUTAS ESTÁNDAR
+    # ----------------------------------------------------------------------
+    @app.route('/')
+    def index():
+        return render_template('index.html')
 
+    # ----------------------------------------------------------------------
+    # RUTAS DE WEBSOCKETS
+    # ----------------------------------------------------------------------
+    @sock.route('/')
+    def echo(sock):
+        while True:
+            data = sock.receive()
+            print('收到消息/:', data)
+            
+    @sock.route('/pub/chat')
+    def echo2(sock):
+        while True:
+            data = sock.receive()
+            print('收到消息/pub/chat:', data)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+    return app
 
+# ----------------------------------------------------------------------
+# 3. Punto de Entrada para Gunicorn y Desarrollo Local
+# ----------------------------------------------------------------------
 
-@sock.route('/')
-def echo(sock):
-    while True:
-        data = sock.receive()
-        # if not data is None:
-        print('收到消息/:', data)
-        # sock.send(data[::-1])
-        # sock.send(data)
-@sock.route('/pub/chat')
-def echo2(sock):
-    while True:
-        data = sock.receive()
-        #if not data is None:
-        print('收到消息/pub/chat:', data)
-        # sock.send(data[::-1])
-        #sock.send(data)
-        if __name__ == '__main__':
+# Gunicorn (Render) buscará 'app' o usará 'create_app()'.
+app = create_app()
+
+if __name__ == '__main__':
+    # Esto es solo para ejecutar localmente
     app.run(host='0.0.0.0', port=7788, debug=True)

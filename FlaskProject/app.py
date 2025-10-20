@@ -2,7 +2,7 @@ import base64
 import json
 import os
 import uuid
-# from flask_sqlalchemy import SQLAlchemy
+# Nota: flask_sqlalchemy se importa implícitamente a través de database
 from datetime import datetime
 from pathlib import Path
 
@@ -12,60 +12,66 @@ from flask import Flask, jsonify, render_template, request
 from flask_sock import Sock
 from werkzeug.utils import secure_filename
 
-from config.readConf import readConf
-from database import db, get_database_uri
+# Importaciones de tu proyecto
+from database import db, get_database_uri  # Usamos get_database_uri para la configuración
 from Helpers.log_conf import Logger
 from job.SendOrderJob import SendOrderJob
-from services.attendance_service import AttendanceService
+from Services.attendance_service import AttendanceService
+from config.readConf import readConf # Mantenemos la importación si se usa en otros lados
 
-#
-# os.environ["FLASK_ENV"] = "development"
-# os.environ["FLASK_DEBUG"] = "1"
-app = Flask(__name__)
-sock = Sock(app)
+# ----------------------------------------------------------------------
+# 1. Configuración de Entorno
+# ----------------------------------------------------------------------
 
-# Try loading from /etc/secrets/.env first (Render secret files)
+# Esto es correcto: carga variables de Render o localmente
 render_env = Path("/etc/secrets/.env")
 if render_env.exists():
     load_dotenv(render_env)
 else:
-    load_dotenv()  # fallback to local .env
+    load_dotenv() 
 
-# Database configuration
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
+# ----------------------------------------------------------------------
+# 2. Inicialización de Flask y Configuración de BD (SOLO Supabase/Render)
+# ----------------------------------------------------------------------
+app = Flask(__name__)
+sock = Sock(app)
+
+# AHORA USAMOS LA FUNCIÓN CORRECTA PARA OBTENER LA URI DE SUPABASE/RENDER
+# Esto llama a get_database_uri() de database.py
+app.config["SQLALCHEMY_DATABASE_URI"] = get_database_uri()
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# Port configuration
-PORT = int(os.getenv("PORT", 5000))
-WS_PORT = int(os.getenv("WS_PORT", 7788))  # For device websocket
-
 # inicializar la única instancia de SQLAlchemy aquí (una sola vez)
 db.init_app(app)
-print("DEBUG: SQLALCHEMY_DATABASE_URI ->", app.config.get("SQLALCHEMY_DATABASE_URI"))
-# ---------------------   # <-- convertir en comentario (o eliminar)
-app.debug = True
-readConf_ = readConf()
-url = readConf_.GetDBParam()
-print(url)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin.sun@121.40.201.85/fingerprint'
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "mysql+pymysql://root:123456@127.0.0.1:3305/fingerprint"
-)
-# db = SQLAlchemy(app)
 
+print("DEBUG: SQLALCHEMY_DATABASE_URI ->", app.config.get("SQLALCHEMY_DATABASE_URI"))
+
+# ELIMINADO: Todo el código de reconfiguración de MySQL (líneas 47-52 del original)
+# incluyendo el uso de readConf y la URI local 127.0.0.1.
+
+# ----------------------------------------------------------------------
+# 3. Configuración de Puertos y Debug
+# ----------------------------------------------------------------------
+
+PORT = int(os.getenv("PORT", 5000))
+WS_PORT = int(os.getenv("WS_PORT", 7788))  # For device websocket
+app.debug = True # Mantener el debug para el desarrollo
+
+# ----------------------------------------------------------------------
+# 4. Rutas (Manteniendo tu código)
+# ----------------------------------------------------------------------
 
 @app.route("/")
-def index():  # put application's code here
-    print(os.environ["FLASK_ENV"])
+def index():
+    print(os.environ.get("FLASK_ENV"))
     APP_PATH = request.base_url[:-1]
     print(APP_PATH)
     return render_template("index.html", APP_PATH=APP_PATH)
 
 
 @app.route("/logRecords")
-def logRecords():  # put application's code here
+def logRecords():
     device_sn = request.args.get("deviceSn")
-    print(os.environ["FLASK_ENV"])
+    print(os.environ.get("FLASK_ENV"))
     APP_PATH = request.base_url[:-10]
     print(APP_PATH)
     return render_template("logRecords.html", APP_PATH=APP_PATH, deviceSn=device_sn)
@@ -74,10 +80,7 @@ def logRecords():  # put application's code here
 @app.route("/a")
 def index2():
     data = {"key1": "value1", "key2": "value2"}
-
-    # 使用jsonify函数将data转换为JSON格式并返回
     return jsonify(data)
-
 
 from Models.AccessDay import (AccessDay, get_access_day_by_id,
                               get_all_access_days, insert_access_day)
