@@ -621,6 +621,10 @@ attendance_service = AttendanceService()
 
 @sock.route('/pub/chat')
 def handler(sock):
+    is_registered = False
+    device_sn = "UNREGISTERED" # SN por defecto antes del registro
+
+    print(">>> [WS] Nueva conexión iniciada.") # LOG DE INICIO DE CONEXIÓN
     try:
         while True:
             message = sock.receive()
