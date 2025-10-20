@@ -5,6 +5,7 @@ import uuid
 # Nota: flask_sqlalchemy se importa implícitamente a través de database
 from datetime import datetime
 from pathlib import Path
+import atexit
 
 import jsons
 from dotenv import load_dotenv
@@ -34,19 +35,29 @@ else:
 # 2. Inicialización de Flask y Configuración de BD (SOLO Supabase/Render)
 # ----------------------------------------------------------------------
 app = Flask(__name__)
+app.debug = True
 sock = Sock(app)
 
 # AHORA USAMOS LA FUNCIÓN CORRECTA PARA OBTENER LA URI DE SUPABASE/RENDER
 # Esto llama a get_database_uri() de database.py
+print("Attempting to connect to the database...")
 app.config["SQLALCHEMY_DATABASE_URI"] = get_database_uri()
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-# inicializar la única instancia de SQLAlchemy aquí (una sola vez)
 db.init_app(app)
-
 print("DEBUG: SQLALCHEMY_DATABASE_URI ->", app.config.get("SQLALCHEMY_DATABASE_URI"))
 
-# ELIMINADO: Todo el código de reconfiguración de MySQL (líneas 47-52 del original)
-# incluyendo el uso de readConf y la URI local 127.0.0.1.
+send_order_job = SendOrderJob(app)
+
+# --- La lógica que seleccionaste está aquí y ahora funcionará correctamente ---
+@app.before_request
+def start_thread_once():
+    # Esta lógica está bien, inicia el hilo si no está corriendo.
+    if not send_order_job.is_running():
+        print("Starting background job thread...")
+        send_order_job.start_thread()
+
+# Esto también está bien, se asegura de que el hilo se detenga al salir.
+atexit.register(send_order_job.stop_thread)
 
 # ----------------------------------------------------------------------
 # 3. Configuración de Puertos y Debug
