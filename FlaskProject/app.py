@@ -886,8 +886,10 @@ def get_user_list(json_node, conn):
     device_status = DeviceStatus()
 
     if result:
-        count = jsonNode["count"]
-        records = jsonNode["record"]
+        # CORRECCIÓN: Se usa json_node (con guion bajo)
+        count = json_node["count"]
+        records = json_node["record"]
+        
         print("get_user_list:count " + str(count))
         if count > 0:
             for record in records:

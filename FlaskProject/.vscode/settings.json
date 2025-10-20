@@ -11,4 +11,8 @@
     },
     "files.encoding": "utf8",
     "python.formatting.provider": "black"
+    "python.analysis.extraPaths": [
+        "./FlaskProject" 
+        // Si 'services' está en FlaskProject
+    ]
 }
