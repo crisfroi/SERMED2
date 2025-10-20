@@ -16,7 +16,7 @@ from config.readConf import readConf
 from database import db, get_database_uri
 from Helpers.log_conf import Logger
 from job.SendOrderJob import SendOrderJob
-from services.attendance_service import AttendanceService
+from Services.attendance_service import AttendanceService
 
 #
 # os.environ["FLASK_ENV"] = "development"
