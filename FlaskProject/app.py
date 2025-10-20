@@ -606,14 +606,14 @@ def websock(sock):
 attendance_service = AttendanceService()
 
 @sock.route('/pub/chat')
-def handler(sock):
+async def handler(sock):  # Añadido async aquí
     try:
         while True:
             message = sock.receive()
             try:
                 jsonMsg = json.loads(message)
                 if jsonMsg.get("cmd") == "sendlog":
-                    # Procesar registro del dispositivo
+                    # Ahora podemos usar await porque la función es async
                     await attendance_service.sync_attendance(jsonMsg)
                     sock.send('{"ret":"sendlog","result":true}')
             except Exception as err:
@@ -621,10 +621,8 @@ def handler(sock):
                 sock.send('{"ret":"sendlog","result":false,"reason":1}')
     except Exception as e:
         import traceback
-
         traceback.print_exc()
         print(e)
-
     finally:
         pass
 

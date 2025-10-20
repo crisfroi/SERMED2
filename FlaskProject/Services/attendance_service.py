@@ -10,19 +10,19 @@ class AttendanceService:
             os.getenv("SUPABASE_KEY", "")
         )
 
-    async def sync_attendance_log(self, device_data: Dict[str, Any]) -> bool:
+    async def sync_attendance(self, device_data: Dict[str, Any]) -> bool:
         try:
-            # Mapear datos del dispositivo al formato de attendance_logs
+            # Convertir datos del dispositivo al formato de attendance_logs
             log_data = {
                 "enrollid": str(device_data.get("enrollid")),
-                "timestamp": datetime.fromtimestamp(
-                    device_data.get("timestamp", 0)
-                ).isoformat(),
+                "timestamp": datetime.now().isoformat(),
                 "device_sn": device_data.get("sn", ""),
                 "created_at": datetime.now().isoformat(),
-                "verificado": 0  # nuevo registro, no verificado
+                "verificado": 0
             }
 
+            # Nota: supabase-py no es asíncrono, pero lo envolvemos en async
+            # para mantener la consistencia de la interfaz
             result = self.supabase.table("attendance_logs").insert(log_data).execute()
             return bool(result.data)
         except Exception as e:
