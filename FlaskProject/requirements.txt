@@ -49,3 +49,4 @@ websockets
 supabase
 psycopg2-binary
 requests
+eventlet==0.40.0
