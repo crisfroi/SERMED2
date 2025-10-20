@@ -127,7 +127,30 @@ enrollinfoserive = EnrollInfoService(enroll_info=enrollinfo, person=person_)
 personService = PersonServiceImpl(
     person=person_, enroll_info=enrollinfoserive, machine_command=MachineCommand()
 )
+@app.route('/pub/api', methods=['POST'])
+def pub_api_handler():
+    """
+    Maneja las peticiones HTTP POST a la ruta /pub/api.
+    Esta ruta está configurada para recibir logs o comandos a través de HTTP
+    en caso de que no se utilice el protocolo WebSocket.
+    """
+    try:
+        # Asegúrate de que Flask está importado y 'app' está definido globalmente
+        data = request.get_json()
+        
+        # Log del mensaje recibido
+        print(f"--- [HTTP API] Petición POST recibida en /pub/api. Datos: {data}")
 
+        # Aquí debes implementar la lógica que el dispositivo espera:
+        # 1. Comprobar si 'data' contiene 'cmd' como 'reg' o 'sendlog'.
+        # 2. Procesar la información de registro o asistencia.
+        
+        # Ejemplo de respuesta básica para resolver el 404 y confirmar recepción:
+        return jsonify({"ret": "ok", "message": "Data received successfully"}), 200
+        
+    except Exception as e:
+        print(f"!!! [HTTP API] ERROR al procesar la petición POST en /pub/api: {e}")
+        return jsonify({"ret": "error", "reason": "server_error"}), 500
 
 @app.route("/device", methods=["POST"])
 def create_device():
