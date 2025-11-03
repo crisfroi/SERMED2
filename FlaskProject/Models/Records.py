@@ -18,7 +18,7 @@ class Record(db.Model):
     __tablename__ = 'records'
     id = db.Column(db.Integer, primary_key=True)
     enroll_id = db.Column(db.Integer)
-    records_time = db.Column(db.DateTime)
+    records_time = db.Column(db.DateTime(timezone=True))  # Matches DB: timestamp with time zone
     mode = db.Column(db.Integer)
     intOut = db.Column('int_out', db.Integer)
     event = db.Column(db.Integer)
@@ -34,7 +34,7 @@ class Record(db.Model):
     device_serial_num = db.Column(db.String(80))
     temperature = db.Column(db.Float)
     image = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime(timezone=True))  # Matches DB: timestamp with time zone
 
     def __str__(self):
         return f"Record [id={self.id}, enroll_id={self.enroll_id}, records_time={self.records_time}, mode={self.mode}, " \
