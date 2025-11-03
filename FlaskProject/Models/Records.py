@@ -65,11 +65,8 @@ def insert_record(record):
     db.session.commit()
 def insert_record2(**record_data):
     try:
-        # Map intOut to int_out if needed for backward compatibility
-        if 'intOut' in record_data and 'int_out' not in record_data:
-            record_data['int_out'] = record_data.pop('intOut')
-
-        # Create record instance - let SQLAlchemy handle the actual insert
+        # Create record instance using the model
+        # Note: intOut in record_data maps to int_out column via SQLAlchemy column mapping
         record = Record(**record_data)
         db.session.add(record)
         db.session.flush()  # Flush to ensure ID is generated
@@ -78,13 +75,11 @@ def insert_record2(**record_data):
         # Log successful insertion
         print(f"[Records.insert_record2] SUCCESS: Record inserted - id={record.id}, enroll_id={record.enroll_id}, device={record.device_serial_num}, time={record.records_time}")
         return record.id
-    except ValueError as e:
-        db.session.rollback()
-        print(f"[Records.insert_record2] VALIDATION ERROR: {str(e)}")
-        raise
     except Exception as e:
         db.session.rollback()
         print(f"[Records.insert_record2] DATABASE ERROR: {str(e)}")
+        import traceback
+        traceback.print_exc()
         raise
 
 def select_record_by_id(id):
