@@ -23,7 +23,6 @@ import {
   Activity,
   BarChart3,
   Image,
-  HardDrive,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
@@ -39,8 +38,9 @@ import SupabaseDebugTest from "@/components/dashboard/SupabaseDebugTest";
 import UserRoleManagement from "@/components/dashboard/UserRoleManagement";
 import ConnectivityDiagnostic from "@/components/dashboard/ConnectivityDiagnostic";
 import CarnetQueueProcessor from "@/components/dashboard/CarnetQueueProcessor";
-import SlideshowSettings from "@/components/admin/SlideshowSettings";
-import MigrationManager from "@/components/dashboard/MigrationManager"; 
+
+// 💡 NUEVO: Importamos el componente de gestión del carrusel
+import SlideshowSettings from "@/components/admin/SlideshowSettings"; 
 
 const AdminPanel = () => {
   const navigate = useNavigate();
