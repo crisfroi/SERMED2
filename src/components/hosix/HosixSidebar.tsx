@@ -17,6 +17,11 @@ import {
   TrendingDown,
   Package,
   ShoppingCart,
+  Zap,
+  Baby,
+  Microscope,
+  ImageIcon,
+  Share2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -30,14 +35,28 @@ const HosixSidebar: React.FC<HosixSidebarProps> = ({ isOpen }) => {
 
   const menuItems = [
     { label: 'Dashboard', icon: LayoutDashboard, path: '/hosix' },
+    { label: 'Admisión Central', icon: Users, path: '/hosix/admision' },
     { label: 'Pacientes', icon: Users, path: '/hosix/pacientes' },
     { label: 'Urgencias', icon: AlertCircle, path: '/hosix/urgencias' },
     { label: 'Citas', icon: Calendar, path: '/hosix/citas' },
     { label: 'Hospitalización', icon: Hospital, path: '/hosix/hospitalizacion' },
+<<<<<<< HEAD
     { label: 'Quirófanos', icon: Stethoscope, path: '/hosix/quirofanos' },
     { label: 'Farmacia', icon: Pill, path: '/hosix/farmacia' },
     { label: 'Enfermería', icon: Heart, path: '/hosix/enfermeria' },
     { label: 'Médicos', icon: Stethoscope, path: '/hosix/medicos' },
+=======
+    { label: 'Quirófanos (ASIS 3.0)', icon: Zap, path: '/hosix/quirofanos' },
+    { label: 'Obstetricia (ASIS 4.0)', icon: Baby, path: '/hosix/obstetricia' },
+    { label: 'CRED (ASIS 5.0)', icon: Heart, path: '/hosix/cred' },
+    { label: 'Médicos (ASIS 1.0)', icon: Stethoscope, path: '/hosix/medicos' },
+    { label: 'Enfermería (ASIS 2.0)', icon: Heart, path: '/hosix/enfermeria' },
+    { label: 'Laboratorio (ASIS 8.0)', icon: Microscope, path: '/hosix/laboratorio' },
+    { label: 'Imagenología (ASIS 9.0)', icon: ImageIcon, path: '/hosix/imagenologia' },
+    { label: 'Farmacia (ASIS 10.0)', icon: Pill, path: '/hosix/farmacia' },
+    { label: 'Interconsultas (ASIS 11.0)', icon: Share2, path: '/hosix/interconsultas' },
+    { label: 'Prescripción (CPOE)', icon: Pill, path: '/hosix/prescripcion' },
+>>>>>>> 02b6dd4a8a1f68cb12af7584d9414105e9cf44fb
     { label: 'Facturación', icon: DollarSign, path: '/hosix/facturacion' },
     { label: 'Cajas', icon: Vault, path: '/hosix/cajas' },
     { label: 'Recobros', icon: TrendingDown, path: '/hosix/recobros' },
