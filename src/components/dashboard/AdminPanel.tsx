@@ -270,19 +270,16 @@ const AdminPanel = () => {
         </Card>
       </div>
 
-      <Tabs defaultValue="slideshow" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-7">
+      <Tabs defaultValue="slideshow" className="space-y-6"> {/* 💡 CAMBIO: Establecemos 'slideshow' como pestaña por defecto */}
+        {/* 💡 CAMBIO: Añadimos una nueva columna al grid (w-full grid-cols-6) y el nuevo TabTrigger */}
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="settings" className="flex items-center gap-1">
             <Settings className="w-4 h-4" />
             <span className="hidden sm:inline">Configuración</span>
           </TabsTrigger>
-          <TabsTrigger value="slideshow" className="flex items-center gap-1">
+          <TabsTrigger value="slideshow" className="flex items-center gap-1"> {/* 💡 NUEVO: Pestaña Carrusel */}
             <Image className="w-4 h-4" />
             <span className="hidden sm:inline">Carrusel Web</span>
-          </TabsTrigger>
-          <TabsTrigger value="migrations" className="flex items-center gap-1">
-            <HardDrive className="w-4 h-4" />
-            <span className="hidden sm:inline">Migraciones</span>
           </TabsTrigger>
           <TabsTrigger value="diagnostics" className="flex items-center gap-1">
             <Monitor className="w-4 h-4" />
@@ -302,13 +299,11 @@ const AdminPanel = () => {
           </TabsTrigger>
         </TabsList>
 
+        {/* 💡 NUEVO: TabsContent para el componente de gestión del carrusel */}
         <TabsContent value="slideshow">
-          <SlideshowSettings />
+            <SlideshowSettings />
         </TabsContent>
-
-        <TabsContent value="migrations">
-          <MigrationManager />
-        </TabsContent>
+        {/* ----------------------------------------------------------- */}
 
         <TabsContent value="settings">
           <Card>
