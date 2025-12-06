@@ -112,76 +112,30 @@ const MigrationManager = () => {
       return;
     }
 
-    setMigrationsToApply(pendingSelected);
+    setMigrationsToApply(pendingSelected.map((m) => m.name));
     setShowConfirmDialog(true);
   };
 
-  const applyMigrations = async () => {
+  const handleApplyMigrations = async () => {
     setShowConfirmDialog(false);
     setApplyingMigrations(true);
 
     try {
-      let successCount = 0;
-      let errorCount = 0;
-
-      for (const migration of migrationsToApply) {
-        try {
-          const response = await fetch("/api/apply-migration", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ migrationName: migration.name }),
-          });
-
-          if (response.ok) {
-            successCount++;
-            // Actualizar estado en la lista
-            setMigrations((prev) =>
-              prev.map((m) =>
-                m.filename === migration.filename
-                  ? { ...m, status: "applied", appliedAt: new Date().toISOString() }
-                  : m
-              )
-            );
-
-            toast({
-              title: "Migración Aplicada",
-              description: `${migration.name} se aplicó correctamente`,
-            });
-          } else {
-            errorCount++;
-            const error = await response.json();
-            setMigrations((prev) =>
-              prev.map((m) =>
-                m.filename === migration.filename
-                  ? {
-                      ...m,
-                      status: "error",
-                      errorMessage: error.message || "Error desconocido",
-                    }
-                  : m
-              )
-            );
-
-            toast({
-              title: "Error",
-              description: `Fallo al aplicar ${migration.name}: ${error.message}`,
-              variant: "destructive",
-            });
-          }
-        } catch (error) {
-          errorCount++;
-          console.error(`Error applying migration ${migration.name}:`, error);
-        }
-      }
+      const result = await applyMigrations(migrationsToApply);
 
       toast({
         title: "Aplicación de Migraciones Completada",
-        description: `${successCount} aplicadas, ${errorCount} errores`,
-        variant: successCount > 0 ? "default" : "destructive",
+        description: `${result.success} aplicadas, ${result.failed} errores`,
+        variant: result.success > 0 ? "default" : "destructive",
       });
 
       setSelectedMigrations(new Set());
       setMigrationsToApply([]);
+
+      // Recargar migraciones para actualizar estado
+      setTimeout(() => {
+        loadMigrations();
+      }, 1000);
     } catch (error) {
       console.error("Error applying migrations:", error);
       toast({
