@@ -33,31 +33,28 @@ import {
   CheckCircle,
   Clock,
   RefreshCw,
-  Download,
   Loader,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-
-interface Migration {
-  filename: string;
-  name: string;
-  status: "pending" | "applied" | "error";
-  appliedAt?: string;
-  errorMessage?: string;
-  content?: string;
-}
+import { useSupabaseMigrations } from "@/hooks/useSupabaseMigrations";
 
 const MigrationManager = () => {
   const { toast } = useToast();
-  const [migrations, setMigrations] = useState<Migration[]>([]);
-  const [loading, setLoading] = useState(false);
+  const {
+    migrations,
+    stats,
+    loading,
+    error,
+    loadMigrations,
+    applyMigrations,
+  } = useSupabaseMigrations();
+
   const [applyingMigrations, setApplyingMigrations] = useState(false);
   const [selectedMigrations, setSelectedMigrations] = useState<Set<string>>(
     new Set()
@@ -66,200 +63,22 @@ const MigrationManager = () => {
     null
   );
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [migrationsToApply, setMigrationsToApply] = useState<Migration[]>([]);
+  const [migrationsToApply, setMigrationsToApply] = useState<string[]>([]);
 
   useEffect(() => {
     loadMigrations();
-  }, []);
+  }, [loadMigrations]);
 
-  const loadMigrations = async () => {
-    setLoading(true);
-    try {
-      // Obtener migraciones disponibles desde el servidor
-      const response = await fetch("/api/migrations");
-      let availableMigrations: Migration[] = [];
-
-      if (response.ok) {
-        const data = await response.json();
-        availableMigrations = data.migrations || [];
-      } else {
-        // Fallback: usar lista conocida de migraciones
-        availableMigrations = getDefaultMigrations();
-      }
-
-      // Verificar estado de cada migración en Supabase
-      const migrationsWithStatus = await Promise.all(
-        availableMigrations.map(async (migration) => {
-          const status = await checkMigrationStatus(migration.name);
-          return {
-            ...migration,
-            status: status.status,
-            appliedAt: status.appliedAt,
-            errorMessage: status.errorMessage,
-          };
-        })
-      );
-
-      setMigrations(migrationsWithStatus);
-
-      // Contar migraciones pendientes
-      const pendingCount = migrationsWithStatus.filter(
-        (m) => m.status === "pending"
-      ).length;
-
-      if (pendingCount > 0) {
-        toast({
-          title: "Migraciones Pendientes",
-          description: `Hay ${pendingCount} migraciones sin aplicar`,
-          variant: "default",
-        });
-      }
-    } catch (error) {
-      console.error("Error loading migrations:", error);
+  // Mostrar error si existe
+  useEffect(() => {
+    if (error) {
       toast({
-        title: "Error",
-        description: "Error al cargar las migraciones",
+        title: "Error al cargar migraciones",
+        description: error,
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
-  };
-
-  const checkMigrationStatus = async (
-    migrationName: string
-  ): Promise<{
-    status: "pending" | "applied" | "error";
-    appliedAt?: string;
-    errorMessage?: string;
-  }> => {
-    try {
-      // Verificar si existe tabla de registro de migraciones
-      const { data, error } = await supabase
-        .from("schema_migrations")
-        .select("*")
-        .eq("name", migrationName)
-        .single();
-
-      if (error && error.code !== "PGRST116") {
-        // Si el error no es "no rows found", es un error real
-        return { status: "error", errorMessage: error.message };
-      }
-
-      if (data) {
-        return {
-          status: "applied",
-          appliedAt: data.executed_at || data.created_at,
-        };
-      }
-
-      return { status: "pending" };
-    } catch (error) {
-      // Tabla podría no existir, asumir pendiente
-      return { status: "pending" };
-    }
-  };
-
-  const getDefaultMigrations = (): Migration[] => {
-    // Lista de migraciones conocidas en el proyecto
-    return [
-      {
-        filename: "20240101000000_create_biometric_sync_logs.sql",
-        name: "20240101000000_create_biometric_sync_logs",
-        status: "pending",
-      },
-      {
-        filename: "20241201_dynamic_forms.sql",
-        name: "20241201_dynamic_forms",
-        status: "pending",
-      },
-      {
-        filename: "20250116_001_hosix_base_schema.sql",
-        name: "20250116_001_hosix_base_schema",
-        status: "pending",
-      },
-      {
-        filename: "20250116_002_hosix_pacientes_historia_clinica.sql",
-        name: "20250116_002_hosix_pacientes_historia_clinica",
-        status: "pending",
-      },
-      {
-        filename: "20250116_003_hosix_urgencias_citas_agendas.sql",
-        name: "20250116_003_hosix_urgencias_citas_agendas",
-        status: "pending",
-      },
-      {
-        filename: "20250116_004_hosix_hospitalizacion_quirofanos_farmacia.sql",
-        name: "20250116_004_hosix_hospitalizacion_quirofanos_farmacia",
-        status: "pending",
-      },
-      {
-        filename: "20250116_005_hosix_facturacion_reportes.sql",
-        name: "20250116_005_hosix_facturacion_reportes",
-        status: "pending",
-      },
-      {
-        filename: "20250121_006_hosix_cajas_completo.sql",
-        name: "20250121_006_hosix_cajas_completo",
-        status: "pending",
-      },
-      {
-        filename: "20250121_007_hosix_recobros.sql",
-        name: "20250121_007_hosix_recobros",
-        status: "pending",
-      },
-      {
-        filename: "20250121_008_hosix_suministros.sql",
-        name: "20250121_008_hosix_suministros",
-        status: "pending",
-      },
-      {
-        filename: "20250122_009_hosix_almacenes.sql",
-        name: "20250122_009_hosix_almacenes",
-        status: "pending",
-      },
-      {
-        filename: "20250122_011_hosix_cpoe_prescripciones.sql",
-        name: "20250122_011_hosix_cpoe_prescripciones",
-        status: "pending",
-      },
-      {
-        filename: "20250122_012_hosix_servicios_tipos_ingreso.sql",
-        name: "20250122_012_hosix_servicios_tipos_ingreso",
-        status: "pending",
-      },
-      {
-        filename: "20250205_010_hosix_enfermeria.sql",
-        name: "20250205_010_hosix_enfermeria",
-        status: "pending",
-      },
-      {
-        filename: "20250205_011_hosix_medicos.sql",
-        name: "20250205_011_hosix_medicos",
-        status: "pending",
-      },
-      {
-        filename: "20250205_012_hosix_drug_interactions.sql",
-        name: "20250205_012_hosix_drug_interactions",
-        status: "pending",
-      },
-      {
-        filename: "20250206_011_hosix_medicos_asis_1.sql",
-        name: "20250206_011_hosix_medicos_asis_1",
-        status: "pending",
-      },
-      {
-        filename: "20250206_013_hosix_quirofanos_asis_3.sql",
-        name: "20250206_013_hosix_quirofanos_asis_3",
-        status: "pending",
-      },
-      {
-        filename: "20250206_014_hosix_interconsultas_asis_11.sql",
-        name: "20250206_014_hosix_interconsultas_asis_11",
-        status: "pending",
-      },
-    ];
-  };
+  }, [error, toast]);
 
   const handleSelectMigration = (filename: string) => {
     const newSelected = new Set(selectedMigrations);
