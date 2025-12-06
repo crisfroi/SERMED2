@@ -36,11 +36,8 @@ import Suministros from "./pages/Hosix/Suministros";
 import Almacenes from "./pages/Hosix/Almacenes";
 import ComprasPage from "./pages/Hosix/Compras";
 import Enfermeria from "./pages/Hosix/Enfermeria";
-<<<<<<< HEAD
-=======
 import Prescripcion from "./pages/Hosix/Prescripcion";
 import AdmisionCentral from "./pages/Hosix/AdmisionCentral";
->>>>>>> 02b6dd4a8a1f68cb12af7584d9414105e9cf44fb
 import Medicos from "./pages/Hosix/Medicos";
 import Configuracion from "./pages/Hosix/Configuracion";
 import BI from "./pages/Hosix/BI";
