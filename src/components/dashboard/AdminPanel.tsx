@@ -22,7 +22,8 @@ import {
   Power,
   Activity,
   BarChart3,
-  Image, // 💡 NUEVO: Icono para la pestaña del carrusel
+  Image,
+  HardDrive,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
@@ -38,9 +39,8 @@ import SupabaseDebugTest from "@/components/dashboard/SupabaseDebugTest";
 import UserRoleManagement from "@/components/dashboard/UserRoleManagement";
 import ConnectivityDiagnostic from "@/components/dashboard/ConnectivityDiagnostic";
 import CarnetQueueProcessor from "@/components/dashboard/CarnetQueueProcessor";
-
-// 💡 NUEVO: Importamos el componente de gestión del carrusel
-import SlideshowSettings from "@/components/admin/SlideshowSettings"; 
+import SlideshowSettings from "@/components/admin/SlideshowSettings";
+import MigrationManager from "@/components/dashboard/MigrationManager"; 
 
 const AdminPanel = () => {
   const navigate = useNavigate();
