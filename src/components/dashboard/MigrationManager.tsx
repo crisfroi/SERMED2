@@ -186,10 +186,6 @@ const MigrationManager = () => {
     }
   };
 
-  const pendingCount = migrations.filter((m) => m.status === "pending").length;
-  const appliedCount = migrations.filter((m) => m.status === "applied").length;
-  const errorCount = migrations.filter((m) => m.status === "error").length;
-
   return (
     <div className="space-y-6">
       <Card>
@@ -205,7 +201,7 @@ const MigrationManager = () => {
               </div>
             </div>
             <Button
-              onClick={loadMigrations}
+              onClick={() => loadMigrations()}
               variant="outline"
               disabled={loading}
               className="flex items-center gap-2"
@@ -223,7 +219,7 @@ const MigrationManager = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Aplicadas</p>
-                <p className="text-3xl font-bold text-green-600">{appliedCount}</p>
+                <p className="text-3xl font-bold text-green-600">{stats.applied}</p>
               </div>
               <CheckCircle className="w-8 h-8 text-green-600 opacity-50" />
             </div>
@@ -235,7 +231,7 @@ const MigrationManager = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Pendientes</p>
-                <p className="text-3xl font-bold text-yellow-600">{pendingCount}</p>
+                <p className="text-3xl font-bold text-yellow-600">{stats.pending}</p>
               </div>
               <Clock className="w-8 h-8 text-yellow-600 opacity-50" />
             </div>
@@ -247,7 +243,7 @@ const MigrationManager = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Errores</p>
-                <p className="text-3xl font-bold text-red-600">{errorCount}</p>
+                <p className="text-3xl font-bold text-red-600">{stats.errors}</p>
               </div>
               <AlertTriangle className="w-8 h-8 text-red-600 opacity-50" />
             </div>
