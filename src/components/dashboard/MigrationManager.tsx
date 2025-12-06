@@ -392,19 +392,19 @@ const MigrationManager = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="space-y-2 max-h-64 overflow-y-auto">
-            {migrationsToApply.map((migration) => (
+            {migrationsToApply.map((migrationName) => (
               <div
-                key={migration.filename}
+                key={migrationName}
                 className="text-sm p-2 bg-gray-50 rounded"
               >
-                {migration.filename}
+                {migrationName}
               </div>
             ))}
           </div>
           <div className="flex gap-4 justify-end">
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
-              onClick={applyMigrations}
+              onClick={handleApplyMigrations}
               disabled={applyingMigrations}
               className="bg-blue-600"
             >
