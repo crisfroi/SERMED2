@@ -302,11 +302,13 @@ const AdminPanel = () => {
           </TabsTrigger>
         </TabsList>
 
-        {/* 💡 NUEVO: TabsContent para el componente de gestión del carrusel */}
         <TabsContent value="slideshow">
-            <SlideshowSettings />
+          <SlideshowSettings />
         </TabsContent>
-        {/* ----------------------------------------------------------- */}
+
+        <TabsContent value="migrations">
+          <MigrationManager />
+        </TabsContent>
 
         <TabsContent value="settings">
           <Card>
