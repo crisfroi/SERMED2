@@ -36,9 +36,19 @@ import Suministros from "./pages/Hosix/Suministros";
 import Almacenes from "./pages/Hosix/Almacenes";
 import ComprasPage from "./pages/Hosix/Compras";
 import Enfermeria from "./pages/Hosix/Enfermeria";
+<<<<<<< HEAD
+=======
+import Prescripcion from "./pages/Hosix/Prescripcion";
+import AdmisionCentral from "./pages/Hosix/AdmisionCentral";
+>>>>>>> 02b6dd4a8a1f68cb12af7584d9414105e9cf44fb
 import Medicos from "./pages/Hosix/Medicos";
 import Configuracion from "./pages/Hosix/Configuracion";
 import BI from "./pages/Hosix/BI";
+import Obstetricia from "./pages/Hosix/Obstetricia";
+import CRED from "./pages/Hosix/CRED";
+import Laboratorio from "./pages/Hosix/Laboratorio";
+import Imagenologia from "./pages/Hosix/Imagenologia";
+import Interconsultas from "./pages/Hosix/Interconsultas";
 
 // Initialize ResizeObserver error handling
 initResizeObserverErrorHandling();
@@ -108,12 +118,15 @@ function App() {
                 <Route path="/hosix/login" element={<HosixLogin />} />
                 <Route path="/hosix" element={<HosixLayout />}>
                   <Route index element={<HosixDashboard />} />
+                  <Route path="admision" element={<AdmisionCentral />} />
                   <Route path="pacientes" element={<Pacientes />} />
                   <Route path="urgencias" element={<Urgencias />} />
                   <Route path="citas" element={<Citas />} />
                   <Route path="hospitalizacion" element={<Hospitalizacion />} />
                   <Route path="quirofanos" element={<Quirofanos />} />
                   <Route path="farmacia" element={<Farmacia />} />
+                  <Route path="medicos" element={<Medicos />} />
+                  <Route path="prescripcion" element={<Prescripcion />} />
                   <Route path="enfermeria" element={<Enfermeria />} />
                   <Route path="medicos" element={<Medicos />} />
                   <Route path="facturacion" element={<FacturacionPage />} />
@@ -122,6 +135,11 @@ function App() {
                   <Route path="suministros" element={<Suministros />} />
                   <Route path="almacenes" element={<Almacenes />} />
                   <Route path="compras" element={<ComprasPage />} />
+                  <Route path="obstetricia" element={<Obstetricia />} />
+                  <Route path="cred" element={<CRED />} />
+                  <Route path="laboratorio" element={<Laboratorio />} />
+                  <Route path="imagenologia" element={<Imagenologia />} />
+                  <Route path="interconsultas" element={<Interconsultas />} />
                   <Route path="configuracion" element={<Configuracion />} />
                   <Route path="bi" element={<BI />} />
                 </Route>
