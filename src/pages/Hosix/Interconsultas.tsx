@@ -3,16 +3,18 @@ import { useHosixInterconsultas } from '@/hooks/useHosixInterconsultas'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { InterconsultasSolicitudesManager } from '@/components/hosix/interconsultas/SolicitudesManager'
+import { RespuestasManager } from '@/components/hosix/interconsultas/RespuestasManager'
+import { SeguimientoManager } from '@/components/hosix/interconsultas/SeguimientoManager'
 
 export default function InterconsultasPage() {
-  const { solicitudes = [], respuestas = [] } = useHosixInterconsultas()
+  const { solicitudes = [], respuestas = [], seguimientos = [] } = useHosixInterconsultas()
   const [activeTab, setActiveTab] = useState('solicitudes')
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Interconsultas (ASIS 11.0)</h1>
-        <p className="text-gray-600 mt-2">Gestión integral de solicitudes de interconsulta, respuestas especialista y seguimiento</p>
+        <p className="text-muted-foreground mt-2">Gestión integral de solicitudes de interconsulta, respuestas especialista y seguimiento</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -45,10 +47,10 @@ export default function InterconsultasPage() {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Solicitudes</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Seguimientos</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{solicitudes.length}</div>
+            <div className="text-2xl font-bold">{seguimientos.length}</div>
           </CardContent>
         </Card>
       </div>
@@ -57,6 +59,7 @@ export default function InterconsultasPage() {
         <TabsList>
           <TabsTrigger value="solicitudes">Solicitudes</TabsTrigger>
           <TabsTrigger value="respuestas">Respuestas</TabsTrigger>
+          <TabsTrigger value="seguimiento">Seguimiento</TabsTrigger>
         </TabsList>
 
         <TabsContent value="solicitudes">
@@ -64,16 +67,13 @@ export default function InterconsultasPage() {
         </TabsContent>
 
         <TabsContent value="respuestas">
-          <Card>
-            <CardHeader>
-              <CardTitle>Respuestas de Interconsulta</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">Módulo de respuestas en desarrollo</p>
-            </CardContent>
-          </Card>
+          <RespuestasManager />
+        </TabsContent>
+
+        <TabsContent value="seguimiento">
+          <SeguimientoManager />
         </TabsContent>
       </Tabs>
     </div>
   )
-  }
+}

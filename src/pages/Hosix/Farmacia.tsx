@@ -3,6 +3,7 @@ import { useHosixFarmacia } from '@/hooks/useHosixFarmacia'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DispensacionesManager } from '@/components/hosix/farmacia/DispensacionesManager'
+import { FarmacovigilanciaManager } from '@/components/hosix/farmacia/FarmacovigilanciaManager'
 
 export default function FarmaciaPage() {
   const { dispensarios = [], dispensaciones = [], farmacovigilancia = [] } = useHosixFarmacia()
@@ -11,8 +12,8 @@ export default function FarmaciaPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Farmacia Clínica (ASIS 10.0)</h1>
-        <p className="text-gray-600 mt-2">Gestión de dispensación de medicamentos, farmacovigilancia y evaluación clínica</p>
+        <h1 className="text-3xl font-bold">Farmacia Clínica (ASIS 9.0)</h1>
+        <p className="text-muted-foreground mt-2">Gestión de dispensación de medicamentos, farmacovigilancia y evaluación clínica</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -66,16 +67,9 @@ export default function FarmaciaPage() {
         </TabsContent>
 
         <TabsContent value="farmacovigilancia">
-          <Card>
-            <CardHeader>
-              <CardTitle>Eventos Adversos (Farmacovigilancia)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">Módulo de farmacovigilancia en desarrollo</p>
-            </CardContent>
-          </Card>
+          <FarmacovigilanciaManager />
         </TabsContent>
       </Tabs>
     </div>
   )
-  }
+}
