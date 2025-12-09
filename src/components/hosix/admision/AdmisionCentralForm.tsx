@@ -1,5 +1,5 @@
 import { LogIn } from 'lucide-react'
-import TicketGenerator from './TicketGenerator'
+import TicketGenerator from '@/components/hosix/admision/TicketGenerator'
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
