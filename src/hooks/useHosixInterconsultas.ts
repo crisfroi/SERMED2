@@ -29,6 +29,18 @@ export const useHosixInterconsultas = () => {
     }
   })
 
+  const seguimientosQuery = useQuery({
+    queryKey: ['hosix_interconsultas_seguimiento'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('hosix_interconsultas_seguimiento')
+        .select('*')
+        .order('fecha_seguimiento', { ascending: false })
+      if (error) throw error
+      return data || []
+    }
+  })
+
   const crearSolicitudMutation = useMutation({
     mutationFn: async (solicitud: any) => {
       const { data, error } = await supabase
@@ -70,12 +82,31 @@ export const useHosixInterconsultas = () => {
     onError: (error: any) => toast.error(`Error: ${error.message}`)
   })
 
+  const crearSeguimientoMutation = useMutation({
+    mutationFn: async (seguimiento: any) => {
+      const { data, error } = await supabase
+        .from('hosix_interconsultas_seguimiento')
+        .insert([seguimiento])
+        .select()
+      if (error) throw error
+      return data[0]
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['hosix_interconsultas_seguimiento'] })
+      toast.success('Seguimiento registrado')
+    },
+    onError: (error: any) => toast.error(`Error: ${error.message}`)
+  })
+
   return {
     solicitudes: solicitudesQuery.data || [],
     solicitudesLoading: solicitudesQuery.isLoading,
     respuestas: respuestasQuery.data || [],
     respuestasLoading: respuestasQuery.isLoading,
+    seguimientos: seguimientosQuery.data || [],
+    seguimientosLoading: seguimientosQuery.isLoading,
     crearSolicitud: crearSolicitudMutation.mutate,
-    crearRespuesta: crearRespuestaMutation.mutate
+    crearRespuesta: crearRespuestaMutation.mutate,
+    crearSeguimiento: crearSeguimientoMutation.mutate
   }
 }
