@@ -1,124 +1,142 @@
-import React, { useState } from 'react'
-import { useHosixFarmacia } from '@/hooks/useHosixFarmacia'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Plus } from 'lucide-react'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import React, { useState } from 'react';
+import { supabase, executeSupabaseQuery } from '../../../integrations/supabase/client';
+import useDispensaciones from '../../../hooks/hosix/useDispensaciones';
+import useHosixStock from '../../../hooks/hosix/useHosixStock';
+import useHosixMedicamentos from '../../../hooks/hosix/useHosixMedicamentos';
 
 export const DispensacionesManager: React.FC = () => {
-  const { dispensaciones = [], dispensarios = [] } = useHosixFarmacia()
-  const [searchTerm, setSearchTerm] = useState('')
-  const [isOpen, setIsOpen] = useState(false)
+  const [prescripcionNumero, setPrescripcionNumero] = useState('');
+  const [prescripcion, setPrescripcion] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const { createDispensacion } = useDispensaciones();
+  const { getStockForMedicamento } = useHosixStock();
+  const { medicamentos } = useHosixMedicamentos();
+  const [cajas, setCajas] = useState<any[]>([]);
+  const [formasPago, setFormasPago] = useState<any[]>([]);
+  const [selectedCaja, setSelectedCaja] = useState<string | null>(null);
+  const [selectedFormaPago, setSelectedFormaPago] = useState<string | null>(null);
+  const [dispensadorId, setDispensadorId] = useState<string | null>(null);
 
-  const filtered = dispensaciones.filter(d => {
-    return searchTerm === '' || 
-      d.numero_dispensacion?.includes(searchTerm) ||
-      d.articulo?.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
-  })
+  const buscar = async () => {
+    setLoading(true);
+    try {
+      const res = await executeSupabaseQuery(() => supabase.from('hosix_prescripciones').select('*').eq('id', prescripcionNumero).or(`numero.eq.${prescripcionNumero}`), 'prescripcion_lookup');
+      if (res.error) throw res.error;
+      setPrescripcion(res.data?.[0] ?? null);
+    } catch (err) {
+      console.error(err);
+      setPrescripcion(null);
+    } finally { setLoading(false); }
+  };
 
-  const dispensacionesHoy = dispensaciones.filter(d => 
-    new Date(d.fecha_dispensacion).toDateString() === new Date().toDateString()
-  ).length
+  const loadCajas = async () => {
+    const res = await executeSupabaseQuery(() => supabase.from('hosix_cajas').select('*').eq('activo', true), 'cajas_list');
+    if (!res.error) setCajas(res.data || []);
+    const formas = await executeSupabaseQuery(() => supabase.from('hosix_cajas_formas_pago').select('*').eq('activo', true), 'formas_pago_list');
+    if (!formas.error) setFormasPago(formas.data || []);
+  };
+
+  React.useEffect(() => { loadCajas(); }, []);
+
+  const dispensar = async () => {
+    if (!prescripcion) return;
+    setLoading(true);
+    try {
+      // For simplicity assume medication id present or use medicamento_texto
+      const medicamento_id = prescripcion.medicamento_id;
+      const cantidad = prescripcion.dosis || 1;
+      // compute amount: attempt to find tarifa by medicamento id
+      let monto = 0;
+      if (medicamento_id) {
+        const tarifaRes = await executeSupabaseQuery(() => supabase.from('hosix_tarifas').select('precio').eq('codigo_concepto', medicamento_id).limit(1), 'tarifa_lookup');
+        if (!tarifaRes.error && tarifaRes.data?.[0]?.precio) {
+          monto = Number(tarifaRes.data[0].precio) * Number(cantidad);
+        }
+      }
+
+      const res = await createDispensacion({ prescripcion_id: prescripcion.id, prescripcion_numero: prescripcion.numero || prescripcion.id, medicamento_id: prescripcion.medicamento_id, medicamento_texto: prescripcion.medicamento_texto, cantidad_dispensada: Number(cantidad), dispensador_id: null, cantidad_a_facturar: monto, caja_id: null });
+      if (res.error) {
+        console.error('Error dispensing', res.error);
+      } else {
+        // reload prescripcion if needed
+        setPrescripcion(null);
+        setPrescripcionNumero('');
+      }
+    } catch (err) {
+      console.error(err);
+    } finally { setLoading(false); }
+  };
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Dispensarios Operativos</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{dispensarios.length}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Dispensaciones Hoy</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{dispensacionesHoy}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Total Dispensaciones</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{dispensaciones.length}</div>
-          </CardContent>
-        </Card>
+    <div className="hosix-dispensaciones-manager">
+      <header>
+        <h3>Dispensaciones - Farmacia</h3>
+      </header>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+        <input placeholder="Número de receta o ID" value={prescripcionNumero} onChange={(e) => setPrescripcionNumero(e.target.value)} />
+        <button onClick={buscar} disabled={loading}>Buscar</button>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle>Registro de Dispensaciones</CardTitle>
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Nueva Dispensación
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Nueva Dispensación Farmacéutica</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <Input placeholder="Seleccionar paciente" />
-                  <Input placeholder="Seleccionar medicamento" />
-                  <Input placeholder="Cantidad" type="number" />
-                  <Input placeholder="Lote" />
-                  <Input placeholder="Fecha vencimiento" type="date" />
-                  <textarea placeholder="Instrucciones al paciente" className="w-full px-3 py-2 border rounded" />
-                  <Button className="w-full">Dispensar</Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-4 mb-4">
-            <Input
-              placeholder="Buscar dispensación..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1"
-            />
-          </div>
+      {loading && <p>Procesando...</p>}
+      {prescripcion && (
+        <div>
+          <h4>Receta</h4>
+          <div>Paciente: {prescripcion.paciente_id}</div>
+          <div>Medicamento: {prescripcion.medicamento_texto ?? prescripcion.medicamento_id}</div>
+          <div>Dosis: {prescripcion.dosis}</div>
+          <div>Prescriptor: {prescripcion.prescriptor_id}</div>
+          <div style={{ marginTop: '0.5rem' }}>
+            <div style={{ marginBottom: '0.5rem' }}>
+              <label style={{ marginRight: '0.5rem' }}>Caja</label>
+              <select value={selectedCaja ?? ''} onChange={(e) => setSelectedCaja(e.target.value || null)}>
+                <option value="">-- Seleccionar --</option>
+                {cajas.map(c => <option key={c.id} value={c.id}>{c.nombre} ({c.codigo})</option>)}
+              </select>
+              <label style={{ marginLeft: '1rem', marginRight: '0.5rem' }}>Forma pago</label>
+              <select value={selectedFormaPago ?? ''} onChange={(e) => setSelectedFormaPago(e.target.value || null)}>
+                <option value="">-- Seleccionar --</option>
+                {formasPago.map(f => <option key={f.id} value={f.codigo}>{f.nombre}</option>)}
+              </select>
+            </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nro Dispensación</TableHead>
-                <TableHead>Medicamento</TableHead>
-                <TableHead>Cantidad</TableHead>
-                <TableHead>Lote</TableHead>
-                <TableHead>Fecha Vencimiento</TableHead>
-                <TableHead>Farmacéutico</TableHead>
-                <TableHead>Fecha</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filtered.slice(0, 10).map((d: any) => (
-                <TableRow key={d.id}>
-                  <TableCell className="font-semibold">{d.numero_dispensacion}</TableCell>
-                  <TableCell>{d.articulo?.nombre || 'N/A'}</TableCell>
-                  <TableCell>{d.cantidad_dispensada}</TableCell>
-                  <TableCell>{d.lote_medicamento}</TableCell>
-                  <TableCell>{d.fecha_vencimiento_medicamento ? new Date(d.fecha_vencimiento_medicamento).toLocaleDateString() : '-'}</TableCell>
-                  <TableCell>{d.farmaceutico?.primer_nombre || 'N/A'}</TableCell>
-                  <TableCell>{new Date(d.fecha_dispensacion).toLocaleDateString()}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+            <div style={{ marginBottom: '0.5rem' }}>
+              <label>Dispensador (user id)</label>
+              <input value={dispensadorId ?? ''} onChange={(e) => setDispensadorId(e.target.value || null)} placeholder="UUID usuario" />
+            </div>
+
+            <button onClick={async () => {
+              // quick stock check
+              if (prescripcion.medicamento_id) {
+                const stock = await getStockForMedicamento(prescripcion.medicamento_id);
+                alert(`Stock disponible: ${stock.data?.cantidad_disponible ?? 'N/A'}`);
+              }
+            }}>Comprobar stock</button>
+            <button onClick={async () => {
+              // call createDispensacion with caja/forma/dispensador
+              setLoading(true);
+              try {
+                const cantidad = Number(prescripcion.dosis || 1);
+                // determine monto (simple heuristic, may be refined)
+                let monto = 0;
+                if (prescripcion.medicamento_id) {
+                  const tarifaRes = await executeSupabaseQuery(() => supabase.from('hosix_tarifas').select('precio').eq('codigo_concepto', prescripcion.medicamento_id).limit(1), 'tarifa_lookup');
+                  if (!tarifaRes.error && tarifaRes.data?.[0]?.precio) monto = Number(tarifaRes.data[0].precio) * cantidad;
+                }
+                const res = await createDispensacion({ prescripcion_id: prescripcion.id, prescripcion_numero: prescripcion.numero || prescripcion.id, medicamento_id: prescripcion.medicamento_id, medicamento_texto: prescripcion.medicamento_texto, cantidad_dispensada: cantidad, dispensador_id: dispensadorId || null, cantidad_a_facturar: monto, caja_id: selectedCaja || null, forma_pago: selectedFormaPago || null });
+                if (res.error) alert('Error al dispensar: ' + JSON.stringify(res.error));
+                else {
+                  alert('Dispensación creada');
+                  setPrescripcion(null);
+                  setPrescripcionNumero('');
+                }
+              } finally { setLoading(false); }
+            }} style={{ marginLeft: '0.5rem' }} disabled={loading}>Dispensar y Cobrar</button>
+          </div>
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default DispensacionesManager
+export default DispensacionesManager;
+
