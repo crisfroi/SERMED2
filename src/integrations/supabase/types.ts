@@ -2559,6 +2559,348 @@ export type Database = {
           },
         ]
       }
+      hosix_cpoe_prescripciones: {
+        Row: {
+          alertas_ignoradas: Json | null
+          created_at: string | null
+          dosis: string
+          duracion_dias: number | null
+          episodio_id: string | null
+          estado: string | null
+          fecha_fin: string | null
+          fecha_firma: string | null
+          fecha_inicio: string
+          firmada: boolean | null
+          frecuencia: string
+          hash_firma: string | null
+          id: string
+          instrucciones_paciente: string | null
+          medicamento_id: string
+          medico_id: string
+          nombre_medicamento: string
+          observaciones_medicas: string | null
+          paciente_id: string
+          principio_activo: string | null
+          tiene_alerta_alergia: boolean | null
+          tiene_alerta_dosis: boolean | null
+          tiene_alerta_interaccion: boolean | null
+          unidad_dosis: string | null
+          updated_at: string | null
+          via_administracion: string
+        }
+        Insert: {
+          alertas_ignoradas?: Json | null
+          created_at?: string | null
+          dosis: string
+          duracion_dias?: number | null
+          episodio_id?: string | null
+          estado?: string | null
+          fecha_fin?: string | null
+          fecha_firma?: string | null
+          fecha_inicio: string
+          firmada?: boolean | null
+          frecuencia: string
+          hash_firma?: string | null
+          id?: string
+          instrucciones_paciente?: string | null
+          medicamento_id: string
+          medico_id: string
+          nombre_medicamento: string
+          observaciones_medicas?: string | null
+          paciente_id: string
+          principio_activo?: string | null
+          tiene_alerta_alergia?: boolean | null
+          tiene_alerta_dosis?: boolean | null
+          tiene_alerta_interaccion?: boolean | null
+          unidad_dosis?: string | null
+          updated_at?: string | null
+          via_administracion: string
+        }
+        Update: {
+          alertas_ignoradas?: Json | null
+          created_at?: string | null
+          dosis?: string
+          duracion_dias?: number | null
+          episodio_id?: string | null
+          estado?: string | null
+          fecha_fin?: string | null
+          fecha_firma?: string | null
+          fecha_inicio?: string
+          firmada?: boolean | null
+          frecuencia?: string
+          hash_firma?: string | null
+          id?: string
+          instrucciones_paciente?: string | null
+          medicamento_id?: string
+          medico_id?: string
+          nombre_medicamento?: string
+          observaciones_medicas?: string | null
+          paciente_id?: string
+          principio_activo?: string | null
+          tiene_alerta_alergia?: boolean | null
+          tiene_alerta_dosis?: boolean | null
+          tiene_alerta_interaccion?: boolean | null
+          unidad_dosis?: string | null
+          updated_at?: string | null
+          via_administracion?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_cpoe_prescripciones_medicamento_id_fkey"
+            columns: ["medicamento_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_articulos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_cpoe_prescripciones_medico_id_fkey"
+            columns: ["medico_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_cpoe_prescripciones_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_cred_desarrollo_evaluacion: {
+        Row: {
+          created_at: string | null
+          edad_meses: number | null
+          fecha_evaluacion: string
+          id: string
+          items_evaluados: Json | null
+          observaciones: string | null
+          paciente_id: string
+          profesional_id: string
+          prueba_tamiz: string | null
+          resultado: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          edad_meses?: number | null
+          fecha_evaluacion: string
+          id?: string
+          items_evaluados?: Json | null
+          observaciones?: string | null
+          paciente_id: string
+          profesional_id: string
+          prueba_tamiz?: string | null
+          resultado?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          edad_meses?: number | null
+          fecha_evaluacion?: string
+          id?: string
+          items_evaluados?: Json | null
+          observaciones?: string | null
+          paciente_id?: string
+          profesional_id?: string
+          prueba_tamiz?: string | null
+          resultado?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_cred_desarrollo_evaluacion_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_cred_desarrollo_evaluacion_profesional_id_fkey"
+            columns: ["profesional_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_cred_referral: {
+        Row: {
+          centro_referral: string | null
+          created_at: string | null
+          diagnostico_profesional: string | null
+          especialidad_referida: string | null
+          estado_referral: string | null
+          fecha_referral: string
+          id: string
+          paciente_id: string
+          razon_referral: string
+          updated_at: string | null
+        }
+        Insert: {
+          centro_referral?: string | null
+          created_at?: string | null
+          diagnostico_profesional?: string | null
+          especialidad_referida?: string | null
+          estado_referral?: string | null
+          fecha_referral: string
+          id?: string
+          paciente_id: string
+          razon_referral: string
+          updated_at?: string | null
+        }
+        Update: {
+          centro_referral?: string | null
+          created_at?: string | null
+          diagnostico_profesional?: string | null
+          especialidad_referida?: string | null
+          estado_referral?: string | null
+          fecha_referral?: string
+          id?: string
+          paciente_id?: string
+          razon_referral?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_cred_referral_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_cred_seguimiento: {
+        Row: {
+          created_at: string | null
+          desarrollo_psicomotor: string | null
+          edad_meses: number | null
+          estado_nutricional: string | null
+          evaluacion_auditiva: boolean | null
+          evaluacion_visual: boolean | null
+          fecha_control: string
+          hito_desarrollo: string | null
+          id: string
+          imc: number | null
+          observaciones: string | null
+          paciente_id: string
+          perimetro_cefalico_cm: number | null
+          peso_kg: number | null
+          profesional_id: string | null
+          talla_cm: number | null
+          vacunas_completas: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          desarrollo_psicomotor?: string | null
+          edad_meses?: number | null
+          estado_nutricional?: string | null
+          evaluacion_auditiva?: boolean | null
+          evaluacion_visual?: boolean | null
+          fecha_control: string
+          hito_desarrollo?: string | null
+          id?: string
+          imc?: number | null
+          observaciones?: string | null
+          paciente_id: string
+          perimetro_cefalico_cm?: number | null
+          peso_kg?: number | null
+          profesional_id?: string | null
+          talla_cm?: number | null
+          vacunas_completas?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          desarrollo_psicomotor?: string | null
+          edad_meses?: number | null
+          estado_nutricional?: string | null
+          evaluacion_auditiva?: boolean | null
+          evaluacion_visual?: boolean | null
+          fecha_control?: string
+          hito_desarrollo?: string | null
+          id?: string
+          imc?: number | null
+          observaciones?: string | null
+          paciente_id?: string
+          perimetro_cefalico_cm?: number | null
+          peso_kg?: number | null
+          profesional_id?: string | null
+          talla_cm?: number | null
+          vacunas_completas?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_cred_seguimiento_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_cred_seguimiento_profesional_id_fkey"
+            columns: ["profesional_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_cred_vacunacion: {
+        Row: {
+          brazo_sitio: string | null
+          created_at: string | null
+          dosis: number | null
+          fecha_vacunacion: string
+          id: string
+          paciente_id: string
+          profesional_id: string
+          reacciones_adversas: string | null
+          vacuna_lote: string | null
+          vacuna_nombre: string
+          via_administracion: string | null
+        }
+        Insert: {
+          brazo_sitio?: string | null
+          created_at?: string | null
+          dosis?: number | null
+          fecha_vacunacion: string
+          id?: string
+          paciente_id: string
+          profesional_id: string
+          reacciones_adversas?: string | null
+          vacuna_lote?: string | null
+          vacuna_nombre: string
+          via_administracion?: string | null
+        }
+        Update: {
+          brazo_sitio?: string | null
+          created_at?: string | null
+          dosis?: number | null
+          fecha_vacunacion?: string
+          id?: string
+          paciente_id?: string
+          profesional_id?: string
+          reacciones_adversas?: string | null
+          vacuna_lote?: string | null
+          vacuna_nombre?: string
+          via_administracion?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_cred_vacunacion_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_cred_vacunacion_profesional_id_fkey"
+            columns: ["profesional_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hosix_cuestionarios: {
         Row: {
           aplicado_por: string | null
@@ -3738,6 +4080,311 @@ export type Database = {
           },
         ]
       }
+      hosix_farmacia_dispensaciones: {
+        Row: {
+          cantidad_dispensada: number
+          created_at: string | null
+          dosis_medicamento: string | null
+          estado_dispensacion: string | null
+          farmaceutico_id: string
+          fecha_dispensacion: string
+          fecha_vencimiento: string | null
+          forma_farmaceutica: string | null
+          id: string
+          instrucciones_uso: string | null
+          interacciones_conocidas: string | null
+          lote_medicamento: string | null
+          medicamento_id: string
+          numero_comprimidos: number | null
+          paciente_id: string
+          reacciones_adversas: string | null
+          unidad_dispensacion: string | null
+        }
+        Insert: {
+          cantidad_dispensada: number
+          created_at?: string | null
+          dosis_medicamento?: string | null
+          estado_dispensacion?: string | null
+          farmaceutico_id: string
+          fecha_dispensacion: string
+          fecha_vencimiento?: string | null
+          forma_farmaceutica?: string | null
+          id?: string
+          instrucciones_uso?: string | null
+          interacciones_conocidas?: string | null
+          lote_medicamento?: string | null
+          medicamento_id: string
+          numero_comprimidos?: number | null
+          paciente_id: string
+          reacciones_adversas?: string | null
+          unidad_dispensacion?: string | null
+        }
+        Update: {
+          cantidad_dispensada?: number
+          created_at?: string | null
+          dosis_medicamento?: string | null
+          estado_dispensacion?: string | null
+          farmaceutico_id?: string
+          fecha_dispensacion?: string
+          fecha_vencimiento?: string | null
+          forma_farmaceutica?: string | null
+          id?: string
+          instrucciones_uso?: string | null
+          interacciones_conocidas?: string | null
+          lote_medicamento?: string | null
+          medicamento_id?: string
+          numero_comprimidos?: number | null
+          paciente_id?: string
+          reacciones_adversas?: string | null
+          unidad_dispensacion?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_farmacia_dispensaciones_farmaceutico_id_fkey"
+            columns: ["farmaceutico_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_farmacia_dispensaciones_medicamento_id_fkey"
+            columns: ["medicamento_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_articulos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_farmacia_dispensaciones_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_farmacia_dispensario: {
+        Row: {
+          codigo: string
+          created_at: string | null
+          encargado_id: string | null
+          estado_dispensario: string | null
+          horario_apertura: string | null
+          horario_cierre: string | null
+          id: string
+          nombre: string
+          ubicacion: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          codigo: string
+          created_at?: string | null
+          encargado_id?: string | null
+          estado_dispensario?: string | null
+          horario_apertura?: string | null
+          horario_cierre?: string | null
+          id?: string
+          nombre: string
+          ubicacion?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          codigo?: string
+          created_at?: string | null
+          encargado_id?: string | null
+          estado_dispensario?: string | null
+          horario_apertura?: string | null
+          horario_cierre?: string | null
+          id?: string
+          nombre?: string
+          ubicacion?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_farmacia_dispensario_encargado_id_fkey"
+            columns: ["encargado_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_farmacia_evaluacion_clinica: {
+        Row: {
+          adherencia: string | null
+          calidad_vida: string | null
+          created_at: string | null
+          efectividad_clinica: string | null
+          eventos_adversos: string | null
+          farmaceutico_id: string
+          fecha_evaluacion: string
+          id: string
+          paciente_id: string
+          recomendaciones: string | null
+        }
+        Insert: {
+          adherencia?: string | null
+          calidad_vida?: string | null
+          created_at?: string | null
+          efectividad_clinica?: string | null
+          eventos_adversos?: string | null
+          farmaceutico_id: string
+          fecha_evaluacion: string
+          id?: string
+          paciente_id: string
+          recomendaciones?: string | null
+        }
+        Update: {
+          adherencia?: string | null
+          calidad_vida?: string | null
+          created_at?: string | null
+          efectividad_clinica?: string | null
+          eventos_adversos?: string | null
+          farmaceutico_id?: string
+          fecha_evaluacion?: string
+          id?: string
+          paciente_id?: string
+          recomendaciones?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_farmacia_evaluacion_clinica_farmaceutico_id_fkey"
+            columns: ["farmaceutico_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_farmacia_evaluacion_clinica_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_farmacia_farmacovigilancia: {
+        Row: {
+          accion_tomada: string | null
+          created_at: string | null
+          descripcion_evento: string
+          dispensacion_id: string | null
+          fecha_evento: string
+          id: string
+          medicamento_id: string
+          paciente_id: string
+          reportado_por_id: string | null
+          resultado_evento: string | null
+          severidad_evento: string | null
+          tipo_evento: string | null
+        }
+        Insert: {
+          accion_tomada?: string | null
+          created_at?: string | null
+          descripcion_evento: string
+          dispensacion_id?: string | null
+          fecha_evento: string
+          id?: string
+          medicamento_id: string
+          paciente_id: string
+          reportado_por_id?: string | null
+          resultado_evento?: string | null
+          severidad_evento?: string | null
+          tipo_evento?: string | null
+        }
+        Update: {
+          accion_tomada?: string | null
+          created_at?: string | null
+          descripcion_evento?: string
+          dispensacion_id?: string | null
+          fecha_evento?: string
+          id?: string
+          medicamento_id?: string
+          paciente_id?: string
+          reportado_por_id?: string | null
+          resultado_evento?: string | null
+          severidad_evento?: string | null
+          tipo_evento?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_farmacia_farmacovigilancia_dispensacion_id_fkey"
+            columns: ["dispensacion_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_farmacia_dispensaciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_farmacia_farmacovigilancia_medicamento_id_fkey"
+            columns: ["medicamento_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_articulos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_farmacia_farmacovigilancia_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_farmacia_farmacovigilancia_reportado_por_id_fkey"
+            columns: ["reportado_por_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_farmacia_interacciones_medicamentos: {
+        Row: {
+          created_at: string | null
+          descripcion: string | null
+          id: string
+          manejo_recomendado: string | null
+          medicamento_1_id: string
+          medicamento_2_id: string
+          severidad: string | null
+          tipo_interaccion: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          descripcion?: string | null
+          id?: string
+          manejo_recomendado?: string | null
+          medicamento_1_id: string
+          medicamento_2_id: string
+          severidad?: string | null
+          tipo_interaccion?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          descripcion?: string | null
+          id?: string
+          manejo_recomendado?: string | null
+          medicamento_1_id?: string
+          medicamento_2_id?: string
+          severidad?: string | null
+          tipo_interaccion?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_farmacia_interacciones_medicamentos_medicamento_1_id_fkey"
+            columns: ["medicamento_1_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_articulos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_farmacia_interacciones_medicamentos_medicamento_2_id_fkey"
+            columns: ["medicamento_2_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_articulos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hosix_historia_clinica: {
         Row: {
           adjuntos: Json | null
@@ -3971,6 +4618,284 @@ export type Database = {
           },
         ]
       }
+      hosix_imagenologia_estudios: {
+        Row: {
+          calidad_imagen: string | null
+          codigo_estudio: string
+          created_at: string | null
+          dosis_radiacion_mgy: number | null
+          estado_estudio: string | null
+          fecha_hora_estudio: string
+          id: string
+          modalidad_id: string
+          numero_imagenes: number | null
+          observaciones_tecnico: string | null
+          paciente_id: string
+          solicitud_id: string
+          tecnico_id: string
+        }
+        Insert: {
+          calidad_imagen?: string | null
+          codigo_estudio: string
+          created_at?: string | null
+          dosis_radiacion_mgy?: number | null
+          estado_estudio?: string | null
+          fecha_hora_estudio: string
+          id?: string
+          modalidad_id: string
+          numero_imagenes?: number | null
+          observaciones_tecnico?: string | null
+          paciente_id: string
+          solicitud_id: string
+          tecnico_id: string
+        }
+        Update: {
+          calidad_imagen?: string | null
+          codigo_estudio?: string
+          created_at?: string | null
+          dosis_radiacion_mgy?: number | null
+          estado_estudio?: string | null
+          fecha_hora_estudio?: string
+          id?: string
+          modalidad_id?: string
+          numero_imagenes?: number | null
+          observaciones_tecnico?: string | null
+          paciente_id?: string
+          solicitud_id?: string
+          tecnico_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_imagenologia_estudios_modalidad_id_fkey"
+            columns: ["modalidad_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_imagenologia_modalidades"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_imagenologia_estudios_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_imagenologia_estudios_solicitud_id_fkey"
+            columns: ["solicitud_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_imagenologia_solicitudes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_imagenologia_estudios_tecnico_id_fkey"
+            columns: ["tecnico_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_imagenologia_modalidades: {
+        Row: {
+          activa: boolean | null
+          codigo: string
+          contraindicaciones: string | null
+          created_at: string | null
+          descripcion: string | null
+          exposicion_radiacion: boolean | null
+          id: string
+          nombre: string
+          tiempo_aproximado_minutos: number | null
+          tipo_estudio: string | null
+        }
+        Insert: {
+          activa?: boolean | null
+          codigo: string
+          contraindicaciones?: string | null
+          created_at?: string | null
+          descripcion?: string | null
+          exposicion_radiacion?: boolean | null
+          id?: string
+          nombre: string
+          tiempo_aproximado_minutos?: number | null
+          tipo_estudio?: string | null
+        }
+        Update: {
+          activa?: boolean | null
+          codigo?: string
+          contraindicaciones?: string | null
+          created_at?: string | null
+          descripcion?: string | null
+          exposicion_radiacion?: boolean | null
+          id?: string
+          nombre?: string
+          tiempo_aproximado_minutos?: number | null
+          tipo_estudio?: string | null
+        }
+        Relationships: []
+      }
+      hosix_imagenologia_reportes: {
+        Row: {
+          comparacion_estudios_previos: string | null
+          created_at: string | null
+          estado_reporte: string | null
+          estudio_id: string
+          fecha_firma: string | null
+          fecha_reporte: string
+          firmado: boolean | null
+          hallazgos_principales: string
+          hallazgos_secundarios: string | null
+          id: string
+          impresion_diagnostica: string | null
+          paciente_id: string
+          radiologo_id: string
+          recomendaciones: string | null
+          solicitud_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          comparacion_estudios_previos?: string | null
+          created_at?: string | null
+          estado_reporte?: string | null
+          estudio_id: string
+          fecha_firma?: string | null
+          fecha_reporte: string
+          firmado?: boolean | null
+          hallazgos_principales: string
+          hallazgos_secundarios?: string | null
+          id?: string
+          impresion_diagnostica?: string | null
+          paciente_id: string
+          radiologo_id: string
+          recomendaciones?: string | null
+          solicitud_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          comparacion_estudios_previos?: string | null
+          created_at?: string | null
+          estado_reporte?: string | null
+          estudio_id?: string
+          fecha_firma?: string | null
+          fecha_reporte?: string
+          firmado?: boolean | null
+          hallazgos_principales?: string
+          hallazgos_secundarios?: string | null
+          id?: string
+          impresion_diagnostica?: string | null
+          paciente_id?: string
+          radiologo_id?: string
+          recomendaciones?: string | null
+          solicitud_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_imagenologia_reportes_estudio_id_fkey"
+            columns: ["estudio_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_imagenologia_estudios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_imagenologia_reportes_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_imagenologia_reportes_radiologo_id_fkey"
+            columns: ["radiologo_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_imagenologia_reportes_solicitud_id_fkey"
+            columns: ["solicitud_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_imagenologia_solicitudes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_imagenologia_solicitudes: {
+        Row: {
+          contraindicaciones_conocidas: string | null
+          created_at: string | null
+          diagnostico_clinico: string | null
+          embarazo_posible: boolean | null
+          episodio_id: string | null
+          estado_solicitud: string | null
+          fecha_solicitud: string
+          id: string
+          lado: string | null
+          medico_solicitante_id: string
+          modalidad_id: string
+          paciente_id: string
+          region_anatomica: string | null
+          updated_at: string | null
+          urgencia: boolean | null
+        }
+        Insert: {
+          contraindicaciones_conocidas?: string | null
+          created_at?: string | null
+          diagnostico_clinico?: string | null
+          embarazo_posible?: boolean | null
+          episodio_id?: string | null
+          estado_solicitud?: string | null
+          fecha_solicitud: string
+          id?: string
+          lado?: string | null
+          medico_solicitante_id: string
+          modalidad_id: string
+          paciente_id: string
+          region_anatomica?: string | null
+          updated_at?: string | null
+          urgencia?: boolean | null
+        }
+        Update: {
+          contraindicaciones_conocidas?: string | null
+          created_at?: string | null
+          diagnostico_clinico?: string | null
+          embarazo_posible?: boolean | null
+          episodio_id?: string | null
+          estado_solicitud?: string | null
+          fecha_solicitud?: string
+          id?: string
+          lado?: string | null
+          medico_solicitante_id?: string
+          modalidad_id?: string
+          paciente_id?: string
+          region_anatomica?: string | null
+          updated_at?: string | null
+          urgencia?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_imagenologia_solicitudes_medico_solicitante_id_fkey"
+            columns: ["medico_solicitante_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_imagenologia_solicitudes_modalidad_id_fkey"
+            columns: ["modalidad_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_imagenologia_modalidades"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_imagenologia_solicitudes_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hosix_interconsultas: {
         Row: {
           antecedentes_relevantes: string | null
@@ -4089,6 +5014,273 @@ export type Database = {
           },
         ]
       }
+      hosix_interconsultas_rechazo: {
+        Row: {
+          created_at: string | null
+          especialista_id: string
+          fecha_rechazo: string
+          id: string
+          razon_rechazo: string | null
+          solicitud_id: string
+          sugerencia_alternativa: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          especialista_id: string
+          fecha_rechazo: string
+          id?: string
+          razon_rechazo?: string | null
+          solicitud_id: string
+          sugerencia_alternativa?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          especialista_id?: string
+          fecha_rechazo?: string
+          id?: string
+          razon_rechazo?: string | null
+          solicitud_id?: string
+          sugerencia_alternativa?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_interconsultas_rechazo_especialista_id_fkey"
+            columns: ["especialista_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_interconsultas_rechazo_solicitud_id_fkey"
+            columns: ["solicitud_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_interconsultas_solicitudes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_interconsultas_respuestas: {
+        Row: {
+          created_at: string | null
+          diagnostico_codigo_cie10: string | null
+          diagnostico_especialista: string | null
+          especialista_id: string
+          estado_respuesta: string | null
+          fecha_evaluacion: string
+          fecha_respuesta: string | null
+          frecuencia_seguimiento: string | null
+          hallazgos_clinicos: string | null
+          id: string
+          medicamentos_recomendados: Json | null
+          paciente_id: string
+          procedimientos_recomendados: string | null
+          recomendaciones_tratamiento: string | null
+          seguimiento_necesario: boolean | null
+          solicitud_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          diagnostico_codigo_cie10?: string | null
+          diagnostico_especialista?: string | null
+          especialista_id: string
+          estado_respuesta?: string | null
+          fecha_evaluacion: string
+          fecha_respuesta?: string | null
+          frecuencia_seguimiento?: string | null
+          hallazgos_clinicos?: string | null
+          id?: string
+          medicamentos_recomendados?: Json | null
+          paciente_id: string
+          procedimientos_recomendados?: string | null
+          recomendaciones_tratamiento?: string | null
+          seguimiento_necesario?: boolean | null
+          solicitud_id: string
+        }
+        Update: {
+          created_at?: string | null
+          diagnostico_codigo_cie10?: string | null
+          diagnostico_especialista?: string | null
+          especialista_id?: string
+          estado_respuesta?: string | null
+          fecha_evaluacion?: string
+          fecha_respuesta?: string | null
+          frecuencia_seguimiento?: string | null
+          hallazgos_clinicos?: string | null
+          id?: string
+          medicamentos_recomendados?: Json | null
+          paciente_id?: string
+          procedimientos_recomendados?: string | null
+          recomendaciones_tratamiento?: string | null
+          seguimiento_necesario?: boolean | null
+          solicitud_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_interconsultas_respuestas_especialista_id_fkey"
+            columns: ["especialista_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_interconsultas_respuestas_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_interconsultas_respuestas_solicitud_id_fkey"
+            columns: ["solicitud_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_interconsultas_solicitudes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_interconsultas_seguimiento: {
+        Row: {
+          adherencia_recomendaciones: string | null
+          created_at: string | null
+          especialista_id: string | null
+          estado_clinico: string | null
+          evoluciono_satisfactoriamente: boolean | null
+          fecha_seguimiento: string
+          id: string
+          nuevas_recomendaciones: string | null
+          paciente_id: string
+          respuesta_id: string
+          solicitud_id: string
+        }
+        Insert: {
+          adherencia_recomendaciones?: string | null
+          created_at?: string | null
+          especialista_id?: string | null
+          estado_clinico?: string | null
+          evoluciono_satisfactoriamente?: boolean | null
+          fecha_seguimiento: string
+          id?: string
+          nuevas_recomendaciones?: string | null
+          paciente_id: string
+          respuesta_id: string
+          solicitud_id: string
+        }
+        Update: {
+          adherencia_recomendaciones?: string | null
+          created_at?: string | null
+          especialista_id?: string | null
+          estado_clinico?: string | null
+          evoluciono_satisfactoriamente?: boolean | null
+          fecha_seguimiento?: string
+          id?: string
+          nuevas_recomendaciones?: string | null
+          paciente_id?: string
+          respuesta_id?: string
+          solicitud_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_interconsultas_seguimiento_especialista_id_fkey"
+            columns: ["especialista_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_interconsultas_seguimiento_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_interconsultas_seguimiento_respuesta_id_fkey"
+            columns: ["respuesta_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_interconsultas_respuestas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_interconsultas_seguimiento_solicitud_id_fkey"
+            columns: ["solicitud_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_interconsultas_solicitudes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_interconsultas_solicitudes: {
+        Row: {
+          alergias_conocidas: string | null
+          created_at: string | null
+          diagnostico_provisional: string | null
+          episodio_id: string | null
+          especialidad_solicitada: string
+          estado_solicitud: string | null
+          fecha_asignacion: string | null
+          fecha_solicitud: string
+          id: string
+          medicamentos_actuales: string | null
+          medico_solicitante_id: string
+          motivo_interconsulta: string
+          paciente_id: string
+          prioridad: string | null
+          updated_at: string | null
+          urgencia: boolean | null
+        }
+        Insert: {
+          alergias_conocidas?: string | null
+          created_at?: string | null
+          diagnostico_provisional?: string | null
+          episodio_id?: string | null
+          especialidad_solicitada: string
+          estado_solicitud?: string | null
+          fecha_asignacion?: string | null
+          fecha_solicitud: string
+          id?: string
+          medicamentos_actuales?: string | null
+          medico_solicitante_id: string
+          motivo_interconsulta: string
+          paciente_id: string
+          prioridad?: string | null
+          updated_at?: string | null
+          urgencia?: boolean | null
+        }
+        Update: {
+          alergias_conocidas?: string | null
+          created_at?: string | null
+          diagnostico_provisional?: string | null
+          episodio_id?: string | null
+          especialidad_solicitada?: string
+          estado_solicitud?: string | null
+          fecha_asignacion?: string | null
+          fecha_solicitud?: string
+          id?: string
+          medicamentos_actuales?: string | null
+          medico_solicitante_id?: string
+          motivo_interconsulta?: string
+          paciente_id?: string
+          prioridad?: string | null
+          updated_at?: string | null
+          urgencia?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_interconsultas_solicitudes_medico_solicitante_id_fkey"
+            columns: ["medico_solicitante_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_interconsultas_solicitudes_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hosix_kpis_reportes: {
         Row: {
           created_at: string | null
@@ -4130,6 +5322,337 @@ export type Database = {
           valor_kpi?: number | null
         }
         Relationships: []
+      }
+      hosix_laboratorio_muestras: {
+        Row: {
+          codigo_muestra: string
+          created_at: string | null
+          estado_muestra: string | null
+          fecha_recepcion: string | null
+          fecha_recoleccion: string | null
+          id: string
+          observaciones_muestra: string | null
+          paciente_id: string
+          solicitud_id: string
+          tipo_muestra: string | null
+          volumen_recibido_ml: number | null
+        }
+        Insert: {
+          codigo_muestra: string
+          created_at?: string | null
+          estado_muestra?: string | null
+          fecha_recepcion?: string | null
+          fecha_recoleccion?: string | null
+          id?: string
+          observaciones_muestra?: string | null
+          paciente_id: string
+          solicitud_id: string
+          tipo_muestra?: string | null
+          volumen_recibido_ml?: number | null
+        }
+        Update: {
+          codigo_muestra?: string
+          created_at?: string | null
+          estado_muestra?: string | null
+          fecha_recepcion?: string | null
+          fecha_recoleccion?: string | null
+          id?: string
+          observaciones_muestra?: string | null
+          paciente_id?: string
+          solicitud_id?: string
+          tipo_muestra?: string | null
+          volumen_recibido_ml?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_laboratorio_muestras_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_laboratorio_muestras_solicitud_id_fkey"
+            columns: ["solicitud_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_laboratorio_solicitudes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_laboratorio_pruebas_catalogo: {
+        Row: {
+          activa: boolean | null
+          codigo: string
+          conservacion: string | null
+          contenedor: string | null
+          costo_institucion: number | null
+          costo_paciente: number | null
+          created_at: string | null
+          id: string
+          metodo: string | null
+          nombre: string
+          nombre_cientifico: string | null
+          tiempo_resultado_horas: number | null
+          tipo_muestra: string | null
+          unidad_medida: string | null
+          valor_referencia_max: number | null
+          valor_referencia_min: number | null
+          volumen_minimo_ml: number | null
+        }
+        Insert: {
+          activa?: boolean | null
+          codigo: string
+          conservacion?: string | null
+          contenedor?: string | null
+          costo_institucion?: number | null
+          costo_paciente?: number | null
+          created_at?: string | null
+          id?: string
+          metodo?: string | null
+          nombre: string
+          nombre_cientifico?: string | null
+          tiempo_resultado_horas?: number | null
+          tipo_muestra?: string | null
+          unidad_medida?: string | null
+          valor_referencia_max?: number | null
+          valor_referencia_min?: number | null
+          volumen_minimo_ml?: number | null
+        }
+        Update: {
+          activa?: boolean | null
+          codigo?: string
+          conservacion?: string | null
+          contenedor?: string | null
+          costo_institucion?: number | null
+          costo_paciente?: number | null
+          created_at?: string | null
+          id?: string
+          metodo?: string | null
+          nombre?: string
+          nombre_cientifico?: string | null
+          tiempo_resultado_horas?: number | null
+          tipo_muestra?: string | null
+          unidad_medida?: string | null
+          valor_referencia_max?: number | null
+          valor_referencia_min?: number | null
+          volumen_minimo_ml?: number | null
+        }
+        Relationships: []
+      }
+      hosix_laboratorio_reporte: {
+        Row: {
+          conclusiones: string | null
+          created_at: string | null
+          director_id: string
+          estado_firmado: boolean | null
+          fecha_firma: string | null
+          fecha_reporte: string
+          id: string
+          observaciones_clinicas: string | null
+          paciente_id: string
+          solicitud_id: string
+        }
+        Insert: {
+          conclusiones?: string | null
+          created_at?: string | null
+          director_id: string
+          estado_firmado?: boolean | null
+          fecha_firma?: string | null
+          fecha_reporte: string
+          id?: string
+          observaciones_clinicas?: string | null
+          paciente_id: string
+          solicitud_id: string
+        }
+        Update: {
+          conclusiones?: string | null
+          created_at?: string | null
+          director_id?: string
+          estado_firmado?: boolean | null
+          fecha_firma?: string | null
+          fecha_reporte?: string
+          id?: string
+          observaciones_clinicas?: string | null
+          paciente_id?: string
+          solicitud_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_laboratorio_reporte_director_id_fkey"
+            columns: ["director_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_laboratorio_reporte_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_laboratorio_reporte_solicitud_id_fkey"
+            columns: ["solicitud_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_laboratorio_solicitudes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_laboratorio_resultados: {
+        Row: {
+          created_at: string | null
+          estado_resultado: string | null
+          fecha_inicio_procesamiento: string | null
+          fecha_resultado: string
+          id: string
+          muestra_id: string | null
+          paciente_id: string
+          prueba_id: string
+          responsable_id: string | null
+          resultado_numerico: number | null
+          solicitud_id: string
+          tecnologia: string | null
+          unidad_resultado: string | null
+          valor_referencia_max: number | null
+          valor_referencia_min: number | null
+          valor_resultado: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          estado_resultado?: string | null
+          fecha_inicio_procesamiento?: string | null
+          fecha_resultado: string
+          id?: string
+          muestra_id?: string | null
+          paciente_id: string
+          prueba_id: string
+          responsable_id?: string | null
+          resultado_numerico?: number | null
+          solicitud_id: string
+          tecnologia?: string | null
+          unidad_resultado?: string | null
+          valor_referencia_max?: number | null
+          valor_referencia_min?: number | null
+          valor_resultado?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          estado_resultado?: string | null
+          fecha_inicio_procesamiento?: string | null
+          fecha_resultado?: string
+          id?: string
+          muestra_id?: string | null
+          paciente_id?: string
+          prueba_id?: string
+          responsable_id?: string | null
+          resultado_numerico?: number | null
+          solicitud_id?: string
+          tecnologia?: string | null
+          unidad_resultado?: string | null
+          valor_referencia_max?: number | null
+          valor_referencia_min?: number | null
+          valor_resultado?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_laboratorio_resultados_muestra_id_fkey"
+            columns: ["muestra_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_laboratorio_muestras"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_laboratorio_resultados_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_laboratorio_resultados_prueba_id_fkey"
+            columns: ["prueba_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_laboratorio_pruebas_catalogo"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_laboratorio_resultados_responsable_id_fkey"
+            columns: ["responsable_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_laboratorio_resultados_solicitud_id_fkey"
+            columns: ["solicitud_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_laboratorio_solicitudes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_laboratorio_solicitudes: {
+        Row: {
+          created_at: string | null
+          diagnostico_clinico: string | null
+          episodio_id: string | null
+          estado_solicitud: string | null
+          fecha_solicitud: string
+          id: string
+          medico_solicitante_id: string
+          notas_especiales: string | null
+          paciente_id: string
+          pruebas_solicitadas: string[]
+          updated_at: string | null
+          urgente: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          diagnostico_clinico?: string | null
+          episodio_id?: string | null
+          estado_solicitud?: string | null
+          fecha_solicitud: string
+          id?: string
+          medico_solicitante_id: string
+          notas_especiales?: string | null
+          paciente_id: string
+          pruebas_solicitadas: string[]
+          updated_at?: string | null
+          urgente?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          diagnostico_clinico?: string | null
+          episodio_id?: string | null
+          estado_solicitud?: string | null
+          fecha_solicitud?: string
+          id?: string
+          medico_solicitante_id?: string
+          notas_especiales?: string | null
+          paciente_id?: string
+          pruebas_solicitadas?: string[]
+          updated_at?: string | null
+          urgente?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_laboratorio_solicitudes_medico_solicitante_id_fkey"
+            columns: ["medico_solicitante_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_laboratorio_solicitudes_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       hosix_lista_espera: {
         Row: {
@@ -4396,6 +5919,437 @@ export type Database = {
             columns: ["servicio_id"]
             isOneToOne: false
             referencedRelation: "hosix_servicios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_obstetricia_controles: {
+        Row: {
+          altura_uterina_cm: number | null
+          created_at: string | null
+          fecha_control: string
+          frecuencia_cardiaca_fetal: number | null
+          gestacion_id: string
+          glucosa_orina: boolean | null
+          id: string
+          movimientos_fetales: boolean | null
+          observaciones: string | null
+          paciente_id: string
+          peso_kg: number | null
+          presion_diastolica: number | null
+          presion_sistolica: number | null
+          profesional_id: string | null
+          proteinuria: boolean | null
+          semana_gestacion: number | null
+        }
+        Insert: {
+          altura_uterina_cm?: number | null
+          created_at?: string | null
+          fecha_control: string
+          frecuencia_cardiaca_fetal?: number | null
+          gestacion_id: string
+          glucosa_orina?: boolean | null
+          id?: string
+          movimientos_fetales?: boolean | null
+          observaciones?: string | null
+          paciente_id: string
+          peso_kg?: number | null
+          presion_diastolica?: number | null
+          presion_sistolica?: number | null
+          profesional_id?: string | null
+          proteinuria?: boolean | null
+          semana_gestacion?: number | null
+        }
+        Update: {
+          altura_uterina_cm?: number | null
+          created_at?: string | null
+          fecha_control?: string
+          frecuencia_cardiaca_fetal?: number | null
+          gestacion_id?: string
+          glucosa_orina?: boolean | null
+          id?: string
+          movimientos_fetales?: boolean | null
+          observaciones?: string | null
+          paciente_id?: string
+          peso_kg?: number | null
+          presion_diastolica?: number | null
+          presion_sistolica?: number | null
+          profesional_id?: string | null
+          proteinuria?: boolean | null
+          semana_gestacion?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_obstetricia_controles_gestacion_id_fkey"
+            columns: ["gestacion_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_obstetricia_gestaciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_obstetricia_controles_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_obstetricia_controles_profesional_id_fkey"
+            columns: ["profesional_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_obstetricia_ecografias: {
+        Row: {
+          circunferencia_abdominal_mm: number | null
+          created_at: string | null
+          diametro_biparietal_mm: number | null
+          fecha_ecografia: string
+          gestacion_id: string
+          hallazgos: string | null
+          id: string
+          imagen_url: string | null
+          liquido_amniotico: string | null
+          longitud_femoral_mm: number | null
+          paciente_id: string
+          peso_estimado_gramos: number | null
+          placenta_localizacion: string | null
+          profesional_id: string | null
+          semana_gestacion: number | null
+        }
+        Insert: {
+          circunferencia_abdominal_mm?: number | null
+          created_at?: string | null
+          diametro_biparietal_mm?: number | null
+          fecha_ecografia: string
+          gestacion_id: string
+          hallazgos?: string | null
+          id?: string
+          imagen_url?: string | null
+          liquido_amniotico?: string | null
+          longitud_femoral_mm?: number | null
+          paciente_id: string
+          peso_estimado_gramos?: number | null
+          placenta_localizacion?: string | null
+          profesional_id?: string | null
+          semana_gestacion?: number | null
+        }
+        Update: {
+          circunferencia_abdominal_mm?: number | null
+          created_at?: string | null
+          diametro_biparietal_mm?: number | null
+          fecha_ecografia?: string
+          gestacion_id?: string
+          hallazgos?: string | null
+          id?: string
+          imagen_url?: string | null
+          liquido_amniotico?: string | null
+          longitud_femoral_mm?: number | null
+          paciente_id?: string
+          peso_estimado_gramos?: number | null
+          placenta_localizacion?: string | null
+          profesional_id?: string | null
+          semana_gestacion?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_obstetricia_ecografias_gestacion_id_fkey"
+            columns: ["gestacion_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_obstetricia_gestaciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_obstetricia_ecografias_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_obstetricia_ecografias_profesional_id_fkey"
+            columns: ["profesional_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_obstetricia_gestaciones: {
+        Row: {
+          complicaciones: string | null
+          created_at: string | null
+          estado_gestacion: string | null
+          fecha_probable_parto: string | null
+          fecha_ultima_menstruacion: string
+          id: string
+          numero_gestacion: number | null
+          paciente_id: string
+          semanas_gestacion: number | null
+          tipo_embarazo: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          complicaciones?: string | null
+          created_at?: string | null
+          estado_gestacion?: string | null
+          fecha_probable_parto?: string | null
+          fecha_ultima_menstruacion: string
+          id?: string
+          numero_gestacion?: number | null
+          paciente_id: string
+          semanas_gestacion?: number | null
+          tipo_embarazo?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          complicaciones?: string | null
+          created_at?: string | null
+          estado_gestacion?: string | null
+          fecha_probable_parto?: string | null
+          fecha_ultima_menstruacion?: string
+          id?: string
+          numero_gestacion?: number | null
+          paciente_id?: string
+          semanas_gestacion?: number | null
+          tipo_embarazo?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_obstetricia_gestaciones_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_obstetricia_neonatos: {
+        Row: {
+          apgar_1_min: number | null
+          apgar_10_min: number | null
+          apgar_5_min: number | null
+          created_at: string | null
+          id: string
+          malformaciones: string | null
+          nombre_neonato: string | null
+          paciente_id: string | null
+          parto_id: string
+          perimetro_cefalico_cm: number | null
+          peso_nacimiento_gramos: number | null
+          sexo: string | null
+          talla_nacimiento_cm: number | null
+          vitalidad: string | null
+        }
+        Insert: {
+          apgar_1_min?: number | null
+          apgar_10_min?: number | null
+          apgar_5_min?: number | null
+          created_at?: string | null
+          id?: string
+          malformaciones?: string | null
+          nombre_neonato?: string | null
+          paciente_id?: string | null
+          parto_id: string
+          perimetro_cefalico_cm?: number | null
+          peso_nacimiento_gramos?: number | null
+          sexo?: string | null
+          talla_nacimiento_cm?: number | null
+          vitalidad?: string | null
+        }
+        Update: {
+          apgar_1_min?: number | null
+          apgar_10_min?: number | null
+          apgar_5_min?: number | null
+          created_at?: string | null
+          id?: string
+          malformaciones?: string | null
+          nombre_neonato?: string | null
+          paciente_id?: string | null
+          parto_id?: string
+          perimetro_cefalico_cm?: number | null
+          peso_nacimiento_gramos?: number | null
+          sexo?: string | null
+          talla_nacimiento_cm?: number | null
+          vitalidad?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_obstetricia_neonatos_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_obstetricia_neonatos_parto_id_fkey"
+            columns: ["parto_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_obstetricia_partos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_obstetricia_partos: {
+        Row: {
+          anestesia: string | null
+          comadre_id: string | null
+          complicaciones: string | null
+          created_at: string | null
+          diagnostico_materno: string | null
+          fecha_hora_fin: string | null
+          fecha_hora_inicio: string
+          gestacion_id: string
+          id: string
+          obstetra_id: string
+          paciente_id: string
+          pediatra_id: string | null
+          tipo_parto: string
+          via_parto: string | null
+        }
+        Insert: {
+          anestesia?: string | null
+          comadre_id?: string | null
+          complicaciones?: string | null
+          created_at?: string | null
+          diagnostico_materno?: string | null
+          fecha_hora_fin?: string | null
+          fecha_hora_inicio: string
+          gestacion_id: string
+          id?: string
+          obstetra_id: string
+          paciente_id: string
+          pediatra_id?: string | null
+          tipo_parto: string
+          via_parto?: string | null
+        }
+        Update: {
+          anestesia?: string | null
+          comadre_id?: string | null
+          complicaciones?: string | null
+          created_at?: string | null
+          diagnostico_materno?: string | null
+          fecha_hora_fin?: string | null
+          fecha_hora_inicio?: string
+          gestacion_id?: string
+          id?: string
+          obstetra_id?: string
+          paciente_id?: string
+          pediatra_id?: string | null
+          tipo_parto?: string
+          via_parto?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_obstetricia_partos_comadre_id_fkey"
+            columns: ["comadre_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_obstetricia_partos_gestacion_id_fkey"
+            columns: ["gestacion_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_obstetricia_gestaciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_obstetricia_partos_obstetra_id_fkey"
+            columns: ["obstetra_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_obstetricia_partos_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_obstetricia_partos_pediatra_id_fkey"
+            columns: ["pediatra_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_obstetricia_puerperio: {
+        Row: {
+          created_at: string | null
+          dia_puerperio: number | null
+          estado_episiotomia: string | null
+          fecha_control: string
+          id: string
+          infeccion_puerperal: boolean | null
+          observaciones: string | null
+          paciente_id: string
+          parto_id: string
+          presion_diastolica: number | null
+          presion_sistolica: number | null
+          profesional_id: string | null
+          sangrado_vaginal: string | null
+          temperatura: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          dia_puerperio?: number | null
+          estado_episiotomia?: string | null
+          fecha_control: string
+          id?: string
+          infeccion_puerperal?: boolean | null
+          observaciones?: string | null
+          paciente_id: string
+          parto_id: string
+          presion_diastolica?: number | null
+          presion_sistolica?: number | null
+          profesional_id?: string | null
+          sangrado_vaginal?: string | null
+          temperatura?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          dia_puerperio?: number | null
+          estado_episiotomia?: string | null
+          fecha_control?: string
+          id?: string
+          infeccion_puerperal?: boolean | null
+          observaciones?: string | null
+          paciente_id?: string
+          parto_id?: string
+          presion_diastolica?: number | null
+          presion_sistolica?: number | null
+          profesional_id?: string | null
+          sangrado_vaginal?: string | null
+          temperatura?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_obstetricia_puerperio_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_obstetricia_puerperio_parto_id_fkey"
+            columns: ["parto_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_obstetricia_partos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_obstetricia_puerperio_profesional_id_fkey"
+            columns: ["profesional_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
             referencedColumns: ["id"]
           },
         ]
@@ -4925,6 +6879,176 @@ export type Database = {
         }
         Relationships: []
       }
+      hosix_quirofanos_conteos: {
+        Row: {
+          conteo_agujas_esperadas: number | null
+          conteo_agujas_ok: boolean | null
+          conteo_agujas_reales: number | null
+          conteo_gasas_esperadas: number | null
+          conteo_gasas_ok: boolean | null
+          conteo_gasas_reales: number | null
+          conteo_instrumental_esperado: number | null
+          conteo_instrumental_ok: boolean | null
+          conteo_instrumental_real: number | null
+          created_at: string | null
+          fecha_conteo: string | null
+          historial_id: string
+          id: string
+          observaciones: string | null
+        }
+        Insert: {
+          conteo_agujas_esperadas?: number | null
+          conteo_agujas_ok?: boolean | null
+          conteo_agujas_reales?: number | null
+          conteo_gasas_esperadas?: number | null
+          conteo_gasas_ok?: boolean | null
+          conteo_gasas_reales?: number | null
+          conteo_instrumental_esperado?: number | null
+          conteo_instrumental_ok?: boolean | null
+          conteo_instrumental_real?: number | null
+          created_at?: string | null
+          fecha_conteo?: string | null
+          historial_id: string
+          id?: string
+          observaciones?: string | null
+        }
+        Update: {
+          conteo_agujas_esperadas?: number | null
+          conteo_agujas_ok?: boolean | null
+          conteo_agujas_reales?: number | null
+          conteo_gasas_esperadas?: number | null
+          conteo_gasas_ok?: boolean | null
+          conteo_gasas_reales?: number | null
+          conteo_instrumental_esperado?: number | null
+          conteo_instrumental_ok?: boolean | null
+          conteo_instrumental_real?: number | null
+          created_at?: string | null
+          fecha_conteo?: string | null
+          historial_id?: string
+          id?: string
+          observaciones?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_quirofanos_conteos_historial_id_fkey"
+            columns: ["historial_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_quirofanos_historiales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_quirofanos_equipos: {
+        Row: {
+          created_at: string | null
+          estado_mantenimiento: string | null
+          fecha_proximo_mantenimiento: string | null
+          id: string
+          modelo: string | null
+          nombre_equipo: string
+          numero_serie: string | null
+          quirofano_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          estado_mantenimiento?: string | null
+          fecha_proximo_mantenimiento?: string | null
+          id?: string
+          modelo?: string | null
+          nombre_equipo: string
+          numero_serie?: string | null
+          quirofano_id: string
+        }
+        Update: {
+          created_at?: string | null
+          estado_mantenimiento?: string | null
+          fecha_proximo_mantenimiento?: string | null
+          id?: string
+          modelo?: string | null
+          nombre_equipo?: string
+          numero_serie?: string | null
+          quirofano_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_quirofanos_equipos_quirofano_id_fkey"
+            columns: ["quirofano_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_quirofanos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_quirofanos_historiales: {
+        Row: {
+          complicaciones_intraoperatorias: string | null
+          created_at: string | null
+          diagnostico_postoperatorio: string | null
+          fecha_hora_fin: string | null
+          fecha_hora_inicio: string
+          hallazgos_quirurgicos: string | null
+          id: string
+          paciente_id: string
+          producto_extraido: Json | null
+          programacion_id: string
+          quirofano_id: string
+          reporte_quirurgico: string | null
+          tiempo_recuperacion_estimado: number | null
+        }
+        Insert: {
+          complicaciones_intraoperatorias?: string | null
+          created_at?: string | null
+          diagnostico_postoperatorio?: string | null
+          fecha_hora_fin?: string | null
+          fecha_hora_inicio: string
+          hallazgos_quirurgicos?: string | null
+          id?: string
+          paciente_id: string
+          producto_extraido?: Json | null
+          programacion_id: string
+          quirofano_id: string
+          reporte_quirurgico?: string | null
+          tiempo_recuperacion_estimado?: number | null
+        }
+        Update: {
+          complicaciones_intraoperatorias?: string | null
+          created_at?: string | null
+          diagnostico_postoperatorio?: string | null
+          fecha_hora_fin?: string | null
+          fecha_hora_inicio?: string
+          hallazgos_quirurgicos?: string | null
+          id?: string
+          paciente_id?: string
+          producto_extraido?: Json | null
+          programacion_id?: string
+          quirofano_id?: string
+          reporte_quirurgico?: string | null
+          tiempo_recuperacion_estimado?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_quirofanos_historiales_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_quirofanos_historiales_programacion_id_fkey"
+            columns: ["programacion_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_quirofanos_programacion"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_quirofanos_historiales_quirofano_id_fkey"
+            columns: ["quirofano_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_quirofanos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hosix_quirofanos_intervenciones: {
         Row: {
           cirujano_principal_id: string | null
@@ -5002,6 +7126,115 @@ export type Database = {
           },
           {
             foreignKeyName: "hosix_quirofanos_intervenciones_quirofano_id_fkey"
+            columns: ["quirofano_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_quirofanos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hosix_quirofanos_programacion: {
+        Row: {
+          anesteologo_id: string | null
+          circulante_id: string | null
+          cirujano_principal_id: string
+          created_at: string | null
+          descripcion: string | null
+          diagnostico_preoperatorio: string | null
+          duracion_estimada_minutos: number | null
+          especialidad: string
+          estado_programacion: string | null
+          fecha_programada: string
+          id: string
+          instrumentista_id: string | null
+          observaciones_preoperatorias: string | null
+          paciente_id: string
+          prioridad: string | null
+          quirofano_id: string
+          tipo_anestesia: string | null
+          tipo_cirugia: string
+          updated_at: string | null
+        }
+        Insert: {
+          anesteologo_id?: string | null
+          circulante_id?: string | null
+          cirujano_principal_id: string
+          created_at?: string | null
+          descripcion?: string | null
+          diagnostico_preoperatorio?: string | null
+          duracion_estimada_minutos?: number | null
+          especialidad: string
+          estado_programacion?: string | null
+          fecha_programada: string
+          id?: string
+          instrumentista_id?: string | null
+          observaciones_preoperatorias?: string | null
+          paciente_id: string
+          prioridad?: string | null
+          quirofano_id: string
+          tipo_anestesia?: string | null
+          tipo_cirugia: string
+          updated_at?: string | null
+        }
+        Update: {
+          anesteologo_id?: string | null
+          circulante_id?: string | null
+          cirujano_principal_id?: string
+          created_at?: string | null
+          descripcion?: string | null
+          diagnostico_preoperatorio?: string | null
+          duracion_estimada_minutos?: number | null
+          especialidad?: string
+          estado_programacion?: string | null
+          fecha_programada?: string
+          id?: string
+          instrumentista_id?: string | null
+          observaciones_preoperatorias?: string | null
+          paciente_id?: string
+          prioridad?: string | null
+          quirofano_id?: string
+          tipo_anestesia?: string | null
+          tipo_cirugia?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_quirofanos_programacion_anesteologo_id_fkey"
+            columns: ["anesteologo_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_quirofanos_programacion_circulante_id_fkey"
+            columns: ["circulante_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_quirofanos_programacion_cirujano_principal_id_fkey"
+            columns: ["cirujano_principal_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_quirofanos_programacion_instrumentista_id_fkey"
+            columns: ["instrumentista_id"]
+            isOneToOne: false
+            referencedRelation: "profesionales_sanitarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_quirofanos_programacion_paciente_id_fkey"
+            columns: ["paciente_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_pacientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hosix_quirofanos_programacion_quirofano_id_fkey"
             columns: ["quirofano_id"]
             isOneToOne: false
             referencedRelation: "hosix_quirofanos"
@@ -5367,6 +7600,9 @@ export type Database = {
       hosix_servicios: {
         Row: {
           activo: boolean | null
+          atiende_externa: boolean | null
+          atiende_hospitalizacion: boolean | null
+          atiende_urgencias: boolean | null
           codigo: string
           created_at: string | null
           departamento_id: string | null
@@ -5378,6 +7614,9 @@ export type Database = {
         }
         Insert: {
           activo?: boolean | null
+          atiende_externa?: boolean | null
+          atiende_hospitalizacion?: boolean | null
+          atiende_urgencias?: boolean | null
           codigo: string
           created_at?: string | null
           departamento_id?: string | null
@@ -5389,6 +7628,9 @@ export type Database = {
         }
         Update: {
           activo?: boolean | null
+          atiende_externa?: boolean | null
+          atiende_hospitalizacion?: boolean | null
+          atiende_urgencias?: boolean | null
           codigo?: string
           created_at?: string | null
           departamento_id?: string | null
