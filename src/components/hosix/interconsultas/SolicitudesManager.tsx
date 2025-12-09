@@ -7,7 +7,7 @@ import { Plus } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
-export const InterconsultasSolicitudesManager: React.FC = () => {
+export const SolicitudesManager: React.FC = () => {
   const { solicitudes = [] } = useHosixInterconsultas()
   const [searchTerm, setSearchTerm] = useState('')
   const [filtroEspecialidad, setFiltroEspecialidad] = useState<string>('todos')
@@ -146,4 +146,7 @@ export const InterconsultasSolicitudesManager: React.FC = () => {
   )
 }
 
-export default InterconsultasSolicitudesManager
+export default SolicitudesManager
+
+// backward-compatible named export for existing imports
+export const InterconsultasSolicitudesManager = SolicitudesManager

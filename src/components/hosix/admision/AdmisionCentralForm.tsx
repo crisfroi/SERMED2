@@ -1,3 +1,5 @@
+import { LogIn } from 'lucide-react'
+import TicketGenerator from './TicketGenerator'
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -415,6 +417,18 @@ export default function AdmisionCentralForm({
                 </AlertDescription>
               </Alert>
             )}
+          </CardContent>
+          {/* Ticket generator: permite crear un número de llegada/turno antes de admitir */}
+          <CardContent>
+            <TicketGenerator
+              pacienteId={paciente.id}
+              servicioId={formData.servicioId || undefined}
+              centroSaludId={paciente.centro_salud_id || null}
+              onCreated={(ticket) => {
+                // Mostrar número en toast adicional
+                toast({ title: 'Ticket registrado', description: `Turno: ${ticket?.numero_turno}` })
+              }}
+            />
           </CardContent>
         </Card>
       )}

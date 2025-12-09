@@ -1,3 +1,4 @@
+
 # HOSIX - Sistema de Gestión Hospitalaria Nacional
 ## Plan de Implementación y Seguimiento de Progreso
 
@@ -8,6 +9,65 @@
 > **Proyecto**: Dashboard de Gestión Hospitalaria - GEPROSTEC
 
 ---
+
+## Actualización: Revisión rápida y acciones aplicadas (2025-12-09)
+
+> Nota: Esta sección fue añadida automáticamente tras una revisión completa de la documentación y del código del repositorio para conciliar el estado real del proyecto con las migraciones y componentes existentes.
+
+- Revisión ejecutada: lectura completa de `HOSIX_ARQUITECTURA_SUPABASE_COMPLETA.md` y `HOSIX_IMPLEMENTACION_SEGUIMIENTO.md`; inspección de migraciones en `supabase/migrations` y componentes en `src/components/hosix` y hooks en `src/hooks`.
+- Acciones y hallazgos principales:
+  - ✅ Migración de Interconsultas `20250206_014_hosix_interconsultas_asis_11.sql` existe en `supabase/migrations` (lista para aplicar con `mcp`).
+  - ⚠️ Componentes React relacionados con ASIS 11.0: `RespuestasManager.tsx`, `SeguimientoManager.tsx`, `ComunicacionesManager.tsx` se encuentran pendientes o requieren actualización (hay stubs o componentes parciales detectados — revisar rutas en `src/components/hosix/interconsultas/`).
+  - ✅ Módulos de Farmacia y Quirófanos tienen migraciones y componentes implementados; revisión de integraciones recomendada (hooks e indexaciones RLS ya aplicadas en SQL).
+  - ✅ RLS y políticas principales ya definidas en varias migraciones; se detectaron correcciones previas aplicadas (EXTRACT, ON DELETE CASCADE modificaciones).
+
+- Recomendaciones operativas (comandos):
+  - Aplicar migración de interconsultas en Supabase usando `mcp` (desde la raíz del repo):
+    ```powershell
+    # Aplicar la migración HOSIX de interconsultas
+    mcp exec migrations apply_migration --file supabase/migrations/20250206_014_hosix_interconsultas_asis_11.sql
+
+    # Ver tablas y políticas creadas
+    mcp exec migrations view_table --table hosix_interconsultas
+    mcp exec migrations view_policies --table hosix_interconsultas
+    ```
+  - Para comprobar el estado de migraciones aplicadas (local/entorno):
+    ```powershell
+    # Listar migrations
+    ls supabase/migrations | Select-String -Pattern "hosix_interconsultas"
+    ```
+
+- Próximas tareas sugeridas (prioridad alta):
+  1. Implementar/actualizar `RespuestasManager.tsx`, `SeguimientoManager.tsx`, `ComunicacionesManager.tsx` para ASIS 11.0.
+  2. Ejecutar la migración en el entorno de staging (usar `mcp` o la consola de Supabase) y validar RLS y triggers.
+  3. Añadir pruebas de integración (end-to-end) mínimas para crear una interconsulta y que el flujo genere los registros esperados.
+
+> Estado: revisión automática completada. Se recomienda aplicar las migraciones en staging y posteriormente en producción bajo control.
+
+### Cambios aplicados (sesión 2025-12-09)
+
+- Se añadieron migraciones y funciones para gestionar tickets de llegada y asignación atómica:
+  - `supabase/migrations/20251209_001_hosix_admision_tickets.sql` — crea tablas `hosix_tickets_llegada` y `hosix_triage_registros`, índices, triggers `set_updated_at` y políticas RLS iniciales.
+  - `supabase/migrations/20251209_002_hosix_tickets_rpc.sql` — añade `profesional_id` a `hosix_tickets_llegada` y crea la función RPC `assign_next_ticket_to_professional(_profesional_id, _servicio_id, _centro_id)` con `SECURITY DEFINER` para asignación atómica.
+
+- Se agregaron hooks y componentes frontend para soportar el flujo de Admisión → Ticket → Triage:
+  - `src/hooks/useHosixTickets.ts` — hook para crear tickets (`createTicket`) con generación automática de `numero_turno` si no se provee.
+  - `src/hooks/useAdmision.ts` — helper `createEpisodio` para centralizar la creación de episodios en `hosix_urgencias_episodios`, `hosix_hospitalizacion_episodios` o `hosix_citas` según `tipoIngreso`.
+  - `src/hooks/useTriage.ts` — hook `createTriageRecord` para insertar en `hosix_triage_registros`.
+  - `src/hooks/useListaEspera.ts` — helpers para consultar/crear/asignar elementos en `hosix_lista_espera`.
+  - `src/components/hosix/admision/TicketGenerator.tsx` — componente UI para generar tickets de llegada con prioridad y mostrar número de turno.
+  - `src/components/hosix/admision/TriageForm.tsx` — formulario mínimo de triage enlazado desde `TicketGenerator` para registrar nivel y observaciones.
+  - Integración: `src/components/hosix/admision/AdmisionCentralForm.tsx` fue actualizado para mostrar el `TicketGenerator` cuando hay un paciente seleccionado.
+
+- Investigación e infra:
+  - `OCR_INTEGRATION_PROPOSAL.md` añadido con recomendaciones para prototipar captura OCR (cliente, servidor o servicio de terceros).
+
+- Estado de la UI y dev server:
+  - Se corrigió un error de import en `AdmisionCentralForm.tsx` originado por la ausencia del componente `TicketGenerator`; el archivo faltante fue creado y la importación ahora resuelve correctamente.
+  - En entorno local, Vite arranca correctamente (ej.: `http://localhost:5173/`). Si el dev server muestra puertos alternativos, usar la URL mostrada por Vite.
+
+> Nota: Las migraciones han sido añadidas al repositorio pero NO fueron aplicadas automáticamente — requiere ejecutar las migraciones en el entorno Supabase/staging con credenciales apropiadas. Recomendación: aplicar en staging, validar RLS y comprobar la integración frontend contra la base de datos antes de desplegar en producción.
+
 
 ## 📊 RESUMEN EJECUTIVO DEL PLAN
 
