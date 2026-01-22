@@ -516,7 +516,11 @@ const NewProfessionalModal = ({
                   style={{ padding: "20mm", width: "210mm", minHeight: "297mm" }}
                 >
                   <ApprovalLetter
-                    formData={formDataForDocuments}
+                    professional={professional}
+                    documentDate={professional.fecha_generacion_resolucion 
+                      ? new Date(professional.fecha_generacion_resolucion).toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" })
+                      : new Date().toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" })
+                    }
                   />
                 </div>
               </ScrollArea>
