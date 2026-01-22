@@ -189,7 +189,11 @@ const formSchema = z
       return;
     }
 
-    if (data.nacionalidad === "Ecuatoguineana") {
+    // Normalizar nacionalidad para comparación (case-insensitive)
+    const nacionalidadNorm = data.nacionalidad.trim().toUpperCase();
+    const isEcuatoguineana = nacionalidadNorm === "ECUATOGUINEANA";
+
+    if (isEcuatoguineana) {
       if (!data.numero_dip || data.numero_dip.trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -242,6 +246,28 @@ const formSchema = z
         } catch (e) {
           console.warn("Error validando Pasaporte único:", e);
         }
+      }
+    }
+
+    // Validar unicidad del teléfono
+    if (data.telefono && data.telefono.trim().length >= 9) {
+      try {
+        const telefonoNorm = data.telefono.replace(/\s|-/g, "").trim();
+        const { data: existingTel, error } = await supabase
+          .from('profesionales_sanitarios')
+          .select('id')
+          .eq('telefono', telefonoNorm)
+          .maybeSingle();
+
+        if (existingTel && !error) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Este número de teléfono ya está registrado en el sistema",
+            path: ["telefono"],
+          });
+        }
+      } catch (e) {
+        console.warn("Error validando teléfono único:", e);
       }
     }
 
@@ -641,118 +667,59 @@ const ProfessionalRegistration = () => {
       }
 
       // ---------------------------------------------------------------------
-      // ⭐ PASO CLAVE 2: Subida de documentos adicionales (Edge Function + Fallback)
+      // ⭐ PASO CLAVE 2: Subida de documentos adicionales (Directo a Storage)
       // ---------------------------------------------------------------------
       if (uploadedFiles.length > 0 && result?.id) {
         let uploadSucceeded = false;
         const professionalId = result.id;
 
-        // ------------------------------------------
-        // 1. INTENTO DE SUBIDA VÍA EDGE FUNCTION (Preferido si se requiere lógica de servidor)
-        // ------------------------------------------
+        // Subida directa a Supabase Storage
+        console.log("Subiendo documentos directamente a Storage...");
         try {
-          console.log("Intentando subir documentos vía Edge Function (con Authorization)...");
+          const uploaded: string[] = [];
+          for (const file of uploadedFiles) {
+            const fileName = `${Date.now()}_${file.name}`;
+            const filePath = `documentos-adicionales/${professionalId}/${fileName}`;
 
-          const formDataDocs = new FormData();
-          formDataDocs.append("professional_id", professionalId);
-          uploadedFiles.forEach((file) => {
-            formDataDocs.append("documentos_adicionales[]", file);
-          });
+            const { data: up, error: upErr } = await supabase.storage
+              .from('documentos-profesionales')
+              .upload(filePath, file, { cacheControl: '3600', upsert: false, contentType: file.type });
+            if (upErr) throw upErr;
 
-          // Obtener token actual
-          const { data: sessionData } = await supabase.auth.getSession();
-          const accessToken = sessionData.session?.access_token;
+            const { data: pub } = supabase.storage
+              .from('documentos-profesionales')
+              .getPublicUrl(up.path);
+            uploaded.push(pub.publicUrl);
+          }
 
-          const resp = await fetch(
-            `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-documentos-adicionales`,
-            {
-              method: "POST",
-              headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
-              body: formDataDocs,
-            },
-          );
+          if (uploaded.length > 0) {
+            const { data: current } = await supabase
+              .from('profesionales_sanitarios')
+              .select('documentos_adicionales')
+              .eq('id', professionalId)
+              .single();
 
-          if (resp.ok) {
-            const json = await resp.json();
-            if (json?.success && Array.isArray(json.updated_record?.documentos_adicionales)) {
-              documentosUrls = json.updated_record.documentos_adicionales as string[];
-              uploadSucceeded = true;
-              console.log("Documentos subidos con éxito vía Edge Function.");
-            } else {
-              console.warn("Edge Function devolvió OK pero sin 'success' o URLs esperadas. Intentando fallback...");
-            }
-          } else {
-            const t = await resp.text();
-            console.error(`Edge Function falló (${resp.status}): ${t}. Intentando fallback...`);
+            const combined = [...(current?.documentos_adicionales || []), ...uploaded];
+
+            const { error: updErr } = await supabase
+              .from('profesionales_sanitarios')
+              .update({ documentos_adicionales: combined })
+              .eq('id', professionalId);
+
+            if (updErr) throw updErr;
+            documentosUrls = combined;
+            uploadSucceeded = true;
+            console.log("Documentos subidos con éxito.");
           }
         } catch (e: any) {
-          console.error("Error en la llamada al Edge Function. Intentando fallback:", e);
-        }
-
-        // ------------------------------------------
-        // 2. FALLBACK: Subida Directa a Supabase Storage (Si el paso 1 falló)
-        // ------------------------------------------
-        if (!uploadSucceeded) {
-          console.log("Ejecutando lógica de fallback (Subida directa a Storage)...");
-          try {
-            const uploaded: string[] = [];
-            for (const file of uploadedFiles) {
-              const fileName = `${Date.now()}_${file.name}`;
-              const filePath = `documentos-adicionales/${professionalId}/${fileName}`;
-
-              // Subida directa usando el cliente Supabase (requiere que la policy de RLS lo permita, 
-              // o que el usuario tenga un token de sesión si la tabla es privada)
-              const { data: up, error: upErr } = await supabase.storage
-                .from('documentos-profesionales')
-                .upload(filePath, file, { cacheControl: '3600', upsert: false, contentType: file.type });
-              if (upErr) throw upErr;
-
-              const { data: pub } = supabase.storage
-                .from('documentos-profesionales')
-                .getPublicUrl(up.path);
-              uploaded.push(pub.publicUrl);
-            }
-
-            if (uploaded.length > 0) {
-              // Actualizar DB con las URLs directas (usando el cliente normal de Supabase)
-              const { data: current } = await supabase
-                .from('profesionales_sanitarios')
-                .select('documentos_adicionales')
-                .eq('id', professionalId)
-                .single();
-
-              const combined = [...(current?.documentos_adicionales || []), ...uploaded];
-
-              const { error: updErr } = await supabase
-                .from('profesionales_sanitarios')
-                .update({ documentos_adicionales: combined })
-                .eq('id', professionalId);
-
-              if (updErr) throw updErr;
-              documentosUrls = combined;
-              uploadSucceeded = true;
-              console.log("Documentos subidos con éxito vía Fallback (Subida Directa).");
-            } else {
-              throw new Error("No se pudo subir ningún archivo en el fallback.");
-            }
-          } catch (e: any) {
-            console.error("Error subiendo documentos en el fallback:", e);
-            toast({
-              title: "Aviso",
-              description: "El registro fue exitoso, pero los documentos adicionales no se pudieron subir (Edge Function y Fallback fallaron).",
-              variant: "default",
-            });
-          }
-        }
-
-        // Si la subida falló después de todos los intentos, podemos notificar.
-        if (!uploadSucceeded) {
+          console.error("Error subiendo documentos:", e);
           toast({
-            title: "Advertencia de Documentos",
-            description: "La solicitud se registró, pero no se pudo confirmar la subida de los documentos adicionales.",
-            variant: "destructive",
+            title: "Aviso",
+            description: "El registro fue exitoso, pero los documentos adicionales no se pudieron subir.",
+            variant: "default",
           });
         }
+
       }
 
       // Sync center data if professional is active
