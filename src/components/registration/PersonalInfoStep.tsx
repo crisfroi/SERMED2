@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -12,7 +12,21 @@ interface PersonalInfoStepProps {
 }
 
 export const PersonalInfoStep = ({ form, nacionalidades, watchedValues }: PersonalInfoStepProps) => {
-  const isEcuatoguineana = watchedValues.nacionalidad === "Ecuatoguineana";
+  const nacionalidad = watchedValues.nacionalidad?.toUpperCase?.() || '';
+  const isEcuatoguineana = nacionalidad === "ECUATOGUINEANA";
+
+  // CRÍTICO: Limpiar campos al cambiar nacionalidad para evitar inconsistencias
+  useEffect(() => {
+    if (isEcuatoguineana) {
+      // Si es ecuatoguineana, limpiar pasaporte y brigada médica
+      form.setValue('numero_pasaporte', '');
+      form.setValue('pertenece_brigada_medica', false);
+      form.setValue('tipo_cooperacion', '');
+    } else {
+      // Si NO es ecuatoguineana, limpiar DIP
+      form.setValue('numero_dip', '');
+    }
+  }, [isEcuatoguineana, form]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -50,7 +64,7 @@ export const PersonalInfoStep = ({ form, nacionalidades, watchedValues }: Person
         render={({ field }) => (
           <FormItem>
             <FormLabel>Género *</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select onValueChange={field.onChange} value={field.value || ''}>
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccione su género" />
@@ -86,7 +100,10 @@ export const PersonalInfoStep = ({ form, nacionalidades, watchedValues }: Person
         render={({ field }) => (
           <FormItem className="md:col-span-2">
             <FormLabel>Nacionalidad *</FormLabel>
-            <Select onValueChange={(v) => field.onChange(String(v).toUpperCase())} defaultValue={field.value ? String(field.value).toUpperCase() : field.value}>
+            <Select 
+              onValueChange={(v) => field.onChange(String(v).toUpperCase())} 
+              value={field.value ? String(field.value).toUpperCase() : ''}
+            >
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccione su nacionalidad" />
@@ -117,7 +134,7 @@ export const PersonalInfoStep = ({ form, nacionalidades, watchedValues }: Person
             <FormItem>
               <FormLabel>Número DIP *</FormLabel>
               <FormControl>
-                <Input placeholder="Ingrese su número DIP" {...field} />
+                <Input placeholder="Ingrese su número DIP" {...field} value={field.value || ''} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -133,7 +150,7 @@ export const PersonalInfoStep = ({ form, nacionalidades, watchedValues }: Person
             <FormItem>
               <FormLabel>Número de Pasaporte *</FormLabel>
               <FormControl>
-                <Input placeholder="Ingrese su número de pasaporte" {...field} />
+                <Input placeholder="Ingrese su número de pasaporte" {...field} value={field.value || ''} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -190,14 +207,14 @@ export const PersonalInfoStep = ({ form, nacionalidades, watchedValues }: Person
         />
       )}
 
-      {watchedValues.pertenece_brigada_medica && (
+      {watchedValues.pertenece_brigada_medica && !isEcuatoguineana && (
         <FormField
           control={form.control}
           name="tipo_cooperacion"
           render={({ field }) => (
             <FormItem className="md:col-span-2">
               <FormLabel>Tipo de Cooperación</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value || ''}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccione el tipo" />
