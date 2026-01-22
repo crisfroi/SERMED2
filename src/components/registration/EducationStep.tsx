@@ -71,7 +71,10 @@ export const EducationStep = ({ form }: EducationStepProps) => {
     if (!watchedPais || !watchedInstitucion) return;
     const exists = instituciones.find(i => i.nombre.trim().toLowerCase() === watchedInstitucion.trim().toLowerCase());
     if (exists) return;
-    const created = await addInstitucionFormacion(watchedInstitucion, watchedPais, categoriaInstitucion || 'OTRA');
+    // Buscar el pais_id correspondiente al nombre del país seleccionado
+    const paisObj = paises.find(p => String(p.pais).toUpperCase() === String(watchedPais).toUpperCase());
+    const paisId = paisObj?.id || 0;
+    const created = await addInstitucionFormacion(watchedInstitucion, watchedPais, categoriaInstitucion || 'OTRA', paisId);
     setAddingNew(false);
     setCategoriaInstitucion(created.categoria);
     form.setValue('categoria_institucion_1', created.categoria as any);
@@ -175,16 +178,20 @@ export const EducationStep = ({ form }: EducationStepProps) => {
         render={({ field }) => (
           <FormItem className="md:col-span-2">
             <FormLabel>País de Formación *</FormLabel>
-            <Select onValueChange={(v) => field.onChange(String(v).toUpperCase())} defaultValue={field.value ? String(field.value).toUpperCase() : field.value} disabled={isLoadingPaises}>
+            <Select 
+              onValueChange={(v) => field.onChange(String(v).toUpperCase())} 
+              value={field.value ? String(field.value).toUpperCase() : ''} 
+              disabled={isLoadingPaises}
+            >
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder={isLoadingPaises ? "Cargando países..." : "Seleccione el país donde obtuvo la titulación"} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {paises.map((pais) => (
-                  <SelectItem key={pais} value={String(pais).toUpperCase()}>
-                    {String(pais).toUpperCase()}
+                {paises.map((paisObj) => (
+                  <SelectItem key={paisObj.id} value={String(paisObj.pais).toUpperCase()}>
+                    {String(paisObj.pais).toUpperCase()}
                   </SelectItem>
                 ))}
               </SelectContent>
