@@ -793,9 +793,6 @@ const ProfessionalRegistration = () => {
           const uploadResponse = await withTimeout(
             fetch('https://wdieynendfjbkbhfovrx.supabase.co/functions/v1/upload-documentos-adicionales', {
               method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${session?.access_token || ''}`,
-              },
               body: formData
             }),
             45_000,
