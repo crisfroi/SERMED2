@@ -667,17 +667,56 @@ const ProfessionalRegistration = () => {
 
       console.log("Datos a enviar a Supabase:", submissionData);
 
-      const insertPromise = supabase
-        .from("profesionales_sanitarios")
-        .insert([submissionData])
-        .select("id, codigo_expediente, url_codigo_barras_expediente")
-        .single();
+      // ✅ VERIFICACIÓN DE IDEMPOTENCIA: Detectar si ya existe este profesional
+      const telefonoNorm = normalizeTelefono(data.telefono);
+      const dip = (data.numero_dip || '').trim();
+      const pas = (data.numero_pasaporte || '').trim();
 
-      const { data: result, error } = await withTimeout(insertPromise, 25_000, 'inserción en base de datos');
+      let existingProfessional = null;
+      try {
+        let q = supabase
+          .from('profesionales_sanitarios')
+          .select('id, codigo_expediente, url_codigo_barras_expediente')
+          .eq('telefono', telefonoNorm)
+          .order('created_at', { ascending: false })
+          .limit(1);
 
-      if (error) {
-        console.error("Error de Supabase:", error);
-        throw new Error(`Error de base de datos: ${error.message}`);
+        if (dip) q = q.eq('numero_dip', dip);
+        if (pas) q = q.eq('numero_pasaporte', pas);
+
+        const { data: existing } = await q.maybeSingle();
+        if (existing?.id) {
+          existingProfessional = existing;
+          console.log('✅ Se detectó que este profesional ya existe:', existing);
+        }
+      } catch (e) {
+        console.warn('Error en verificación de idempotencia:', e);
+      }
+
+      let result;
+      let error;
+
+      if (existingProfessional) {
+        // Ya existe, usar los datos existentes
+        result = existingProfessional;
+        console.log('📌 Usando registro existente:', result);
+      } else {
+        // No existe, insertar nuevo
+        const insertPromise = supabase
+          .from("profesionales_sanitarios")
+          .insert([submissionData])
+          .select("id, codigo_expediente, url_codigo_barras_expediente")
+          .single();
+
+        const insertResult = await withTimeout(insertPromise, 25_000, 'inserción en base de datos');
+        result = insertResult.data;
+        error = insertResult.error;
+
+        if (error) {
+          console.error("Error de Supabase:", error);
+          throw new Error(`Error de base de datos: ${error.message}`);
+        }
+        console.log('✅ Nuevo registro insertado:', result);
       }
 
       // CRÍTICO: Limpiar datos persistidos después del éxito
