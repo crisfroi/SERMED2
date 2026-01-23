@@ -21,10 +21,12 @@ import { useState } from "react";
 import { ENABLE_INTERACTIVE_TOURS, isTourCompleted, setTourCompleted } from "@/config/featureFlags";
 import CoachMarks, { CoachMarkStep } from "@/components/onboarding/CoachMarks";
 // 💡 NUEVO: Importamos el componente de fondo
-import BackgroundSlideshow from "@/components/BackgroundSlideshow"; 
+import BackgroundSlideshow from "@/components/BackgroundSlideshow";
+import { RequestStatusVerification } from "@/components/RequestStatusVerification"; 
 
 const Home = () => {
   const [openTour, setOpenTour] = useState(false);
+  const [showStatusVerification, setShowStatusVerification] = useState(false);
 
   const steps: CoachMarkStep[] = [
     {
@@ -115,7 +117,7 @@ const Home = () => {
               profesionales de la salud en Guinea Ecuatorial. Garantizamos la
               acreditación y calidad de nuestros profesionales sanitarios.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
               <Link to="/register">
                 <Button
                   size="lg"
@@ -132,6 +134,15 @@ const Home = () => {
                   Verificar Acreditación
                 </Button>
               </Link>
+              <Button
+                size="lg"
+                variant="outline"
+                className="px-8 py-3"
+                onClick={() => setShowStatusVerification(true)}
+              >
+                <FileText className="w-5 h-5 mr-2" />
+                Ver Estado de Solicitud
+              </Button>
               <Link to="/solicitud-establecimiento">
                 <Button size="lg" variant="outline" className="px-8 py-3">
                   Solicitud de Establecimiento
@@ -335,6 +346,11 @@ const Home = () => {
           </div>
         </footer>
       </div>
+
+      <RequestStatusVerification
+        isOpen={showStatusVerification}
+        onClose={() => setShowStatusVerification(false)}
+      />
 
       {ENABLE_INTERACTIVE_TOURS && !isTourCompleted('home') && (
         <>

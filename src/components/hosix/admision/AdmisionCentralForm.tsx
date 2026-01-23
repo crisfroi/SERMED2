@@ -11,7 +11,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/components/ui/use-toast'
 import { supabase } from '@/integrations/supabase/client'
-import { AlertCircle, CheckCircle, Users, LogIn } from 'lucide-react'
+import { AlertCircle, CheckCircle, Users } from 'lucide-react'
 
 interface AdmisionCentralFormProps {
   pacienteId?: string
