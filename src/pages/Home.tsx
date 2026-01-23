@@ -347,6 +347,11 @@ const Home = () => {
         </footer>
       </div>
 
+      <RequestStatusVerification
+        isOpen={showStatusVerification}
+        onClose={() => setShowStatusVerification(false)}
+      />
+
       {ENABLE_INTERACTIVE_TOURS && !isTourCompleted('home') && (
         <>
           <button
