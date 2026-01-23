@@ -1090,6 +1090,12 @@ const ProfessionalRegistration = () => {
           isOpen={showProcedureModal}
           onClose={() => setShowProcedureModal(false)}
         />
+        <ExitConfirmationDialog
+          isOpen={showExitConfirmation}
+          onCancel={handleExitCancel}
+          onExit={handleExitWithoutSave}
+          onSave={handleExitWithSave}
+        />
       </div>
     </div>
   );
