@@ -1056,7 +1056,6 @@ const ProfessionalRegistration = () => {
                 type="button"
                 variant="outline"
                 onClick={prevStep}
-                disabled={currentStep === 1}
               >
                 Anterior
               </Button>
