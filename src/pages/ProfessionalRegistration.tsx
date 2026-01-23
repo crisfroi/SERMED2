@@ -38,6 +38,7 @@ import { RegistrationProgress } from "@/components/registration/RegistrationProg
 import PDFSummary from "@/components/registration/PDFSummary";
 import PoliticasModal from "@/components/registration/PoliticasModal";
 import ProcedureModal from "@/components/registration/ProcedureModal";
+import { ExitConfirmationDialog } from "@/components/registration/ExitConfirmationDialog";
 
 // --- LÓGICA DE PERSISTENCIA ---
 const STORAGE_KEY = "professional_registration_form_data";
