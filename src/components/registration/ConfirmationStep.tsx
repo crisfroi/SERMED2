@@ -83,9 +83,25 @@ const ConfirmationStep = ({
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 max-w-md">
           <p className="text-red-700 text-center">{errorEnvio}</p>
         </div>
-        <p className="text-gray-600 text-center mb-4">
+        <p className="text-gray-600 text-center mb-6">
           Por favor, revise los datos e intente nuevamente.
         </p>
+        <div className="flex gap-3">
+          {onRetrySend && (
+            <Button
+              onClick={onRetrySend}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              Reintentar envío
+            </Button>
+          )}
+          <Button
+            variant="outline"
+            onClick={() => navigate("/")}
+          >
+            Volver a inicio
+          </Button>
+        </div>
       </div>
     );
   }
