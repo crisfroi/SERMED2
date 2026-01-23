@@ -30,6 +30,7 @@ import ProfessionalDocumentsCard from "./professional-detail/ProfessionalDocumen
 import NotificationAlerts from "./professional-detail/NotificationAlerts";
 import { ParametrosPersonalizadosCard } from "./professional-detail/ParametrosPersonalizadosCard";
 import { DisciplinaryHistoryCard } from "./professional-detail/DisciplinaryHistoryCard";
+import { LaborExperienceCard } from "./professional-detail/LaborExperienceCard";
 
 interface ProfessionalDetailProps {
   professional: Profesional;
