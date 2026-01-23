@@ -8944,6 +8944,7 @@ export type Database = {
           estado_solicitud: string | null
           estado_trabajo: string | null
           estatus_funcionario: string | null
+          experiencia_laboral: Json | null
           fecha_alta: string | null
           fecha_aprobacion: string | null
           fecha_caducidad: string | null
@@ -8998,6 +8999,7 @@ export type Database = {
           tipo_cooperacion: string | null
           tipo_formacion_1: string | null
           tipo_formacion_2: string | null
+          tipo_profesional: string | null
           tipo_sector: string | null
           titulacion_especifica_1: string | null
           titulacion_especifica_2: string | null
@@ -9041,6 +9043,7 @@ export type Database = {
           estado_solicitud?: string | null
           estado_trabajo?: string | null
           estatus_funcionario?: string | null
+          experiencia_laboral?: Json | null
           fecha_alta?: string | null
           fecha_aprobacion?: string | null
           fecha_caducidad?: string | null
@@ -9095,6 +9098,7 @@ export type Database = {
           tipo_cooperacion?: string | null
           tipo_formacion_1?: string | null
           tipo_formacion_2?: string | null
+          tipo_profesional?: string | null
           tipo_sector?: string | null
           titulacion_especifica_1?: string | null
           titulacion_especifica_2?: string | null
@@ -9138,6 +9142,7 @@ export type Database = {
           estado_solicitud?: string | null
           estado_trabajo?: string | null
           estatus_funcionario?: string | null
+          experiencia_laboral?: Json | null
           fecha_alta?: string | null
           fecha_aprobacion?: string | null
           fecha_caducidad?: string | null
@@ -9192,6 +9197,7 @@ export type Database = {
           tipo_cooperacion?: string | null
           tipo_formacion_1?: string | null
           tipo_formacion_2?: string | null
+          tipo_profesional?: string | null
           tipo_sector?: string | null
           titulacion_especifica_1?: string | null
           titulacion_especifica_2?: string | null

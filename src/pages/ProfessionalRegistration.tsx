@@ -546,14 +546,31 @@ const ProfessionalRegistration = () => {
         localStorage.setItem(PENDING_SEND_KEY, JSON.stringify({ at: new Date().toISOString() }));
       } catch {}
 
-      // Subir foto a Supabase Storage (flujo original del usuario)
-      const fotoUrl = await withTimeout(
-        uploadFile(photoFile!, "fotos-carnet"),
-        25_000,
-        'subida de foto'
-      );
+      // Subir foto directamente a Supabase Storage (sin hook que puede fallar)
+      let fotoUrl: string | null = null;
+      try {
+        const fileExt = photoFile!.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('fotos-carnet')
+          .upload(fileName, photoFile!, { cacheControl: '3600', upsert: false });
+        
+        if (uploadError) {
+          console.error("Error subiendo foto:", uploadError);
+          throw new Error(`Error al subir la foto: ${uploadError.message}`);
+        }
+        
+        const { data: { publicUrl } } = supabase.storage.from('fotos-carnet').getPublicUrl(fileName);
+        fotoUrl = publicUrl;
+        console.log("Foto subida exitosamente:", fotoUrl);
+      } catch (uploadErr: any) {
+        console.error("Error en subida de foto:", uploadErr);
+        throw new Error(`Error al subir la foto: ${uploadErr.message || 'Error desconocido'}`);
+      }
+
       if (!fotoUrl) {
-        throw new Error("Error al subir la foto");
+        throw new Error("No se pudo obtener la URL de la foto");
       }
 
       // Asegurar relación con institución de formación
@@ -635,6 +652,9 @@ const ProfessionalRegistration = () => {
         fecha_inicio_trabajo: data.funcion_publica && data.funcionario_estatus === 'no_nombrado' ? (data.fecha_inicio_trabajo || null) : null,
         pertenece_brigada_medica: data.pertenece_brigada_medica,
         tipo_cooperacion: data.tipo_cooperacion ? U(data.tipo_cooperacion) : null,
+        // Nuevos campos: tipo de profesional y experiencia laboral
+        tipo_profesional: (data as any).tipo_profesional || 'sanitario',
+        experiencia_laboral: (data as any).experiencia_laboral || [],
         // URLs de documentos adicionales subidos al bucket
         documentos_adicionales: documentosUrls,
         foto_carnet: fotoUrl,
