@@ -932,9 +932,32 @@ const ProfessionalRegistration = () => {
   };
 
   const prevStep = () => {
-    if (currentStep > 1) {
+    if (currentStep === 1) {
+      // En el primer paso, mostrar diálogo de confirmación de salida
+      setShowExitConfirmation(true);
+    } else if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
+  };
+
+  const handleExitCancel = () => {
+    setShowExitConfirmation(false);
+  };
+
+  const handleExitWithoutSave = () => {
+    setShowExitConfirmation(false);
+    localStorage.removeItem(STORAGE_KEY);
+    navigate("/");
+  };
+
+  const handleExitWithSave = () => {
+    setShowExitConfirmation(false);
+    // Los datos ya están guardados en localStorage por el useEffect de persistencia
+    toast({
+      title: "Progreso guardado",
+      description: "Tu progreso ha sido guardado. Puedes volver a continuar cuando desees.",
+    });
+    navigate("/");
   };
 
   const renderStepContent = () => {
