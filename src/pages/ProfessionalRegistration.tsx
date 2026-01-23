@@ -171,6 +171,16 @@ const formSchema = z
     pertenece_brigada_medica: z.boolean().default(false),
     tipo_cooperacion: z.string().optional(),
 
+    // Campo de experiencia laboral (opcional, array de objetos)
+    experiencia_laboral: z.array(z.object({
+      funcion: z.string().optional(),
+      institucion: z.string().optional(),
+      periodo: z.string().optional(),
+    })).optional().default([]),
+
+    // Campo de tipo de profesional
+    tipo_profesional: z.string().optional().default('sanitario'),
+
     // Validaciones para foto_carnet (un solo archivo FileList)
     foto_carnet: z
       .any()
@@ -761,108 +771,71 @@ const ProfessionalRegistration = () => {
         }
       }
 
-      // ---------------------------------------------------------------------
-      // ⭐ PASO CLAVE 2: Subida de documentos adicionales (Directo a Storage)
-      // ---------------------------------------------------------------------
+      // ⭐ PASO CLAVE 2: Subida de documentos adicionales (Consolidado en Edge Function)
       if (uploadedFiles.length > 0 && result?.id) {
         const professionalId = result.id;
-        const uploaded: string[] = [];
-        const failedFiles: string[] = [];
 
-        console.log(`📦 Iniciando carga de ${uploadedFiles.length} documento(s)...`);
+        console.log(`📦 Iniciando carga de ${uploadedFiles.length} documento(s) usando edge function...`);
 
         try {
+          // Preparar FormData con los documentos
+          const formData = new FormData();
+          formData.append('professional_id', professionalId);
+
           for (const file of uploadedFiles) {
-            try {
-              // Generar nombre de archivo más seguro (usando timestamp + random)
-              const randomSuffix = Math.random().toString(36).substring(2, 10);
-              const sanitizedFileName = file.name
-                .replace(/[^a-zA-Z0-9.-]/g, '_') // Sanitizar caracteres especiales
-                .toLowerCase();
-              const fileName = `${Date.now()}_${randomSuffix}_${sanitizedFileName}`;
-              const filePath = `documentos-adicionales/${professionalId}/${fileName}`;
-
-              console.log(`📄 Subiendo: ${file.name} (${(file.size / 1024).toFixed(2)}KB)...`);
-
-              const uploadPromise = supabase.storage
-                .from('documentos-profesionales')
-                .upload(filePath, file, {
-                  cacheControl: '3600',
-                  upsert: false,
-                  contentType: file.type
-                });
-
-              const { data: up, error: upErr } = await withTimeout(uploadPromise as any, 30_000, `subida documento: ${file.name}`);
-
-              if (upErr || !up) {
-                const errorMsg = upErr?.message || 'Error desconocido';
-                console.error(`❌ Error al subir ${file.name}:`, errorMsg);
-                failedFiles.push(`${file.name} (${errorMsg})`);
-                continue;
-              }
-
-              const { data: pub } = supabase.storage
-                .from('documentos-profesionales')
-                .getPublicUrl(up.path);
-
-              if (pub?.publicUrl) {
-                uploaded.push(pub.publicUrl);
-                console.log(`✅ ${file.name} subido exitosamente`);
-              } else {
-                failedFiles.push(`${file.name} (No se pudo obtener URL pública)`);
-              }
-            } catch (fileError: any) {
-              console.error(`Error en archivo ${file.name}:`, fileError);
-              failedFiles.push(`${file.name} (${fileError.message})`);
-            }
+            formData.append('documentos_adicionales[]', file);
           }
 
-          // Actualizar documentos si al menos uno fue subido exitosamente
-          if (uploaded.length > 0) {
-            try {
-              const { error: updErr } = await supabase
-                .from('profesionales_sanitarios')
-                .update({ documentos_adicionales: uploaded })
-                .eq('id', professionalId);
+          // Obtener token de sesión
+          const { data: { session } } = await supabase.auth.getSession();
 
-              if (updErr) {
-                console.error('Error actualizando documentos_adicionales:', updErr);
+          // Llamar al edge function consolidado
+          const uploadResponse = await withTimeout(
+            fetch('https://wdieynendfjbkbhfovrx.supabase.co/functions/v1/upload-documentos-adicionales', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${session?.access_token || ''}`,
+              },
+              body: formData
+            }),
+            45_000,
+            'carga de documentos adicionales'
+          );
+
+          if (!uploadResponse.ok) {
+            const errorData = await uploadResponse.json();
+            console.error('Error en edge function:', errorData);
+
+            toast({
+              title: "Advertencia en documentos",
+              description: `Los documentos no se pudieron procesar: ${errorData.error || 'Error desconocido'}`,
+              variant: "default",
+            });
+          } else {
+            const result = await uploadResponse.json();
+
+            if (result.success) {
+              documentosUrls = result.uploaded_documents || [];
+              console.log(`✅ ${documentosUrls.length} documento(s) subido(s) exitosamente`);
+
+              if (result.errors && result.errors.length > 0) {
                 toast({
-                  title: "Advertencia",
-                  description: `Se subieron ${uploaded.length} documento(s), pero hubo un error al guardar las referencias en la base de datos.`,
+                  title: "Carga parcial",
+                  description: `Se subieron ${documentosUrls.length} de ${uploadedFiles.length} documentos.`,
                   variant: "default",
                 });
-              } else {
-                documentosUrls = uploaded;
-                console.log(`✅ ${uploaded.length} documento(s) registrado(s) en la base de datos`);
-
-                if (failedFiles.length > 0) {
-                  toast({
-                    title: "Carga parcial",
-                    description: `Se subieron ${uploaded.length} de ${uploadedFiles.length} documentos. Fallaron: ${failedFiles.join(', ')}`,
-                    variant: "default",
-                  });
-                }
               }
-            } catch (updateError: any) {
-              console.error("Error actualizando registro:", updateError);
+            } else {
+              console.error('Error en respuesta del edge function:', result);
               toast({
                 title: "Advertencia",
-                description: "Los documentos se subieron pero no se pudieron guardar las referencias.",
+                description: "No se pudieron procesar los documentos adicionales.",
                 variant: "default",
               });
             }
-          } else if (failedFiles.length > 0) {
-            // Todos los archivos fallaron
-            console.warn("Todos los documentos fallaron:", failedFiles);
-            toast({
-              title: "Error en documentos",
-              description: `No se pudieron subir los documentos: ${failedFiles.join(', ')}`,
-              variant: "default",
-            });
           }
         } catch (e: any) {
-          console.error("Error general en carga de documentos:", e);
+          console.error("Error en carga de documentos:", e);
           toast({
             title: "Advertencia",
             description: "El registro fue exitoso, pero hubo un problema al procesar los documentos adicionales.",
