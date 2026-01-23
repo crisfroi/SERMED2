@@ -171,6 +171,16 @@ const formSchema = z
     pertenece_brigada_medica: z.boolean().default(false),
     tipo_cooperacion: z.string().optional(),
 
+    // Campo de experiencia laboral (opcional, array de objetos)
+    experiencia_laboral: z.array(z.object({
+      funcion: z.string().optional(),
+      institucion: z.string().optional(),
+      periodo: z.string().optional(),
+    })).optional().default([]),
+
+    // Campo de tipo de profesional
+    tipo_profesional: z.string().optional().default('sanitario'),
+
     // Validaciones para foto_carnet (un solo archivo FileList)
     foto_carnet: z
       .any()
