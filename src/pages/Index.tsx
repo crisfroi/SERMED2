@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,9 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowRight, Users, FileText, BarChart3, UserPlus, Hospital } from "lucide-react";
+import { ArrowRight, Users, FileText, BarChart3, UserPlus, Hospital, Search } from "lucide-react";
+import { StatusVerificationModal } from "@/components/home/StatusVerificationModal";
 
 const Index = () => {
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="container mx-auto px-4 py-16">
@@ -38,6 +42,15 @@ const Index = () => {
                 Registrarse como Profesional
               </Button>
             </Link>
+            <Button
+              size="lg"
+              variant="outline"
+              className="px-8 py-3 border-green-600 text-green-700 hover:bg-green-50"
+              onClick={() => setShowVerificationModal(true)}
+            >
+              <Search className="w-5 h-5 mr-2" />
+              Verificar Estado de Solicitud
+            </Button>
             <Link to="/dashboard">
               <Button size="lg" variant="outline" className="px-8 py-3">
                 Acceder al Dashboard
@@ -126,6 +139,11 @@ const Index = () => {
           </Link>
         </div>
       </div>
+
+      <StatusVerificationModal 
+        open={showVerificationModal} 
+        onClose={() => setShowVerificationModal(false)} 
+      />
     </div>
   );
 };
