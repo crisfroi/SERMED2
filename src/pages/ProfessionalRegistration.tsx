@@ -41,6 +41,31 @@ import ProcedureModal from "@/components/registration/ProcedureModal";
 
 // --- LÓGICA DE PERSISTENCIA ---
 const STORAGE_KEY = "professional_registration_form_data";
+const PENDING_SEND_KEY = "professional_registration_pending_send";
+
+const normalizeNacionalidad = (v: any) => String(v || '').trim().toUpperCase();
+const isNacionalidadEcuatoguineana = (v: any) => {
+  const n = normalizeNacionalidad(v);
+  return (
+    n === 'ECUATOGUINEANA' ||
+    n === 'ECUATORGUINEANA' ||
+    n.replace(/\s+/g, ' ') === 'GUINEA ECUATORIAL' ||
+    n.includes('ECUATO') ||
+    n.includes('ECUATOR')
+  );
+};
+
+const withTimeout = async <T,>(promise: Promise<T>, ms: number, label: string): Promise<T> => {
+  let t: any;
+  const timeout = new Promise<never>((_, reject) => {
+    t = setTimeout(() => reject(new Error(`Tiempo de espera agotado (${label})`)), ms);
+  });
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    if (t) clearTimeout(t);
+  }
+};
 
 // Función para cargar datos persistentes desde localStorage
 const getPersistedData = (): { currentStep: number; formData: Partial<FormData> } | null => {
@@ -189,9 +214,7 @@ const formSchema = z
       return;
     }
 
-    // Normalizar nacionalidad para comparación (case-insensitive)
-    const nacionalidadNorm = data.nacionalidad.trim().toUpperCase();
-    const isEcuatoguineana = nacionalidadNorm === "ECUATOGUINEANA";
+    const isEcuatoguineana = isNacionalidadEcuatoguineana(data.nacionalidad);
 
     if (isEcuatoguineana) {
       if (!data.numero_dip || data.numero_dip.trim() === "") {
@@ -518,8 +541,17 @@ const ProfessionalRegistration = () => {
     try {
       console.log("Iniciando proceso de envío de formulario...");
 
+      // Marcador de “envío en progreso” para recuperación UI (evita quedar colgado sin feedback)
+      try {
+        localStorage.setItem(PENDING_SEND_KEY, JSON.stringify({ at: new Date().toISOString() }));
+      } catch {}
+
       // Subir foto a Supabase Storage (flujo original del usuario)
-      const fotoUrl = await uploadFile(photoFile!, "fotos-carnet");
+      const fotoUrl = await withTimeout(
+        uploadFile(photoFile!, "fotos-carnet"),
+        25_000,
+        'subida de foto'
+      );
       if (!fotoUrl) {
         throw new Error("Error al subir la foto");
       }
@@ -613,11 +645,13 @@ const ProfessionalRegistration = () => {
 
       console.log("Datos a enviar a Supabase:", submissionData);
 
-      const { data: result, error } = await supabase
+      const insertPromise = supabase
         .from("profesionales_sanitarios")
         .insert([submissionData])
         .select("id, codigo_expediente, url_codigo_barras_expediente")
         .single();
+
+      const { data: result, error } = await withTimeout(insertPromise, 25_000, 'inserción en base de datos');
 
       if (error) {
         console.error("Error de Supabase:", error);
@@ -654,7 +688,7 @@ const ProfessionalRegistration = () => {
       // ⭐ PASO CLAVE 1: Obtener el código de barras en Base64 (con generador local como fallback)
       let codigoBarrasBase64: string | null = null;
       if (urlCodigoBarrasExp) {
-        codigoBarrasBase64 = await urlToBase64(urlCodigoBarrasExp);
+        codigoBarrasBase64 = await withTimeout(urlToBase64(urlCodigoBarrasExp), 12_000, 'descarga código de barras');
       }
       if (!codigoBarrasBase64 && result.codigo_expediente) {
         try {
@@ -681,9 +715,11 @@ const ProfessionalRegistration = () => {
             const fileName = `${Date.now()}_${file.name}`;
             const filePath = `documentos-adicionales/${professionalId}/${fileName}`;
 
-            const { data: up, error: upErr } = await supabase.storage
+            const uploadPromise = supabase.storage
               .from('documentos-profesionales')
               .upload(filePath, file, { cacheControl: '3600', upsert: false, contentType: file.type });
+
+            const { data: up, error: upErr } = await withTimeout(uploadPromise as any, 25_000, `subida documento: ${file.name}`);
             if (upErr) throw upErr;
 
             const { data: pub } = supabase.storage
@@ -725,7 +761,8 @@ const ProfessionalRegistration = () => {
       // Sync center data if professional is active
       if (data.situacion_laboral === "Activo" && data.nombre_centro) {
         try {
-          const centerId = await syncCenterFromProfessional({
+          const centerId = await withTimeout(
+            syncCenterFromProfessional({
             nombre_centro: data.nombre_centro,
             categoria_centro: data.categoria_centro,
             distrito_sanitario: data.distrito_sanitario,
@@ -733,7 +770,10 @@ const ProfessionalRegistration = () => {
             provincia: data.provincia,
             distrito: data.distrito,
             professional_id: result.id,
-          });
+            }),
+            15_000,
+            'sincronización de centro'
+          );
 
           // Update professional with center ID if center was found/created
           if (centerId) {
@@ -757,6 +797,7 @@ const ProfessionalRegistration = () => {
 
       // Marcar solicitud como enviada
       setSolicitudEnviada(true);
+      try { localStorage.removeItem(PENDING_SEND_KEY); } catch {}
 
       // Actualizar el estado interno con los datos para el PDF
       setFormDataForPDF({
@@ -780,6 +821,46 @@ const ProfessionalRegistration = () => {
       setCurrentStep(6); // Ir al step de confirmación
     } catch (error: any) {
       console.error("Error completo al enviar formulario:", error);
+
+      // Si se quedó colgado por timeout, intenta “reconciliar” verificando si la fila ya se creó
+      const msg = String(error?.message || '');
+      if (msg.toLowerCase().includes('tiempo de espera')) {
+        try {
+          const telefonoNorm = normalizeTelefono(data.telefono);
+          const dip = (data.numero_dip || '').trim();
+          const pas = (data.numero_pasaporte || '').trim();
+          let q = supabase
+            .from('profesionales_sanitarios')
+            .select('id, codigo_expediente, url_codigo_barras_expediente')
+            .eq('telefono', telefonoNorm)
+            .order('created_at', { ascending: false })
+            .limit(1);
+          if (dip) q = q.eq('numero_dip', dip);
+          if (pas) q = q.eq('numero_pasaporte', pas);
+          const { data: maybe, error: e2 } = await q.maybeSingle();
+          if (!e2 && maybe?.id) {
+            setSolicitudEnviada(true);
+            setFormDataForPDF({
+              ...data,
+              photoFile,
+              foto_carnet: null,
+              foto_carnet_base64: fotoCarnetBase64,
+              url_codigo_barras_expediente: maybe.url_codigo_barras_expediente || '',
+              codigo_expediente: maybe.codigo_expediente,
+              edad: new Date().getFullYear() - new Date(data.fecha_nacimiento).getFullYear(),
+              submittedData: maybe,
+            });
+            toast({
+              title: 'Solicitud registrada',
+              description: `Detectamos que la solicitud se registró. Código: ${maybe.codigo_expediente}`,
+            });
+            setCurrentStep(6);
+            try { localStorage.removeItem(PENDING_SEND_KEY); } catch {}
+            return;
+          }
+        } catch {}
+      }
+
       const errorMessage =
         error.message || "Error desconocido al procesar la solicitud";
       setErrorEnvio(errorMessage);
@@ -881,6 +962,10 @@ const ProfessionalRegistration = () => {
             isSubmitting={isSubmitting}
             solicitudEnviada={solicitudEnviada}
             errorEnvio={errorEnvio}
+            onRetrySend={() => {
+              // reintenta el submit con la data actual del form
+              form.handleSubmit(onSubmit)();
+            }}
           />
         );
       default:
