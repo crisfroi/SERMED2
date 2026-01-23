@@ -765,58 +765,110 @@ const ProfessionalRegistration = () => {
       // ⭐ PASO CLAVE 2: Subida de documentos adicionales (Directo a Storage)
       // ---------------------------------------------------------------------
       if (uploadedFiles.length > 0 && result?.id) {
-        let uploadSucceeded = false;
         const professionalId = result.id;
+        const uploaded: string[] = [];
+        const failedFiles: string[] = [];
 
-        // Subida directa a Supabase Storage
-        console.log("Subiendo documentos directamente a Storage...");
+        console.log(`📦 Iniciando carga de ${uploadedFiles.length} documento(s)...`);
+
         try {
-          const uploaded: string[] = [];
           for (const file of uploadedFiles) {
-            const fileName = `${Date.now()}_${file.name}`;
-            const filePath = `documentos-adicionales/${professionalId}/${fileName}`;
+            try {
+              // Generar nombre de archivo más seguro (usando timestamp + random)
+              const randomSuffix = Math.random().toString(36).substring(2, 10);
+              const sanitizedFileName = file.name
+                .replace(/[^a-zA-Z0-9.-]/g, '_') // Sanitizar caracteres especiales
+                .toLowerCase();
+              const fileName = `${Date.now()}_${randomSuffix}_${sanitizedFileName}`;
+              const filePath = `documentos-adicionales/${professionalId}/${fileName}`;
 
-            const uploadPromise = supabase.storage
-              .from('documentos-profesionales')
-              .upload(filePath, file, { cacheControl: '3600', upsert: false, contentType: file.type });
+              console.log(`📄 Subiendo: ${file.name} (${(file.size / 1024).toFixed(2)}KB)...`);
 
-            const { data: up, error: upErr } = await withTimeout(uploadPromise as any, 25_000, `subida documento: ${file.name}`);
-            if (upErr) throw upErr;
+              const uploadPromise = supabase.storage
+                .from('documentos-profesionales')
+                .upload(filePath, file, {
+                  cacheControl: '3600',
+                  upsert: false,
+                  contentType: file.type
+                });
 
-            const { data: pub } = supabase.storage
-              .from('documentos-profesionales')
-              .getPublicUrl(up.path);
-            uploaded.push(pub.publicUrl);
+              const { data: up, error: upErr } = await withTimeout(uploadPromise as any, 30_000, `subida documento: ${file.name}`);
+
+              if (upErr || !up) {
+                const errorMsg = upErr?.message || 'Error desconocido';
+                console.error(`❌ Error al subir ${file.name}:`, errorMsg);
+                failedFiles.push(`${file.name} (${errorMsg})`);
+                continue;
+              }
+
+              const { data: pub } = supabase.storage
+                .from('documentos-profesionales')
+                .getPublicUrl(up.path);
+
+              if (pub?.publicUrl) {
+                uploaded.push(pub.publicUrl);
+                console.log(`✅ ${file.name} subido exitosamente`);
+              } else {
+                failedFiles.push(`${file.name} (No se pudo obtener URL pública)`);
+              }
+            } catch (fileError: any) {
+              console.error(`Error en archivo ${file.name}:`, fileError);
+              failedFiles.push(`${file.name} (${fileError.message})`);
+            }
           }
 
+          // Actualizar documentos si al menos uno fue subido exitosamente
           if (uploaded.length > 0) {
-            const { data: current } = await supabase
-              .from('profesionales_sanitarios')
-              .select('documentos_adicionales')
-              .eq('id', professionalId)
-              .single();
+            try {
+              const { error: updErr } = await supabase
+                .from('profesionales_sanitarios')
+                .update({ documentos_adicionales: uploaded })
+                .eq('id', professionalId);
 
-            const combined = [...(current?.documentos_adicionales || []), ...uploaded];
+              if (updErr) {
+                console.error('Error actualizando documentos_adicionales:', updErr);
+                toast({
+                  title: "Advertencia",
+                  description: `Se subieron ${uploaded.length} documento(s), pero hubo un error al guardar las referencias en la base de datos.`,
+                  variant: "default",
+                });
+              } else {
+                documentosUrls = uploaded;
+                console.log(`✅ ${uploaded.length} documento(s) registrado(s) en la base de datos`);
 
-            const { error: updErr } = await supabase
-              .from('profesionales_sanitarios')
-              .update({ documentos_adicionales: combined })
-              .eq('id', professionalId);
-
-            if (updErr) throw updErr;
-            documentosUrls = combined;
-            uploadSucceeded = true;
-            console.log("Documentos subidos con éxito.");
+                if (failedFiles.length > 0) {
+                  toast({
+                    title: "Carga parcial",
+                    description: `Se subieron ${uploaded.length} de ${uploadedFiles.length} documentos. Fallaron: ${failedFiles.join(', ')}`,
+                    variant: "default",
+                  });
+                }
+              }
+            } catch (updateError: any) {
+              console.error("Error actualizando registro:", updateError);
+              toast({
+                title: "Advertencia",
+                description: "Los documentos se subieron pero no se pudieron guardar las referencias.",
+                variant: "default",
+              });
+            }
+          } else if (failedFiles.length > 0) {
+            // Todos los archivos fallaron
+            console.warn("Todos los documentos fallaron:", failedFiles);
+            toast({
+              title: "Error en documentos",
+              description: `No se pudieron subir los documentos: ${failedFiles.join(', ')}`,
+              variant: "default",
+            });
           }
         } catch (e: any) {
-          console.error("Error subiendo documentos:", e);
+          console.error("Error general en carga de documentos:", e);
           toast({
-            title: "Aviso",
-            description: "El registro fue exitoso, pero los documentos adicionales no se pudieron subir.",
+            title: "Advertencia",
+            description: "El registro fue exitoso, pero hubo un problema al procesar los documentos adicionales.",
             variant: "default",
           });
         }
-
       }
 
       // Sync center data if professional is active
