@@ -238,6 +238,9 @@ const ProfessionalDetail = ({
               <WorkplaceCard professional={professional} />
             </div>
             <div className="mb-4" style={{ breakInside: 'avoid' }}>
+              <LaborExperienceCard professional={professional} />
+            </div>
+            <div className="mb-4" style={{ breakInside: 'avoid' }}>
               <ProfessionalCardInfo
                 professional={professional}
                 daysUntilRenewal={daysUntilRenewal}
