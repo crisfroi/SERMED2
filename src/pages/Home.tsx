@@ -117,7 +117,7 @@ const Home = () => {
               profesionales de la salud en Guinea Ecuatorial. Garantizamos la
               acreditación y calidad de nuestros profesionales sanitarios.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
               <Link to="/register">
                 <Button
                   size="lg"
@@ -134,6 +134,15 @@ const Home = () => {
                   Verificar Acreditación
                 </Button>
               </Link>
+              <Button
+                size="lg"
+                variant="outline"
+                className="px-8 py-3"
+                onClick={() => setShowStatusVerification(true)}
+              >
+                <FileText className="w-5 h-5 mr-2" />
+                Ver Estado de Solicitud
+              </Button>
               <Link to="/solicitud-establecimiento">
                 <Button size="lg" variant="outline" className="px-8 py-3">
                   Solicitud de Establecimiento
