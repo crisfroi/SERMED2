@@ -1,7 +1,5 @@
 import React from 'react';
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
 import { FileText, User } from 'lucide-react';
 
 interface PDFSummaryProps {
@@ -10,34 +8,34 @@ interface PDFSummaryProps {
 
 const PDFSummary = ({ formData }: PDFSummaryProps) => {
   return (
-    <div className="space-y-2"> {/* Reducido de space-y-4 a space-y-2 */}
-      <div className="bg-white p-4 space-y-3" style={{ minHeight: '297mm' }}> {/* Reducido de p-6 a p-4 y space-y-4 a space-y-3 */}
+    <div className="space-y-2">
+      <div className="bg-white p-4 space-y-3" style={{ minHeight: '297mm' }}>
         {/* Encabezado oficial */}
-        <div className="text-center border-b-2 border-gray-300 pb-3 mb-3"> {/* Reducido pb-4 mb-4 a pb-3 mb-3 */}
-          <h1 className="text-lg font-bold text-guinea-teal mb-0.5"> {/* Reducido text-xl a text-lg, mb-1 a mb-0.5 */}
-            MINISTERIO DE SANIDAD Y BIENESTAR SOCIAL
+        <div className="text-center border-b-2 border-gray-300 pb-3 mb-3">
+          <h1 className="text-lg font-bold text-guinea-teal mb-0.5 uppercase">
+            Ministerio de Sanidad y Bienestar Social
           </h1>
-          <h2 className="text-sm font-semibold text-gray-700 mb-0.5"> {/* Reducido text-base a text-sm, mb-1 a mb-0.5 */}
+          <h2 className="text-sm font-semibold text-gray-700 mb-0.5">
             REPÚBLICA DE GUINEA ECUATORIAL
           </h2>
-          <h3 className="text-xs font-medium text-gray-600"> {/* Reducido text-sm a text-xs */}
-            SOLICITUD DE ACREDITACIÓN PROFESIONAL SANITARIA
+          <h3 className="text-xs font-medium text-gray-600 uppercase">
+            Solicitud de Acreditación Profesional Sanitaria
           </h3>
           {formData.codigo_expediente && (
-            <div className="mt-2"> {/* Reducido mt-3 a mt-2 */}
-              <p className="text-xs font-medium text-gray-600 mb-0.5"> {/* Reducido mb-1 a mb-0.5 */}
-                Código de Expediente: {formData.codigo_expediente}
+            <div className="mt-2">
+              <p className="text-xs font-medium text-gray-600 mb-0.5">
+                Código de Expediente: <span className="font-bold">{formData.codigo_expediente}</span>
               </p>
             </div>
           )}
         </div>
 
-        {/* Layout optimizado: Foto + Datos personales + Código de barras */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4"> {/* Reducido gap-4 a gap-3, mb-6 a mb-4 */}
-          {/* Foto carnet */}
-          <div className="flex flex-col items-center space-y-2"> {/* Reducido space-y-3 a space-y-2 */}
+        {/* Layout: Foto + Datos personales + Código de barras */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          {/* Columna Izquierda: Foto y Código de Barras */}
+          <div className="flex flex-col items-center space-y-4">
             {formData.foto_carnet_base64 && (
-              <div className="w-24 h-32 border-2 border-gray-300 rounded overflow-hidden"> {/* Reducido w-28 h-36 a w-24 h-32 */}
+              <div className="w-24 h-32 border-2 border-gray-300 rounded overflow-hidden shadow-sm">
                 <img
                   src={formData.foto_carnet_base64}
                   alt="Foto carnet"
@@ -45,154 +43,103 @@ const PDFSummary = ({ formData }: PDFSummaryProps) => {
                 />
               </div>
             )}
-            {/* Código de barras debajo de la foto - CORRECCIÓN APLICADA AQUÍ */}
-            {formData.codigo_barras_base64 ? (
-              <div className="flex flex-col items-center">
-                <img
-                  // ⭐ Usamos la Base64 que ya fue descargada e incrustada
-                  src={formData.codigo_barras_base64}
-                  alt={`Código de Barras: ${formData.codigo_expediente}`}
-                  style={{ width: '120px', height: '35px' }}
-                  className="mb-0.5 object-contain"
-                />
-                <p className="text-xs text-gray-600 text-center">Código de Barras</p>
-              </div>
-            ) : formData.url_codigo_barras_expediente ? (
-              // Fallback a URL antigua con manejador de error (menos fiable en PDF)
-              <div className="flex flex-col items-center">
+            
+            {/* CÓDIGO DE BARRAS DINÁMICO (316x69 Adaptable) */}
+            {formData.url_codigo_barras_expediente && (
+              <div className="flex flex-col items-center w-full px-2">
                 <img
                   src={formData.url_codigo_barras_expediente}
                   alt={`Código de Barras: ${formData.codigo_expediente}`}
-                  style={{ width: '120px', height: '35px' }}
-                  className="mb-0.5 object-contain"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.style.display = 'none';
-                  }}
+                  // Ajustado a 150px de ancho en el documento para que quepa bien, 
+                  // la Edge Function se encarga de la nitidez
+                  style={{ width: '150px', height: '33px' }}
+                  className="mb-1 object-contain"
+                  crossOrigin="anonymous" 
                 />
-                <p className="text-xs text-gray-600 text-center">Código de Barras</p>
+                <p className="text-[9px] text-gray-500 font-mono tracking-widest text-center uppercase">
+                  Verificación Oficial
+                </p>
               </div>
-            ) : null}
+            )}
           </div>
 
           {/* Datos personales básicos */}
-          <div className="md:col-span-2 space-y-1.5"> {/* Reducido space-y-2 a space-y-1.5 */}
-            <h4 className="font-semibold text-base text-gray-800 mb-2">Datos Personales</h4> {/* Reducido mb-3 a mb-2 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5 text-xs"> {/* Reducido gap-2 a gap-1.5 */}
-              <div><strong>Nombre completo:</strong> {formData.nombre} {formData.apellidos}</div>
-              <div><strong>Género:</strong> {formData.genero}</div>
-              <div><strong>Fecha de nacimiento:</strong> {formData.fecha_nacimiento}</div>
-              <div><strong>Edad:</strong> {formData.edad} años</div>
-              <div><strong>Nacionalidad:</strong> {formData.nacionalidad}</div>
-              <div><strong>Teléfono:</strong> {formData.telefono}</div>
-              {formData.numero_dip && <div><strong>Número DIP:</strong> {formData.numero_dip}</div>}
-              {formData.numero_pasaporte && <div><strong>Número Pasaporte:</strong> {formData.numero_pasaporte}</div>}
+          <div className="md:col-span-2 space-y-1.5 border-l border-gray-100 pl-4">
+            <h4 className="font-semibold text-sm text-gray-800 border-b pb-1 mb-2">Datos Personales</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1.5 text-[11px]">
+              <div><span className="text-gray-500">Nombre completo:</span> <p className="font-medium">{formData.nombre} {formData.apellidos}</p></div>
+              <div><span className="text-gray-500">Género:</span> <p className="font-medium">{formData.genero}</p></div>
+              <div><span className="text-gray-500">Fecha de nacimiento:</span> <p className="font-medium">{formData.fecha_nacimiento}</p></div>
+              <div><span className="text-gray-500">Edad:</span> <p className="font-medium">{formData.edad} años</p></div>
+              <div><span className="text-gray-500">Nacionalidad:</span> <p className="font-medium">{formData.nacionalidad}</p></div>
+              <div><span className="text-gray-500">Teléfono:</span> <p className="font-medium">{formData.telefono}</p></div>
+              {formData.numero_dip && <div><span className="text-gray-500">Número DIP:</span> <p className="font-medium">{formData.numero_dip}</p></div>}
+              {formData.numero_pasaporte && <div><span className="text-gray-500">Número Pasaporte:</span> <p className="font-medium">{formData.numero_pasaporte}</p></div>}
             </div>
           </div>
         </div>
 
         {/* Información de domicilio */}
-        <Card className="mb-2"> {/* Reducido mb-4 a mb-2 */}
-          <CardHeader className="py-2 px-3"> {/* Reducido py-3 px-4 a py-2 px-3 */}
-            <CardTitle className="text-sm">Información de Domicilio</CardTitle> {/* Reducido text-base a text-sm */}
+        <Card className="mb-2 shadow-none border-gray-200">
+          <CardHeader className="py-2 px-3 bg-gray-50/50">
+            <CardTitle className="text-xs font-bold uppercase text-gray-700">Información de Domicilio</CardTitle>
           </CardHeader>
-          <CardContent className="pt-1.5 px-3 pb-3"> {/* Reducido pt-2 px-4 pb-4 a pt-1.5 px-3 pb-3 */}
-            <div className="grid grid-cols-2 gap-1.5 text-xs"> {/* Reducido gap-2 a gap-1.5 */}
-              <div><strong>Domicilio:</strong> {formData.domicilio}</div>
-              <div><strong>Provincia:</strong> {formData.provincia}</div>
-              <div><strong>Distrito:</strong> {formData.distrito}</div>
+          <CardContent className="pt-2 px-3 pb-3">
+            <div className="grid grid-cols-3 gap-2 text-[11px]">
+              <div><span className="text-gray-500">Domicilio:</span> <p>{formData.domicilio}</p></div>
+              <div><span className="text-gray-500">Provincia:</span> <p>{formData.provincia}</p></div>
+              <div><span className="text-gray-500">Distrito:</span> <p>{formData.distrito}</p></div>
             </div>
           </CardContent>
         </Card>
 
         {/* Información profesional */}
-        <Card className="mb-2"> {/* Reducido mb-4 a mb-2 */}
-          <CardHeader className="py-2 px-3">
-            <CardTitle className="text-sm">Información Profesional</CardTitle>
+        <Card className="mb-2 shadow-none border-gray-200">
+          <CardHeader className="py-2 px-3 bg-gray-50/50">
+            <CardTitle className="text-xs font-bold uppercase text-gray-700">Información Profesional</CardTitle>
           </CardHeader>
-          <CardContent className="pt-1.5 px-3 pb-3">
-            <div className="grid grid-cols-2 gap-1.5 text-xs">
-              <div><strong>Área profesional:</strong> {formData.area_profesional}</div>
-              {formData.especialidad && <div><strong>Especialidad:</strong> {formData.especialidad}</div>}
-              <div><strong>Categoría titulación:</strong> {formData.categoria_titulacion}</div>
-              <div><strong>Titulación:</strong> {formData.titulacion_especifica_1}</div>
-              <div><strong>Institución:</strong> {formData.institucion_1}</div>
-              <div><strong>Período formación:</strong> {formData.periodo_formacion}</div>
-              <div><strong>País formación:</strong> {formData.pais_formacion_1}</div>
+          <CardContent className="pt-2 px-3 pb-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-[11px]">
+              <div><span className="text-gray-500">Área profesional:</span> <p className="font-medium">{formData.area_profesional}</p></div>
+              {formData.especialidad && <div><span className="text-gray-500">Especialidad:</span> <p className="font-medium">{formData.especialidad}</p></div>}
+              <div><span className="text-gray-500">Categoría titulación:</span> <p className="font-medium text-guinea-teal">{formData.categoria_titulacion}</p></div>
+              <div><span className="text-gray-500">Titulación:</span> <p className="font-medium">{formData.titulacion_especifica_1}</p></div>
             </div>
           </CardContent>
         </Card>
 
         {/* Información laboral */}
-        <Card className="mb-2">
-          <CardHeader className="py-2 px-3">
-            <CardTitle className="text-sm">Información Laboral</CardTitle>
+        <Card className="mb-2 shadow-none border-gray-200">
+          <CardHeader className="py-2 px-3 bg-gray-50/50">
+            <CardTitle className="text-xs font-bold uppercase text-gray-700">Información Laboral</CardTitle>
           </CardHeader>
-          <CardContent className="pt-1.5 px-3 pb-3">
-            <div className="grid grid-cols-2 gap-1.5 text-xs">
-              <div><strong>Situación laboral:</strong> {formData.situacion_laboral}</div>
-              <div><strong>Centro de trabajo:</strong> {formData.nombre_centro}</div>
-              <div><strong>Categoría centro:</strong> {formData.categoria_centro}</div>
-              <div><strong>Tipo sector:</strong> {formData.tipo_sector}</div>
-              {formData.distrito_sanitario && <div><strong>Distrito sanitario:</strong> {formData.distrito_sanitario}</div>}
+          <CardContent className="pt-2 px-3 pb-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-[11px]">
+              <div><span className="text-gray-500">Situación laboral:</span> <p>{formData.situacion_laboral}</p></div>
+              <div><span className="text-gray-500">Centro de trabajo:</span> <p>{formData.nombre_centro}</p></div>
+              <div><span className="text-gray-500">Tipo sector:</span> <p>{formData.tipo_sector}</p></div>
               {formData.funcion_publica && (
-                <>
-                  <div><strong>Función pública:</strong> Sí</div>
-                  {formData.estatus_funcionario && (
-                    <div><strong>Estatus:</strong> {formData.estatus_funcionario === 'nombrado' ? 'Nombrado' : 'No nombrado'}</div>
-                  )}
-                  {formData.fecha_nombramiento && (
-                    <div><strong>Fecha nombramiento:</strong> {new Date(formData.fecha_nombramiento).toLocaleDateString('es-ES')}</div>
-                  )}
-                  {formData.estatus_funcionario === 'no_nombrado' && formData.fecha_inicio_trabajo && (
-                    <div><strong>Fecha inicio servicio:</strong> {new Date(formData.fecha_inicio_trabajo).toLocaleDateString('es-ES')}</div>
-                  )}
-                  {formData.numero_funcionario && (
-                    <div><strong>Número funcionario:</strong> {formData.numero_funcionario}</div>
-                  )}
-                </>
-              )}
-              {formData.pertenece_brigada_medica && (
-                <div><strong>Brigada médica:</strong> {formData.tipo_cooperacion}</div>
+                <div className="col-span-2 border-t pt-2 mt-1 grid grid-cols-3 gap-2">
+                  <div><span className="text-gray-500">Función pública:</span> <p>Sí</p></div>
+                  {formData.numero_funcionario && <div><span className="text-gray-500">Nº Funcionario:</span> <p>{formData.numero_funcionario}</p></div>}
+                  {formData.estatus_funcionario && <div><span className="text-gray-500">Estatus:</span> <p className="capitalize">{formData.estatus_funcionario.replace('_', ' ')}</p></div>}
+                </div>
               )}
             </div>
           </CardContent>
         </Card>
 
-        {/* Experiencia laboral */}
-        {formData.experiencia_laboral && formData.experiencia_laboral.length > 0 && (
-          <Card className="mb-2">
-            <CardHeader className="py-2 px-3">
-              <CardTitle className="text-sm">Experiencia Laboral</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-1.5 px-3 pb-3">
-              <div className="space-y-2">
-                {formData.experiencia_laboral.map((exp: any, idx: number) => (
-                  <div key={idx} className="border-l-2 border-guinea-teal pl-2 py-1">
-                    <div className="text-xs">
-                      {exp.funcion && <div><strong>Función:</strong> {exp.funcion}</div>}
-                      {exp.institucion && <div><strong>Institución:</strong> {exp.institucion}</div>}
-                      {exp.periodo && <div><strong>Período:</strong> {exp.periodo}</div>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Fecha y firma */}
-        <div className="mt-6 pt-4 border-t border-gray-300">
+        <div className="mt-auto pt-8 border-t border-gray-200">
           <div className="flex justify-between items-end">
-            <div>
-              <p className="text-xs"><strong>Fecha de solicitud:</strong> {new Date().toLocaleDateString('es-ES')}</p>
-              {formData.codigo_expediente && (
-                <p className="text-xs"><strong>Código de expediente:</strong> {formData.codigo_expediente}</p>
-              )}
+            <div className="space-y-1">
+              <p className="text-[11px]"><strong>Fecha de solicitud:</strong> {new Date().toLocaleDateString('es-ES')}</p>
+              <p className="text-[10px] text-gray-400 font-mono">ID VALIDACIÓN: {formData.codigo_expediente?.split('-')[0] || 'N/A'}</p>
             </div>
             <div className="text-center">
-              <div className="border-t border-gray-400 w-36 mb-0.5"></div>
-              <p className="text-xs">Firma del solicitante</p>
+              <div className="border-t border-gray-400 w-48 mb-1"></div>
+              <p className="text-[11px] font-medium text-gray-700">Firma del solicitante</p>
+              <p className="text-[9px] text-gray-400">DNI / DIP: {formData.numero_dip || '__________'}</p>
             </div>
           </div>
         </div>
