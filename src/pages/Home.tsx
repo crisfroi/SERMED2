@@ -21,7 +21,8 @@ import { useState } from "react";
 import { ENABLE_INTERACTIVE_TOURS, isTourCompleted, setTourCompleted } from "@/config/featureFlags";
 import CoachMarks, { CoachMarkStep } from "@/components/onboarding/CoachMarks";
 // 💡 NUEVO: Importamos el componente de fondo
-import BackgroundSlideshow from "@/components/BackgroundSlideshow"; 
+import BackgroundSlideshow from "@/components/BackgroundSlideshow";
+import { RequestStatusVerification } from "@/components/RequestStatusVerification"; 
 
 const Home = () => {
   const [openTour, setOpenTour] = useState(false);
