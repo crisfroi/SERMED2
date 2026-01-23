@@ -19,6 +19,7 @@ interface ConfirmationStepProps {
   isSubmitting: boolean;
   solicitudEnviada?: boolean;
   errorEnvio?: string;
+  onRetrySend?: () => void;
 }
 
 const ConfirmationStep = ({
@@ -26,6 +27,7 @@ const ConfirmationStep = ({
   isSubmitting,
   solicitudEnviada = false,
   errorEnvio,
+  onRetrySend,
 }: ConfirmationStepProps) => {
   // Estados para controlar el modal de previsualización
   const [showPdfPreviewModal, setShowPdfPreviewModal] = useState(false);
@@ -110,6 +112,14 @@ const ConfirmationStep = ({
                 documentos correspondientes.
               </p>
             </div>
+
+            {onRetrySend && (
+              <div className="mt-4 flex justify-center">
+                <Button onClick={onRetrySend}>
+                  Reintentar envío
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

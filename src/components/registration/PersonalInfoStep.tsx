@@ -12,8 +12,14 @@ interface PersonalInfoStepProps {
 }
 
 export const PersonalInfoStep = ({ form, nacionalidades, watchedValues }: PersonalInfoStepProps) => {
-  const nacionalidad = watchedValues.nacionalidad?.toUpperCase?.() || '';
-  const isEcuatoguineana = nacionalidad === "ECUATOGUINEANA";
+  const nacionalidad = String(watchedValues.nacionalidad || '').trim().toUpperCase();
+  // Acepta variaciones comunes para evitar que el toggle DIP/Pasaporte se “atasque”
+  const isEcuatoguineana =
+    nacionalidad === 'ECUATOGUINEANA' ||
+    nacionalidad === 'ECUATORGUINEANA' ||
+    nacionalidad.replace(/\s+/g, ' ') === 'GUINEA ECUATORIAL' ||
+    nacionalidad.includes('ECUATO') ||
+    nacionalidad.includes('ECUATOR');
 
   // CRÍTICO: Limpiar campos al cambiar nacionalidad para evitar inconsistencias
   useEffect(() => {
@@ -101,8 +107,8 @@ export const PersonalInfoStep = ({ form, nacionalidades, watchedValues }: Person
           <FormItem className="md:col-span-2">
             <FormLabel>Nacionalidad *</FormLabel>
             <Select 
-              onValueChange={(v) => field.onChange(String(v).toUpperCase())} 
-              value={field.value ? String(field.value).toUpperCase() : ''}
+              onValueChange={(v) => field.onChange(String(v || '').trim().toUpperCase())} 
+              value={field.value ? String(field.value).trim().toUpperCase() : ''}
             >
               <FormControl>
                 <SelectTrigger>
