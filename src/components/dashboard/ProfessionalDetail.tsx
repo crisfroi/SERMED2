@@ -30,6 +30,7 @@ import ProfessionalDocumentsCard from "./professional-detail/ProfessionalDocumen
 import NotificationAlerts from "./professional-detail/NotificationAlerts";
 import { ParametrosPersonalizadosCard } from "./professional-detail/ParametrosPersonalizadosCard";
 import { DisciplinaryHistoryCard } from "./professional-detail/DisciplinaryHistoryCard";
+import { LaborExperienceCard } from "./professional-detail/LaborExperienceCard";
 
 interface ProfessionalDetailProps {
   professional: Profesional;
@@ -235,6 +236,9 @@ const ProfessionalDetail = ({
             </div>
             <div className="mb-4" style={{ breakInside: 'avoid' }}>
               <WorkplaceCard professional={professional} />
+            </div>
+            <div className="mb-4" style={{ breakInside: 'avoid' }}>
+              <LaborExperienceCard professional={professional} />
             </div>
             <div className="mb-4" style={{ breakInside: 'avoid' }}>
               <ProfessionalCardInfo
