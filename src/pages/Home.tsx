@@ -26,6 +26,7 @@ import { RequestStatusVerification } from "@/components/RequestStatusVerificatio
 
 const Home = () => {
   const [openTour, setOpenTour] = useState(false);
+  const [showStatusVerification, setShowStatusVerification] = useState(false);
 
   const steps: CoachMarkStep[] = [
     {
