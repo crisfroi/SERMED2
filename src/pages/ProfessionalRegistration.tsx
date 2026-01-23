@@ -379,6 +379,7 @@ const ProfessionalRegistration = () => {
   const [showProcedureModal, setShowProcedureModal] = useState(false);
   const [solicitudEnviada, setSolicitudEnviada] = useState(false);
   const [errorEnvio, setErrorEnvio] = useState<string>("");
+  const [showExitConfirmation, setShowExitConfirmation] = useState(false);
   // --------------------------
 
   const { toast } = useToast();
