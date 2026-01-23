@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { UseFormReturn } from 'react-hook-form';
 import { CentroTrabajoAutocomplete } from './CentroTrabajoAutocomplete';
+import { ExperienciaLaboral } from './ExperienciaLaboral';
 
 interface WorkSituationStepProps {
   form: UseFormReturn<any>;
@@ -39,6 +40,35 @@ export const WorkSituationStep = ({ form, watchedValues, distritosSanitarios }: 
           </FormItem>
         )}
       />
+
+      {/* Tipo de profesional - solo si está activo */}
+      {watchedValues.situacion_laboral === 'Activo' && (
+        <FormField
+          control={form.control}
+          name="tipo_profesional"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tipo de Profesional *</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value || 'sanitario'}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccione el tipo de profesional" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="sanitario">Personal Sanitario (Médicos, Enfermeros, etc.)</SelectItem>
+                  <SelectItem value="administrativo">Personal Administrativo</SelectItem>
+                  <SelectItem value="camillero">Camillero</SelectItem>
+                  <SelectItem value="subalterno">Subalterno</SelectItem>
+                  <SelectItem value="odepac">Personal ODEPAC (Defensor del Paciente)</SelectItem>
+                  <SelectItem value="otro">Otro Personal de Hospital</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
 
       {watchedValues.situacion_laboral === 'En paro' && (
         <>
@@ -327,6 +357,11 @@ export const WorkSituationStep = ({ form, watchedValues, distritosSanitarios }: 
           )}
         />
       )}
+
+      {/* Sección de Experiencia Laboral - disponible para todos */}
+      <div className="border-t pt-6 mt-6">
+        <ExperienciaLaboral form={form} />
+      </div>
     </div>
   );
 };
