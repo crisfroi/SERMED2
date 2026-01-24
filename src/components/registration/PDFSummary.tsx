@@ -7,6 +7,11 @@ interface PDFSummaryProps {
 }
 
 const PDFSummary = ({ formData }: PDFSummaryProps) => {
+  const barcodeSrc =
+    formData?.codigo_barras_base64 ||
+    formData?.url_codigo_barras_expediente ||
+    null;
+
   return (
     <div className="space-y-2">
       <div className="bg-white p-4 space-y-3" style={{ minHeight: '297mm' }}>
@@ -45,10 +50,10 @@ const PDFSummary = ({ formData }: PDFSummaryProps) => {
             )}
             
             {/* CÓDIGO DE BARRAS DINÁMICO (316x69 Adaptable) */}
-            {formData.url_codigo_barras_expediente && (
+            {barcodeSrc && (
               <div className="flex flex-col items-center w-full px-2">
                 <img
-                  src={formData.url_codigo_barras_expediente}
+                  src={barcodeSrc}
                   alt={`Código de Barras: ${formData.codigo_expediente}`}
                   // Ajustado a 150px de ancho en el documento para que quepa bien, 
                   // la Edge Function se encarga de la nitidez
