@@ -1125,33 +1125,35 @@ const ProfessionalRegistration = () => {
               </CardContent>
             </Card>
 
-            <div className="flex justify-between">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={prevStep}
-              >
-                Anterior
-              </Button>
-
-              {currentStep < steps.length ? (
-                <Button type="button" onClick={nextStep}>
-                  Siguiente
-                </Button>
-              ) : (
+            {currentStep !== 6 && (
+              <div className="flex justify-between">
                 <Button
-                  type="submit"
-                  disabled={isSubmitting || solicitudEnviada}
-                  className="bg-guinea-teal hover:bg-guinea-teal/90"
+                  type="button"
+                  variant="outline"
+                  onClick={prevStep}
                 >
-                  {isSubmitting
-                    ? "Enviando..."
-                    : solicitudEnviada
-                      ? "Solicitud Enviada"
-                      : "Enviar Solicitud"}
+                  Anterior
                 </Button>
-              )}
-            </div>
+
+                {currentStep < steps.length ? (
+                  <Button type="button" onClick={nextStep}>
+                    Siguiente
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting || solicitudEnviada}
+                    className="bg-guinea-teal hover:bg-guinea-teal/90"
+                  >
+                    {isSubmitting
+                      ? "Enviando..."
+                      : solicitudEnviada
+                        ? "Solicitud Enviada"
+                        : "Enviar Solicitud"}
+                  </Button>
+                )}
+              </div>
+            )}
           </form>
         </Form>
 
