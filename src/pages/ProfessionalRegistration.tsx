@@ -940,7 +940,7 @@ const ProfessionalRegistration = () => {
               title: 'Solicitud registrada',
               description: `Detectamos que la solicitud se registró. Código: ${maybe.codigo_expediente}`,
             });
-            setCurrentStep(6);
+            setCurrentStep(7);
             try { localStorage.removeItem(PENDING_SEND_KEY); } catch {}
             return;
           }
