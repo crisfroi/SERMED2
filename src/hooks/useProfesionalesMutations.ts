@@ -48,23 +48,7 @@ export const useProfesionalesMutations = () => {
     onSuccess: async (data, variables) => {
       console.log("Professional updated successfully:", data.id);
 
-      // Verificar si el estado cambió a "Pendiente de Firma" para generar carnet
-      if (variables.updates.estado_solicitud === "Pendiente de Firma") {
-        console.log(`Estado cambió a "Pendiente de Firma" para profesional ${data.id}. Generando carnet...`);
-
-        try {
-          await generateCarnetAfterStatusChange(data.id);
-          console.log(`Carnet generado automáticamente para profesional ${data.id}`);
-        } catch (carnetError) {
-          console.error(`Error generando carnet para profesional ${data.id}:`, carnetError);
-          toast({
-            title: "Carnet no generado",
-            description: `El profesional fue actualizado pero hubo un error al generar el carnet: ${getErrorMessage(carnetError)}`,
-            variant: "destructive",
-          });
-        }
-      }
-
+      // Invalidar queries PRIMERO para que la UI se actualice inmediatamente
       queryClient.invalidateQueries({ queryKey: ["profesionales"] });
       queryClient.invalidateQueries({ queryKey: ["estadisticas"] });
       queryClient.invalidateQueries({ queryKey: ["centros"] });
@@ -74,6 +58,30 @@ export const useProfesionalesMutations = () => {
         title: "Profesional actualizado",
         description: "Los datos del profesional han sido actualizados exitosamente.",
       });
+
+      // Generar carnet EN SEGUNDO PLANO (no bloquea la UI)
+      if (variables.updates.estado_solicitud === "Pendiente de Firma") {
+        console.log(`Estado cambió a "Pendiente de Firma" para profesional ${data.id}. Programando generación de carnet...`);
+
+        // Usar setTimeout para no bloquear la UI
+        setTimeout(async () => {
+          try {
+            await generateCarnetAfterStatusChange(data.id);
+            console.log(`Carnet generado automáticamente para profesional ${data.id}`);
+            toast({
+              title: "Carnet generado",
+              description: "El carnet profesional ha sido generado correctamente.",
+            });
+          } catch (carnetError) {
+            console.error(`Error generando carnet para profesional ${data.id}:`, carnetError);
+            toast({
+              title: "Carnet no generado",
+              description: `Hubo un error al generar el carnet. Puede generarlo manualmente.`,
+              variant: "destructive",
+            });
+          }
+        }, 100);
+      }
     },
     onError: (error: any) => {
       console.error("Error updating professional:", error);
