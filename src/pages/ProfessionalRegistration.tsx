@@ -904,7 +904,7 @@ const ProfessionalRegistration = () => {
       });
       setShowProcedureModal(true);
 
-      setCurrentStep(6); // Ir al step de confirmación
+      setCurrentStep(7); // Ir al step de confirmación
     } catch (error: any) {
       console.error("Error completo al enviar formulario:", error);
 
