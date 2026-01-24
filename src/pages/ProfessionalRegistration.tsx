@@ -1061,6 +1061,16 @@ const ProfessionalRegistration = () => {
         );
       case 6:
         return (
+          <ReviewStep
+            formData={watchedValues}
+            onEdit={(step: number) => setCurrentStep(step)}
+            onSubmit={() => form.handleSubmit(onSubmit)()}
+            isSubmitting={isSubmitting}
+            errorMessage={errorEnvio}
+          />
+        );
+      case 7:
+        return (
           <ConfirmationStep
             formData={
               formDataForPDF || {
