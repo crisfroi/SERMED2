@@ -134,6 +134,29 @@ const PDFSummary = ({ formData }: PDFSummaryProps) => {
           </CardContent>
         </Card>
 
+        {/* Experiencia Laboral */}
+        {formData.experiencia_laboral && formData.experiencia_laboral.length > 0 && (
+          <Card className="mb-2 shadow-none border-gray-200">
+            <CardHeader className="py-2 px-3 bg-gray-50/50">
+              <CardTitle className="text-xs font-bold uppercase text-gray-700">Experiencia Laboral</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-2 px-3 pb-3">
+              <div className="space-y-2">
+                {formData.experiencia_laboral.map((exp: any, idx: number) => (
+                  <div key={idx} className="border-b border-gray-100 pb-2 last:border-b-0">
+                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Experiencia #{idx + 1}</p>
+                    <div className="grid grid-cols-3 gap-2 text-[10px]">
+                      {exp.funcion && <div><span className="text-gray-500">Función:</span> <p>{exp.funcion}</p></div>}
+                      {exp.institucion && <div><span className="text-gray-500">Institución:</span> <p>{exp.institucion}</p></div>}
+                      {exp.periodo && <div><span className="text-gray-500">Período:</span> <p>{exp.periodo}</p></div>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Fecha y firma */}
         <div className="mt-auto pt-8 border-t border-gray-200">
           <div className="flex justify-between items-end">
