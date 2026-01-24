@@ -333,7 +333,8 @@ const steps = [
   { id: 3, title: "Formación", icon: GraduationCap },
   { id: 4, title: "Situación Laboral", icon: Briefcase },
   { id: 5, title: "Documentos", icon: FileText },
-  { id: 6, title: "Confirmación", icon: CheckCircle },
+  { id: 6, title: "Revisión", icon: CheckCircle },
+  { id: 7, title: "Confirmación", icon: CheckCircle },
 ];
 
 // Campos a validar por cada paso
@@ -370,6 +371,7 @@ const stepFields: { [key: number]: (keyof FormData)[] } = {
   ],
   5: ["foto_carnet", "documentos_adicionales", "acepta_politicas"],
   6: [],
+  7: [],
 };
 
 const ProfessionalRegistration = () => {
