@@ -33,6 +33,7 @@ import { AddressStep } from "@/components/registration/AddressStep";
 import { EducationStep } from "@/components/registration/EducationStep";
 import { WorkSituationStep } from "@/components/registration/WorkSituationStep";
 import { DocumentsStep } from "@/components/registration/DocumentsStep";
+import { ReviewStep } from "@/components/registration/ReviewStep";
 import ConfirmationStep from "@/components/registration/ConfirmationStep";
 import { RegistrationProgress } from "@/components/registration/RegistrationProgress";
 import PDFSummary from "@/components/registration/PDFSummary";
