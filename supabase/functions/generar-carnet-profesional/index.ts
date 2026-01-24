@@ -385,17 +385,15 @@ async function procesarSVGConReemplazo(svgContent, profesional, supabaseClient) 
   finalSvg = finalSvg.replace(/href="{{FOTO_URL}}"/gi, `href="${photoBase64}"`);
   console.log(`Placeholders de FOTO_URL reemplazados con Base64.`);
 
-  // --- 4. Generar código de barras con color específico ---
-  let barcodeImageUrlForFetch;
-  if (profesional.url_codigo_barras && profesional.url_codigo_barras.startsWith('http')) {
-    // Si ya tiene URL del código de barras, pero necesitamos actualizarla con el color correcto
-    barcodeImageUrlForFetch = `${Deno.env.get('SUPABASE_URL')}/functions/v1/generar-codigo-barras?codigo=${profesional.id_profesional_unico.replace('-', '')}&color=${colorCategoria}&ancho=1011&alto=639`;
-  } else {
-    // Generar nueva URL con el color de la categoría
+  // --- 4. Usar código de barras almacenado (no generar nuevo) ---
+  let barcodeImageUrlForFetch = profesional.url_codigo_barras;
+
+  if (!barcodeImageUrlForFetch || !barcodeImageUrlForFetch.startsWith('http')) {
+    console.warn(`URL de código de barras inválida: ${barcodeImageUrlForFetch}. Usando URL por defecto.`);
     barcodeImageUrlForFetch = `${Deno.env.get('SUPABASE_URL')}/functions/v1/generar-codigo-barras?codigo=${profesional.id_profesional_unico.replace('-', '')}&color=${colorCategoria}&ancho=1011&alto=639`;
   }
 
-  console.log(`Generando código de barras con color ${colorCategoria}: ${barcodeImageUrlForFetch}`);
+  console.log(`Usando código de barras almacenado: ${barcodeImageUrlForFetch}`);
 
   const barcodeBase64 = await getImageBase64(barcodeImageUrlForFetch, 'image/png');
   finalSvg = finalSvg.replace(/href="{{CODIGO_BARRAS_PROFESIONAL}}"/gi, `href="${barcodeBase64}"`);
