@@ -1117,7 +1117,11 @@ const ProfessionalRegistration = () => {
                   <span>{steps[currentStep - 1].title}</span>
                 </CardTitle>
                 <CardDescription>
-                  Complete la información solicitada para continuar
+                  {currentStep === 6
+                    ? "Revise su información antes de enviar la solicitud"
+                    : currentStep === 7
+                      ? "Su solicitud ha sido procesada"
+                      : "Complete la información solicitada para continuar"}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
