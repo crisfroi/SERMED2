@@ -33,6 +33,7 @@ import { AddressStep } from "@/components/registration/AddressStep";
 import { EducationStep } from "@/components/registration/EducationStep";
 import { WorkSituationStep } from "@/components/registration/WorkSituationStep";
 import { DocumentsStep } from "@/components/registration/DocumentsStep";
+import { ReviewStep } from "@/components/registration/ReviewStep";
 import ConfirmationStep from "@/components/registration/ConfirmationStep";
 import { RegistrationProgress } from "@/components/registration/RegistrationProgress";
 import PDFSummary from "@/components/registration/PDFSummary";
@@ -332,7 +333,8 @@ const steps = [
   { id: 3, title: "Formación", icon: GraduationCap },
   { id: 4, title: "Situación Laboral", icon: Briefcase },
   { id: 5, title: "Documentos", icon: FileText },
-  { id: 6, title: "Confirmación", icon: CheckCircle },
+  { id: 6, title: "Revisión", icon: CheckCircle },
+  { id: 7, title: "Confirmación", icon: CheckCircle },
 ];
 
 // Campos a validar por cada paso
@@ -369,6 +371,7 @@ const stepFields: { [key: number]: (keyof FormData)[] } = {
   ],
   5: ["foto_carnet", "documentos_adicionales", "acepta_politicas"],
   6: [],
+  7: [],
 };
 
 const ProfessionalRegistration = () => {
@@ -901,7 +904,7 @@ const ProfessionalRegistration = () => {
       });
       setShowProcedureModal(true);
 
-      setCurrentStep(6); // Ir al step de confirmación
+      setCurrentStep(7); // Ir al step de confirmación
     } catch (error: any) {
       console.error("Error completo al enviar formulario:", error);
 
@@ -928,7 +931,7 @@ const ProfessionalRegistration = () => {
               photoFile,
               foto_carnet: null,
               foto_carnet_base64: fotoCarnetBase64,
-              url_codigo_barras_expediente: maybe.url_codigo_barras_expediente || '',
+              url_codigo_barras: maybe.url_codigo_barras || '',
               codigo_expediente: maybe.codigo_expediente,
               edad: new Date().getFullYear() - new Date(data.fecha_nacimiento).getFullYear(),
               submittedData: maybe,
@@ -937,7 +940,7 @@ const ProfessionalRegistration = () => {
               title: 'Solicitud registrada',
               description: `Detectamos que la solicitud se registró. Código: ${maybe.codigo_expediente}`,
             });
-            setCurrentStep(6);
+            setCurrentStep(7);
             try { localStorage.removeItem(PENDING_SEND_KEY); } catch {}
             return;
           }
@@ -954,7 +957,7 @@ const ProfessionalRegistration = () => {
         variant: "destructive",
       });
 
-      setCurrentStep(6); // Ir al step de confirmación para mostrar el error
+      setCurrentStep(7); // Ir al step de confirmación para mostrar el error
     } finally {
       setIsSubmitting(false);
     }
@@ -1058,6 +1061,16 @@ const ProfessionalRegistration = () => {
         );
       case 6:
         return (
+          <ReviewStep
+            formData={watchedValues}
+            onEdit={(step: number) => setCurrentStep(step)}
+            onSubmit={() => form.handleSubmit(onSubmit)()}
+            isSubmitting={isSubmitting}
+            errorMessage={errorEnvio}
+          />
+        );
+      case 7:
+        return (
           <ConfirmationStep
             formData={
               formDataForPDF || {
@@ -1104,7 +1117,11 @@ const ProfessionalRegistration = () => {
                   <span>{steps[currentStep - 1].title}</span>
                 </CardTitle>
                 <CardDescription>
-                  Complete la información solicitada para continuar
+                  {currentStep === 6
+                    ? "Revise su información antes de enviar la solicitud"
+                    : currentStep === 7
+                      ? "Su solicitud ha sido procesada"
+                      : "Complete la información solicitada para continuar"}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -1112,33 +1129,35 @@ const ProfessionalRegistration = () => {
               </CardContent>
             </Card>
 
-            <div className="flex justify-between">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={prevStep}
-              >
-                Anterior
-              </Button>
-
-              {currentStep < steps.length ? (
-                <Button type="button" onClick={nextStep}>
-                  Siguiente
-                </Button>
-              ) : (
+            {currentStep !== 6 && (
+              <div className="flex justify-between">
                 <Button
-                  type="submit"
-                  disabled={isSubmitting || solicitudEnviada}
-                  className="bg-guinea-teal hover:bg-guinea-teal/90"
+                  type="button"
+                  variant="outline"
+                  onClick={prevStep}
                 >
-                  {isSubmitting
-                    ? "Enviando..."
-                    : solicitudEnviada
-                      ? "Solicitud Enviada"
-                      : "Enviar Solicitud"}
+                  Anterior
                 </Button>
-              )}
-            </div>
+
+                {currentStep < steps.length ? (
+                  <Button type="button" onClick={nextStep}>
+                    Siguiente
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting || solicitudEnviada}
+                    className="bg-guinea-teal hover:bg-guinea-teal/90"
+                  >
+                    {isSubmitting
+                      ? "Enviando..."
+                      : solicitudEnviada
+                        ? "Solicitud Enviada"
+                        : "Enviar Solicitud"}
+                  </Button>
+                )}
+              </div>
+            )}
           </form>
         </Form>
 
