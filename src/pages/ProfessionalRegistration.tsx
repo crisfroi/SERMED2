@@ -931,7 +931,7 @@ const ProfessionalRegistration = () => {
               photoFile,
               foto_carnet: null,
               foto_carnet_base64: fotoCarnetBase64,
-              url_codigo_barras_expediente: maybe.url_codigo_barras_expediente || '',
+              url_codigo_barras: maybe.url_codigo_barras || '',
               codigo_expediente: maybe.codigo_expediente,
               edad: new Date().getFullYear() - new Date(data.fecha_nacimiento).getFullYear(),
               submittedData: maybe,
