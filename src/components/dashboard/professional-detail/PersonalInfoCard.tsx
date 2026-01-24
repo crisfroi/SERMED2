@@ -25,8 +25,6 @@ const PersonalInfoCard = ({ professional }: PersonalInfoCardProps) => {
       return { tipo: 'DIP', numero: professional.numero_dip };
     } else if (professional.numero_pasaporte) {
       return { tipo: 'Pasaporte', numero: professional.numero_pasaporte };
-    } else if (professional.numero_documento) {
-      return { tipo: professional.tipo_documento || 'Documento', numero: professional.numero_documento };
     }
     return { tipo: 'No especificado', numero: 'No especificado' };
   };
