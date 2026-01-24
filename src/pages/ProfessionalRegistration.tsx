@@ -957,7 +957,7 @@ const ProfessionalRegistration = () => {
         variant: "destructive",
       });
 
-      setCurrentStep(6); // Ir al step de confirmación para mostrar el error
+      setCurrentStep(7); // Ir al step de confirmación para mostrar el error
     } finally {
       setIsSubmitting(false);
     }
