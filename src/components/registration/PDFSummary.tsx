@@ -9,7 +9,7 @@ interface PDFSummaryProps {
 const PDFSummary = ({ formData }: PDFSummaryProps) => {
   const barcodeSrc =
     formData?.codigo_barras_base64 ||
-    formData?.url_codigo_barras_expediente ||
+    formData?.url_codigo_barras ||
     null;
 
   return (
