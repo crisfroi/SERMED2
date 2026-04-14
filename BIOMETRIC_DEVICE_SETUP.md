@@ -1,6 +1,6 @@
 # Guía de Configuración: Dispositivos Biométricos Qiandao con Render
 
-Esta guía te ayudará a desplegar el SDK Qiandao en Render y conectarlo con tu dashboard.
+Esta guía te ayudará a desplegar el SDK Qiandao en Render y conectarlo con tu dashboard
 
 ## 📋 Requisitos Previos
 
