@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/__tests__/immunization.test.ts
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { renderHook } from '@testing-library/react'

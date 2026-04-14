@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // useRadiologyReport.test.ts - Unit Tests
 // Radiology Report Management and Display

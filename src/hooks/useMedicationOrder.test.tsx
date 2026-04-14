@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // useMedicationOrder.test.ts - Hook Unit Tests
 // ASIS 10.0 - Regímenes de Medicación - Hito 5

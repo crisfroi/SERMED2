@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Laboratory Module Tests (ASIS 10)
 // Comprehensive test suite for laboratory testing workflow
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';

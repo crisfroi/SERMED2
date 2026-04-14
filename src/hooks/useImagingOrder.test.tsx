@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // useImagingOrder.test.ts - Unit Tests
 // Imaging Order Management

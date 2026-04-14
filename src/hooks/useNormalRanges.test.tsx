@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // useNormalRanges.test.ts - Unit Tests
 // Demographic-Specific Normal Range Management

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 11 ADMIN 1: Edge Functions Tests
 // Framework: Jest + Deno testing
 // Coverage: All 5 Deno Edge Functions

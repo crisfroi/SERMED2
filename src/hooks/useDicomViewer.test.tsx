@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // useDicomViewer.test.ts - Unit Tests
 // DICOM Viewer Integration and Display

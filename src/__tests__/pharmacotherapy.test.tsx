@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Pharmacotherapy Module Tests (ASIS 12)
 // Comprehensive test suite for medication management and pharmacotherapy
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';

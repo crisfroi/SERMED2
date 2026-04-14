@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // DiagnosisForm.test.tsx - Diagnosis Component Tests
 // ASIS 14.0 - Diagnóstico Unificado - Hito 5

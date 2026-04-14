@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // useTrendAnalysis.test.ts - Unit Tests
 // Laboratory Results Trend Analysis

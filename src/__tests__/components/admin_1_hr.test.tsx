@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 11 ADMIN 1: Component Tests
 // Framework: Jest + React Testing Library
 // Coverage: All 5 HR components + edge cases

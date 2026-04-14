@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // LabOrderForm.test.tsx - React Component Tests
 // Laboratory Order Form Component

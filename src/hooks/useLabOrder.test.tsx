@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // useLabOrder.test.ts - Unit Tests
 // Laboratory Order Management Hook

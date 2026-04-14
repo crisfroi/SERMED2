@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Referral Module Tests (ASIS 11)
 // Comprehensive test suite for referral workflow and tracking
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';

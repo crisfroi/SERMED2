@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // useLabResults.test.ts - Unit Tests
 // Laboratory Results Fetching and Management

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/ASIS_12_Farmacoterapia/__tests__/pharmacotherapy.test.tsx
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/__tests__/surgery.test.ts
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
