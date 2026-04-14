@@ -434,7 +434,7 @@ export function useQuirofanoAvanzado(procedimiento_id?: string, hospital_id?: st
     confirmarProcedimiento: confirmarProcedimientoMutation.mutate,
     confirmarProcedimientoAsync: confirmarProcedimientoMutation.mutateAsync,
 
-    iniciarIntraoperator io: iniciarIntraoperatorioMutation.mutate,
+    iniciarIntraoperatorio: iniciarIntraoperatorioMutation.mutate,
     iniciarIntraoperatorioAsync: iniciarIntraoperatorioMutation.mutateAsync,
 
     // Refresh
