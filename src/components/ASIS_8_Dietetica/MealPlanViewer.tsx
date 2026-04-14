@@ -121,7 +121,7 @@ export const MealPlanViewer: React.FC<MealPlanViewerProps> = ({ patientId, mealP
             <span className="font-semibold">Plan: </span>
             {mealPlan.plan_type.replace(/_/g, ' ').toUpperCase()}{' '}
             <span className="text-gray-500 text-xs ml-2">
-              {mealPlan.adheren ce_goal}% goal adherence
+              {mealPlan.adherence_goal}% goal adherence
             </span>
           </p>
         </div>

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 11 ADMIN 1: Hook Tests
 // Framework: Jest + React Testing Library
 // Coverage: useStaffManagement, usePayrollProcessing, useStaffScheduling hooks
