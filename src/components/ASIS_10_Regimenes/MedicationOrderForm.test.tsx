@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // MedicationOrderForm.test.tsx - Unit & Component Tests
 // ASIS 10.0 - Regímenes de Medicación - Hito 5

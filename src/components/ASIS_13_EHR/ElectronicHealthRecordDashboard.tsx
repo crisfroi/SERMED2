@@ -91,7 +91,7 @@ export const ElectronicHealthRecordDashboard: React.FC<ElectronicHealthRecordDas
     isSyncing,
     crossHospitalData,
     initiateSync,
-    query CrossHospitalHistory
+    queryCrossHospitalHistory
   } = useThalamusSync(patientId, hospitalId);
 
   // ============================================================================

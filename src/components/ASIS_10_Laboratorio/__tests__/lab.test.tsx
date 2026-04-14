@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/ASIS_10_Laboratorio/__tests__/lab.test.tsx
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';

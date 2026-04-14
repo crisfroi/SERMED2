@@ -15,83 +15,41 @@ import DynamicForms from "./pages/DynamicForms";
 import PublicForm from "./pages/PublicForm";
 import Auth from "./pages/Auth";
 import ErrorBoundary from "@/components/ui/error-boundary";
-import "./utils/authErrorHandler"; // Initialize global auth error handling
-import "./utils/storageCleanup"; // Initialize storage cleanup
+import "./utils/authErrorHandler";
+import "./utils/storageCleanup";
 import { initResizeObserverErrorHandling } from "./utils/resizeObserverHandler";
 
-// HOSIX Pages
-import HosixLogin from "./pages/Hosix/HosixLogin";
-import HosixLayout from "./components/hosix/HosixLayout";
-import HosixDashboard from "./pages/Hosix/HosixDashboard";
-import Pacientes from "./pages/Hosix/Pacientes";
-import Urgencias from "./pages/Hosix/Urgencias";
-import Citas from "./pages/Hosix/Citas";
-import Hospitalizacion from "./pages/Hosix/Hospitalizacion";
-import Quirofanos from "./pages/Hosix/Quirofanos";
-import Farmacia from "./pages/Hosix/Farmacia";
-import FacturacionPage from "./pages/Hosix/Facturacion";
-import CajasPage from "./pages/Hosix/Cajas";
-import RecobrosPage from "./pages/Hosix/Recobros";
-import Suministros from "./pages/Hosix/Suministros";
-import Almacenes from "./pages/Hosix/Almacenes";
-import ComprasPage from "./pages/Hosix/Compras";
-import Enfermeria from "./pages/Hosix/Enfermeria";
-import Prescripcion from "./pages/Hosix/Prescripcion";
-import AdmisionCentral from "./pages/Hosix/AdmisionCentral";
-import Medicos from "./pages/Hosix/Medicos";
-import Configuracion from "./pages/Hosix/Configuracion";
-import BI from "./pages/Hosix/BI";
-import Obstetricia from "./pages/Hosix/Obstetricia";
-import CRED from "./pages/Hosix/CRED";
-import Laboratorio from "./pages/Hosix/Laboratorio";
-import Imagenologia from "./pages/Hosix/Imagenologia";
-import Interconsultas from "./pages/Hosix/Interconsultas";
+// New Hospital System
+import HospitalLogin from "./pages/Hospital/HospitalLogin";
+import HospitalLayout from "./components/hospital/HospitalLayout";
+import HospitalDashboard from "./pages/Hospital/HospitalDashboard";
 
-// Initialize ResizeObserver error handling
 initResizeObserverErrorHandling();
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // Configuración de reintentos
       retry: (failureCount, error: any) => {
-        // No reintentar si es un error de autenticación
-        if (error?.message?.includes('auth') || error?.message?.includes('unauthorized')) {
-          return false;
-        }
-        
-        // Reintentar hasta 3 veces para errores de red
-        if (failureCount < 3) {
-          return true;
-        }
-        
-        return false;
+        if (error?.message?.includes('auth') || error?.message?.includes('unauthorized')) return false;
+        return failureCount < 3;
       },
-      
-      // Tiempo de espera entre reintentos
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-      
-      // Tiempo de vida de los datos en caché
-      staleTime: 5 * 60 * 1000, // 5 minutos
-      
-      // Tiempo de vida de los datos en caché cuando no hay suscriptores
-      gcTime: 10 * 60 * 1000, // 10 minutos
-      
-      // Configuración de refetch
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: true,
-      
-      // Error handling is now managed at component level
     },
-    
-    mutations: {
-      // Configuración de reintentos para mutaciones
-      retry: 1,
-      
-      // Error handling is now managed at component level
-    }
+    mutations: { retry: 1 },
   }
 });
+
+// Simple placeholder for modules not yet wired
+const ModulePlaceholder = ({ name }: { name: string }) => (
+  <div className="p-6">
+    <h2 className="text-xl font-semibold mb-2">{name}</h2>
+    <p className="text-muted-foreground">Módulo en desarrollo. Los componentes ASIS están disponibles en src/components/.</p>
+  </div>
+);
 
 function App() {
   return (
@@ -112,34 +70,28 @@ function App() {
                 <Route path="/solicitud-establecimiento" element={<SolicitudEstablecimiento />} />
                 <Route path="/dynamic-forms" element={<DynamicForms />} />
                 <Route path="/form/:publicUrl" element={<PublicForm />} />
-                <Route path="/hosix/login" element={<HosixLogin />} />
-                <Route path="/hosix" element={<HosixLayout />}>
-                  <Route index element={<HosixDashboard />} />
-                  <Route path="admision" element={<AdmisionCentral />} />
-                  <Route path="pacientes" element={<Pacientes />} />
-                  <Route path="urgencias" element={<Urgencias />} />
-                  <Route path="citas" element={<Citas />} />
-                  <Route path="hospitalizacion" element={<Hospitalizacion />} />
-                  <Route path="quirofanos" element={<Quirofanos />} />
-                  <Route path="farmacia" element={<Farmacia />} />
-                  <Route path="medicos" element={<Medicos />} />
-                  <Route path="prescripcion" element={<Prescripcion />} />
-                  <Route path="enfermeria" element={<Enfermeria />} />
-                  <Route path="medicos" element={<Medicos />} />
-                  <Route path="facturacion" element={<FacturacionPage />} />
-                  <Route path="cajas" element={<CajasPage />} />
-                  <Route path="recobros" element={<RecobrosPage />} />
-                  <Route path="suministros" element={<Suministros />} />
-                  <Route path="almacenes" element={<Almacenes />} />
-                  <Route path="compras" element={<ComprasPage />} />
-                  <Route path="obstetricia" element={<Obstetricia />} />
-                  <Route path="cred" element={<CRED />} />
-                  <Route path="laboratorio" element={<Laboratorio />} />
-                  <Route path="imagenologia" element={<Imagenologia />} />
-                  <Route path="interconsultas" element={<Interconsultas />} />
-                  <Route path="configuracion" element={<Configuracion />} />
-                  <Route path="bi" element={<BI />} />
+
+                {/* Hospital System */}
+                <Route path="/hosix/login" element={<HospitalLogin />} />
+                <Route path="/hosix" element={<HospitalLayout />}>
+                  <Route index element={<HospitalDashboard />} />
+                  <Route path="obstetricia" element={<ModulePlaceholder name="Obstetricia (ASIS 4)" />} />
+                  <Route path="cred" element={<ModulePlaceholder name="CRED (ASIS 5)" />} />
+                  <Route path="cirugia" element={<ModulePlaceholder name="Cirugía (ASIS 7)" />} />
+                  <Route path="dietetica" element={<ModulePlaceholder name="Dietética (ASIS 8)" />} />
+                  <Route path="inmunizacion" element={<ModulePlaceholder name="Inmunización (ASIS 8)" />} />
+                  <Route path="laboratorio" element={<ModulePlaceholder name="Laboratorio (ASIS 8/10)" />} />
+                  <Route path="farmacia" element={<ModulePlaceholder name="Farmacia (ASIS 9)" />} />
+                  <Route path="medicamentos" element={<ModulePlaceholder name="Medicamentos (ASIS 10)" />} />
+                  <Route path="referencia" element={<ModulePlaceholder name="Referencia (ASIS 11)" />} />
+                  <Route path="farmacoterapia" element={<ModulePlaceholder name="Farmacoterapia (ASIS 12)" />} />
+                  <Route path="diagnostico" element={<ModulePlaceholder name="Diagnóstico (ASIS 14)" />} />
+                  <Route path="imagenes" element={<ModulePlaceholder name="Imágenes (ASIS 15)" />} />
+                  <Route path="ehr" element={<ModulePlaceholder name="Historia Clínica Electrónica (ASIS 13)" />} />
+                  <Route path="rrhh" element={<ModulePlaceholder name="Recursos Humanos (ADMIN 1)" />} />
+                  <Route path="salas-espera" element={<ModulePlaceholder name="Salas de Espera (ADMIN 2)" />} />
                 </Route>
+
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

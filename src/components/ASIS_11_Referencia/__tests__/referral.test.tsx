@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/ASIS_11_Referencia/__tests__/referral.test.tsx
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';

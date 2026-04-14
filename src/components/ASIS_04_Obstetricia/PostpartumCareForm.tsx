@@ -245,7 +245,7 @@ export const PostpartumCareForm: React.FC<PostpartumCareFormProps> = ({
                   Lochia Serosa - Marrón (4-14 días)
                 </SelectItem>
                 <SelectItem value="lochia_alba">
-                  Lochia Alba - Blanco/amarillento (>15 días)
+                  Lochia Alba - Blanco/amarillento (&gt;15 días)
                 </SelectItem>
               </SelectContent>
             </Select>

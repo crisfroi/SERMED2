@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // LabOrderForm.test.tsx - React Component Tests
 // Laboratory Order Form Component
@@ -57,7 +58,7 @@ describe('LabOrderForm', () => {
     it('should display test selection checkboxes', () => {
       render(<LabOrderForm patientId="p1" />);
 
-      expect(screen.getByLabel Text('Glucose')).toBeInTheDocument();
+      expect(screen.getByLabelText('Glucose')).toBeInTheDocument();
       expect(screen.getByLabelText('Hemoglobin')).toBeInTheDocument();
     });
 

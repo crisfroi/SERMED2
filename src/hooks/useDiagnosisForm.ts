@@ -4,7 +4,7 @@
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 
 interface DiagnosisDetails {
   icdCode: string;
@@ -13,7 +13,7 @@ interface DiagnosisDetails {
   category: string;
   commonComorbidities: string[];
   treatmentGuidelines: string[];
-  icmr ICD10Description: string;
+  icmrICD10Description: string;
 }
 
 export const useDiagnosisForm = (patientId: string) => {
@@ -21,10 +21,7 @@ export const useDiagnosisForm = (patientId: string) => {
   const [error, setError] = useState<string | null>(null);
   const [icd10Codes, setIcd10Codes] = useState<any[]>([]);
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-  );
+  // supabase client imported from integrations
 
   // Search for ICD-10 codes
   const searchDiagnosis = useCallback(
@@ -98,7 +95,7 @@ export const useDiagnosisForm = (patientId: string) => {
           category: data.category,
           commonComorbidities: data.common_comorbidities || [],
           treatmentGuidelines: data.treatment_guidelines || [],
-          icmr ICD10Description: data.description,
+          icmrICD10Description: data.description,
         };
       } catch (err) {
         console.error('Error getting diagnosis details:', err);

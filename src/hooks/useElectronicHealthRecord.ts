@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 // ============================================================================
 // ASIS 13: useElectronicHealthRecord Hook
@@ -8,7 +8,7 @@ import { supabase } from '@/lib/supabase';
 // Líneas: ~600
 // ============================================================================
 
-interface Electronic HealthRecord {
+interface ElectronicHealthRecord {
   id: string;
   patient_id: string;
   summary_note: string;
