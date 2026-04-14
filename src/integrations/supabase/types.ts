@@ -5323,6 +5323,62 @@ export type Database = {
         }
         Relationships: []
       }
+      hosix_laboratorio_criterios_referencia: {
+        Row: {
+          activo: boolean
+          created_at: string
+          edad_max_meses: number | null
+          edad_min_meses: number | null
+          id: string
+          notas: string | null
+          orden: number
+          prueba_id: string
+          sexo: string | null
+          unidad: string | null
+          updated_at: string
+          valor_max: number | null
+          valor_min: number | null
+        }
+        Insert: {
+          activo?: boolean
+          created_at?: string
+          edad_max_meses?: number | null
+          edad_min_meses?: number | null
+          id?: string
+          notas?: string | null
+          orden?: number
+          prueba_id: string
+          sexo?: string | null
+          unidad?: string | null
+          updated_at?: string
+          valor_max?: number | null
+          valor_min?: number | null
+        }
+        Update: {
+          activo?: boolean
+          created_at?: string
+          edad_max_meses?: number | null
+          edad_min_meses?: number | null
+          id?: string
+          notas?: string | null
+          orden?: number
+          prueba_id?: string
+          sexo?: string | null
+          unidad?: string | null
+          updated_at?: string
+          valor_max?: number | null
+          valor_min?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hosix_laboratorio_criterios_referencia_prueba_id_fkey"
+            columns: ["prueba_id"]
+            isOneToOne: false
+            referencedRelation: "hosix_laboratorio_pruebas_catalogo"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hosix_laboratorio_muestras: {
         Row: {
           codigo_muestra: string
