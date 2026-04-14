@@ -19,42 +19,18 @@ import "./utils/authErrorHandler";
 import "./utils/storageCleanup";
 import { initResizeObserverErrorHandling } from "./utils/resizeObserverHandler";
 
-// New Hospital System Pages
+// New Hospital System
 import HospitalLogin from "./pages/Hospital/HospitalLogin";
 import HospitalLayout from "./components/hospital/HospitalLayout";
 import HospitalDashboard from "./pages/Hospital/HospitalDashboard";
 
-// ASIS Clinical Modules (lazy-loaded wrappers)
-import { lazy, Suspense } from "react";
-
-const ObstetriciaModule = lazy(() => import("./components/ASIS_04_Obstetricia/GestationMonitor"));
-const CREDModule = lazy(() => import("./components/ASIS_05_CRED/CREDMonitoringDashboard").catch(() => ({ default: () => <div className="p-4">Módulo CRED - En desarrollo</div> })));
-const CirugiaModule = lazy(() => import("./components/ASIS_7_Cirugia/SurgeryScheduler").catch(() => ({ default: () => <div className="p-4">Módulo Cirugía - En desarrollo</div> })));
-const DieteticaModule = lazy(() => import("./components/ASIS_8_Dietetica/MealPlanViewer").catch(() => ({ default: () => <div className="p-4">Módulo Dietética - En desarrollo</div> })));
-const InmunizacionModule = lazy(() => import("./components/ASIS_08_Inmunizacion/ImmunizationRecordForm").catch(() => ({ default: () => <div className="p-4">Módulo Inmunización - En desarrollo</div> })));
-const LaboratorioModule = lazy(() => import("./components/ASIS_08_Laboratorio/LabOrderForm").catch(() => ({ default: () => <div className="p-4">Módulo Laboratorio - En desarrollo</div> })));
-const FarmaciaModule = lazy(() => import("./components/ASIS_09_Farmacia/InventoryDashboard").catch(() => ({ default: () => <div className="p-4">Módulo Farmacia - En desarrollo</div> })));
-const MedicamentosModule = lazy(() => import("./components/ASIS_10_Medicamentos/MedicationOrderForm").catch(() => ({ default: () => <div className="p-4">Módulo Medicamentos - En desarrollo</div> })));
-const ReferenciaModule = lazy(() => import("./components/ASIS_11_Referencia/ReferralDashboard").catch(() => ({ default: () => <div className="p-4">Módulo Referencia - En desarrollo</div> })));
-const FarmacoterapiaModule = lazy(() => import("./components/ASIS_12_Farmacoterapia/PharmacotherapyDashboard").catch(() => ({ default: () => <div className="p-4">Módulo Farmacoterapia - En desarrollo</div> })));
-const DiagnosticoModule = lazy(() => import("./components/ASIS_14_Diagnostico/DiagnosisForm").catch(() => ({ default: () => <div className="p-4">Módulo Diagnóstico - En desarrollo</div> })));
-const ImagenesModule = lazy(() => import("./components/ASIS_15_Imagenes/DicomViewer").catch(() => ({ default: () => <div className="p-4">Módulo Imágenes - En desarrollo</div> })));
-const EHRModule = lazy(() => import("./components/ASIS_13_EHR/ElectronicHealthRecordDashboard").catch(() => ({ default: () => <div className="p-4">Módulo HME - En desarrollo</div> })));
-
-// Admin Modules
-const HRModule = lazy(() => import("./components/ADMIN_1_HR/HRDashboard").catch(() => ({ default: () => <div className="p-4">Módulo RRHH - En desarrollo</div> })));
-const WaitingRoomModule = lazy(() => import("./components/ADMIN_2_WAITING_ROOMS/WaitingRoomDashboard").catch(() => ({ default: () => <div className="p-4">Módulo Salas Espera - En desarrollo</div> })));
-
-// Initialize ResizeObserver error handling
 initResizeObserverErrorHandling();
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: (failureCount, error: any) => {
-        if (error?.message?.includes('auth') || error?.message?.includes('unauthorized')) {
-          return false;
-        }
+        if (error?.message?.includes('auth') || error?.message?.includes('unauthorized')) return false;
         return failureCount < 3;
       },
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
@@ -63,16 +39,16 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       refetchOnReconnect: true,
     },
-    mutations: {
-      retry: 1,
-    }
+    mutations: { retry: 1 },
   }
 });
 
-const ModuleLoader = ({ children }: { children: React.ReactNode }) => (
-  <Suspense fallback={<div className="flex items-center justify-center p-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>}>
-    {children}
-  </Suspense>
+// Simple placeholder for modules not yet wired
+const ModulePlaceholder = ({ name }: { name: string }) => (
+  <div className="p-6">
+    <h2 className="text-xl font-semibold mb-2">{name}</h2>
+    <p className="text-muted-foreground">Módulo en desarrollo. Los componentes ASIS están disponibles en src/components/.</p>
+  </div>
 );
 
 function App() {
@@ -85,7 +61,6 @@ function App() {
             <Sonner />
             <BrowserRouter>
               <Routes>
-                {/* Public Routes */}
                 <Route path="/" element={<Home />} />
                 <Route path="/old-home" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
@@ -96,25 +71,25 @@ function App() {
                 <Route path="/dynamic-forms" element={<DynamicForms />} />
                 <Route path="/form/:publicUrl" element={<PublicForm />} />
 
-                {/* Hospital System Routes */}
+                {/* Hospital System */}
                 <Route path="/hosix/login" element={<HospitalLogin />} />
                 <Route path="/hosix" element={<HospitalLayout />}>
                   <Route index element={<HospitalDashboard />} />
-                  <Route path="obstetricia" element={<ModuleLoader><ObstetriciaModule /></ModuleLoader>} />
-                  <Route path="cred" element={<ModuleLoader><CREDModule /></ModuleLoader>} />
-                  <Route path="cirugia" element={<ModuleLoader><CirugiaModule /></ModuleLoader>} />
-                  <Route path="dietetica" element={<ModuleLoader><DieteticaModule /></ModuleLoader>} />
-                  <Route path="inmunizacion" element={<ModuleLoader><InmunizacionModule /></ModuleLoader>} />
-                  <Route path="laboratorio" element={<ModuleLoader><LaboratorioModule /></ModuleLoader>} />
-                  <Route path="farmacia" element={<ModuleLoader><FarmaciaModule /></ModuleLoader>} />
-                  <Route path="medicamentos" element={<ModuleLoader><MedicamentosModule /></ModuleLoader>} />
-                  <Route path="referencia" element={<ModuleLoader><ReferenciaModule /></ModuleLoader>} />
-                  <Route path="farmacoterapia" element={<ModuleLoader><FarmacoterapiaModule /></ModuleLoader>} />
-                  <Route path="diagnostico" element={<ModuleLoader><DiagnosticoModule /></ModuleLoader>} />
-                  <Route path="imagenes" element={<ModuleLoader><ImagenesModule /></ModuleLoader>} />
-                  <Route path="ehr" element={<ModuleLoader><EHRModule /></ModuleLoader>} />
-                  <Route path="rrhh" element={<ModuleLoader><HRModule /></ModuleLoader>} />
-                  <Route path="salas-espera" element={<ModuleLoader><WaitingRoomModule /></ModuleLoader>} />
+                  <Route path="obstetricia" element={<ModulePlaceholder name="Obstetricia (ASIS 4)" />} />
+                  <Route path="cred" element={<ModulePlaceholder name="CRED (ASIS 5)" />} />
+                  <Route path="cirugia" element={<ModulePlaceholder name="Cirugía (ASIS 7)" />} />
+                  <Route path="dietetica" element={<ModulePlaceholder name="Dietética (ASIS 8)" />} />
+                  <Route path="inmunizacion" element={<ModulePlaceholder name="Inmunización (ASIS 8)" />} />
+                  <Route path="laboratorio" element={<ModulePlaceholder name="Laboratorio (ASIS 8/10)" />} />
+                  <Route path="farmacia" element={<ModulePlaceholder name="Farmacia (ASIS 9)" />} />
+                  <Route path="medicamentos" element={<ModulePlaceholder name="Medicamentos (ASIS 10)" />} />
+                  <Route path="referencia" element={<ModulePlaceholder name="Referencia (ASIS 11)" />} />
+                  <Route path="farmacoterapia" element={<ModulePlaceholder name="Farmacoterapia (ASIS 12)" />} />
+                  <Route path="diagnostico" element={<ModulePlaceholder name="Diagnóstico (ASIS 14)" />} />
+                  <Route path="imagenes" element={<ModulePlaceholder name="Imágenes (ASIS 15)" />} />
+                  <Route path="ehr" element={<ModulePlaceholder name="Historia Clínica Electrónica (ASIS 13)" />} />
+                  <Route path="rrhh" element={<ModulePlaceholder name="Recursos Humanos (ADMIN 1)" />} />
+                  <Route path="salas-espera" element={<ModulePlaceholder name="Salas de Espera (ADMIN 2)" />} />
                 </Route>
 
                 <Route path="*" element={<NotFound />} />
