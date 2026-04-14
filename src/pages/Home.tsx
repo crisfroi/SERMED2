@@ -157,6 +157,72 @@ const Home = () => {
             </div>
           </div>
 
+          {/* ✨ NUEVA SECCIÓN: PANEL DE ACCESO RÁPIDO - INICIAR SESIÓN */}
+          <section className="bg-gradient-to-r from-blue-50 to-emerald-50 rounded-2xl p-12 mb-16 shadow-lg border border-blue-100">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                🔐 Acceso Rápido al Sistema
+              </h2>
+              <p className="text-lg text-gray-600">
+                Selecciona dónde deseas iniciar sesión
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              {/* Panel 1: Administrativo */}
+              <Link to="/auth" className="group">
+                <div className="bg-white rounded-xl p-8 shadow-md hover:shadow-xl transition-shadow border-2 border-blue-200 hover:border-blue-500 cursor-pointer">
+                  <div className="flex items-center justify-center mb-4">
+                    <BarChart3 className="w-12 h-12 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 text-center mb-2">
+                    Panel Administrativo
+                  </h3>
+                  <p className="text-sm text-gray-600 text-center mb-6">
+                    Gestión de profesionales, establecimientos y carnet
+                  </p>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3">
+                    INICIAR SESIÓN →
+                  </Button>
+                </div>
+              </Link>
+
+              {/* Panel 2: Sistema HOSIX */}
+              <Link to="/hosix/login" className="group">
+                <div className="bg-white rounded-xl p-8 shadow-md hover:shadow-xl transition-shadow border-2 border-emerald-200 hover:border-emerald-500 cursor-pointer">
+                  <div className="flex items-center justify-center mb-4">
+                    <Hospital className="w-12 h-12 text-emerald-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 text-center mb-2">
+                    Sistema HOSIX
+                  </h3>
+                  <p className="text-sm text-gray-600 text-center mb-6">
+                    Gestión hospitalaria, pacientes y clínica
+                  </p>
+                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3">
+                    INICIAR SESIÓN →
+                  </Button>
+                </div>
+              </Link>
+            </div>
+
+            {/* Opciones adicionales */}
+            <div className="mt-8 pt-8 border-t border-gray-300 text-center">
+              <p className="text-sm text-gray-600 mb-4">
+                ¿No tienes cuenta? 
+                <Link to="/register" className="text-blue-600 font-semibold hover:underline ml-2">
+                  Regístrate aquí
+                </Link>
+              </p>
+              <p className="text-xs text-gray-500">
+                O verifica profesionales:
+                <Link to="/search" className="text-emerald-600 font-semibold hover:underline ml-2">
+                  Búsqueda Pública
+                </Link>
+              </p>
+            </div>
+          </section>
+
           {/* Statistics */}
           {/* NOTA: Las tarjetas estadísticas tienen un fondo blanco por defecto, lo que garantiza la legibilidad. */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
