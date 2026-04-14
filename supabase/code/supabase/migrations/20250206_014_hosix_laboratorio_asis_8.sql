@@ -1,8 +1,5 @@
 -- ASIS 8.0 - Módulo de Laboratorio Clínico
 -- =======================================
--- DEPRECADO para nuevos despliegues: la versión canónica idempotente vive en
--- supabase/migrations/20260412120000_hosix_laboratorio_canonical.sql (ver docs/ADR-001).
--- No eliminar este archivo hasta fusionar historiales y confirmar que ningún CI lo aplica solo.
 
 -- Tabla: Catálogo de pruebas de laboratorio
 CREATE TABLE IF NOT EXISTS hosix_laboratorio_pruebas_catalogo (

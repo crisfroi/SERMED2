@@ -9,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { HospitalSelector } from './HospitalSelector';
 
 interface HosixHeaderProps {
   onToggleSidebar: () => void;
@@ -29,11 +28,6 @@ const HosixHeader: React.FC<HosixHeaderProps> = ({ onToggleSidebar }) => {
         >
           <Menu className="w-5 h-5" />
         </Button>
-
-        {/* Hospital Selector - FASE A1 MULTICENTRO */}
-        <div className="hidden lg:block">
-          <HospitalSelector />
-        </div>
 
         {/* Search Bar */}
         <div className="relative flex-1 max-w-md hidden sm:block">
