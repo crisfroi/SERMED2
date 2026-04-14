@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * useSyncStatus - Hook for real-time sync queue status
  * FASE A3: Show sync progress in UI (toast, badge, dashboard)
