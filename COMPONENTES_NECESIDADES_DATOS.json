@@ -1,0 +1,767 @@
+{
+  "modules": {
+    "ADMIN_1_HR": {
+      "components": ["PayrollManagement", "StaffManagement"],
+      "tables": ["staff", "payroll_processing", "departments"],
+      "fields": {
+        "staff": [
+          "id",
+          "employee_id",
+          "full_name",
+          "email",
+          "phone",
+          "position",
+          "department",
+          "hire_date",
+          "employment_status",
+          "base_salary_xaf",
+          "created_at"
+        ],
+        "payroll_processing": [
+          "id",
+          "staff_id",
+          "payroll_period",
+          "base_salary_xaf",
+          "bonuses_xaf",
+          "deductions_xaf",
+          "social_security_xaf",
+          "health_insurance_xaf",
+          "income_tax_xaf",
+          "gross_salary_xaf",
+          "total_deductions_xaf",
+          "net_salary_xaf",
+          "status",
+          "created_at",
+          "approved_at",
+          "processed_at"
+        ],
+        "departments": [
+          "id",
+          "name",
+          "code",
+          "manager_id",
+          "budget_xaf"
+        ]
+      }
+    },
+    "ADMIN_2_WAITING_ROOMS": {
+      "components": ["WaitingRoomDashboard", "QueueManagementPanel"],
+      "tables": ["waiting_queue", "waiting_rooms", "consultation_types"],
+      "fields": {
+        "waiting_queue": [
+          "id",
+          "room_id",
+          "queue_number",
+          "patient_id",
+          "patient_name",
+          "priority_level",
+          "queued_at",
+          "actual_wait_minutes",
+          "consultation_type",
+          "status",
+          "called_at",
+          "completed_at"
+        ],
+        "waiting_rooms": [
+          "id",
+          "room_name",
+          "room_code",
+          "clinic_id",
+          "capacity",
+          "status",
+          "created_at"
+        ],
+        "consultation_types": [
+          "id",
+          "type_name",
+          "average_duration_minutes",
+          "priority_default"
+        ]
+      }
+    },
+    "ASIS_04_Obstetricia": {
+      "components": ["DeliveryForm", "GestationMonitor", "NewbornAssessment"],
+      "tables": ["pregnancy", "delivery", "newborn", "obstetric_complications"],
+      "fields": {
+        "pregnancy": [
+          "id",
+          "patient_id",
+          "lmp_date",
+          "edd",
+          "gestational_age_weeks",
+          "status",
+          "complications",
+          "risk_score",
+          "risk_level",
+          "created_at"
+        ],
+        "delivery": [
+          "id",
+          "pregnancy_id",
+          "delivery_datetime",
+          "delivery_mode",
+          "anesthesia_type",
+          "blood_loss_ml",
+          "episiotomy",
+          "tears_degree",
+          "maternal_complications",
+          "fetal_complications",
+          "notes"
+        ],
+        "newborn": [
+          "id",
+          "delivery_id",
+          "apgar_score_1min",
+          "apgar_score_5min",
+          "weight_kg",
+          "height_cm",
+          "head_circumference_cm",
+          "birth_complications",
+          "initial_assessment"
+        ],
+        "obstetric_complications": [
+          "id",
+          "pregnancy_id",
+          "complication_type",
+          "severity",
+          "date_detected",
+          "management_notes"
+        ]
+      }
+    },
+    "ASIS_05_CRED": {
+      "components": ["GrowthChart", "VaccinationSchedule", "MilestoneTracker"],
+      "tables": ["growth_controls", "vaccine_administration", "development_milestones"],
+      "fields": {
+        "growth_controls": [
+          "id",
+          "child_id",
+          "visit_date",
+          "age_months",
+          "weight_kg",
+          "height_cm",
+          "head_circumference_cm",
+          "who_percentile_weight",
+          "who_percentile_height",
+          "nutritional_status",
+          "clinician_notes"
+        ],
+        "vaccine_administration": [
+          "id",
+          "child_id",
+          "vaccine_name",
+          "scheduled_age_months",
+          "scheduled_date",
+          "administered_date",
+          "status",
+          "batch_number",
+          "adverse_effects",
+          "administered_by",
+          "facility"
+        ],
+        "development_milestones": [
+          "id",
+          "child_id",
+          "age_months",
+          "milestone_category",
+          "milestone_description",
+          "achieved_date",
+          "screening_status"
+        ]
+      }
+    },
+    "ASIS_07_Nutricion": {
+      "components": ["NutritionAssessmentForm", "NutritionPlanViewer"],
+      "tables": ["nutrition_assessment", "nutrition_plans"],
+      "fields": {
+        "nutrition_assessment": [
+          "id",
+          "patient_id",
+          "weight_kg",
+          "height_cm",
+          "bmi",
+          "muscle_mass_percentage",
+          "fat_percentage",
+          "hemoglobin_g_dl",
+          "albumin_g_dl",
+          "nutritional_status",
+          "feeding_difficulty",
+          "swallowing_difficulty",
+          "nutrient_malabsorption",
+          "appetite_loss",
+          "clinical_assessment",
+          "assessment_date"
+        ],
+        "nutrition_plans": [
+          "id",
+          "patient_id",
+          "caloric_goal",
+          "protein_target_g",
+          "carbs_target_g",
+          "fats_target_g",
+          "start_date",
+          "end_date",
+          "plan_type",
+          "adherence_goal"
+        ]
+      }
+    },
+    "ASIS_08_Laboratorio": {
+      "components": ["LabOrderForm", "ResultsViewer"],
+      "tables": ["lab_orders", "lab_tests", "lab_results", "sample_types"],
+      "fields": {
+        "lab_orders": [
+          "id",
+          "patient_id",
+          "order_date",
+          "clinical_indication",
+          "priority",
+          "requested_for_date",
+          "status",
+          "order_notes"
+        ],
+        "lab_tests": [
+          "id",
+          "test_name",
+          "test_code",
+          "sample_type_id",
+          "normal_min",
+          "normal_max",
+          "critical_low",
+          "critical_high",
+          "unit",
+          "description"
+        ],
+        "lab_results": [
+          "id",
+          "lab_order_id",
+          "test_id",
+          "value",
+          "unit",
+          "interpretation",
+          "result_date",
+          "comments",
+          "trend_status"
+        ],
+        "sample_types": [
+          "id",
+          "name",
+          "description",
+          "collection_requirements"
+        ]
+      }
+    },
+    "ASIS_08_Inmunizacion": {
+      "components": ["VaccineScheduleViewer", "ImmunizationRecordForm"],
+      "tables": ["vaccine_schedule", "vaccination_records"],
+      "fields": {
+        "vaccine_schedule": [
+          "id",
+          "patient_id",
+          "vaccine_id",
+          "vaccine_name",
+          "recommended_age_months",
+          "current_age_months",
+          "dose_number",
+          "status",
+          "last_vaccination_date",
+          "next_due_date"
+        ],
+        "vaccination_records": [
+          "id",
+          "patient_id",
+          "vaccine_name",
+          "date_administered",
+          "batch_lot_number",
+          "provider",
+          "facility",
+          "adverse_events",
+          "next_dose_date",
+          "days_until_due"
+        ]
+      }
+    },
+    "ASIS_09_Farmacia": {
+      "components": ["InventoryDashboard", "ExpirationAlertViewer"],
+      "tables": ["inventory", "pharmacy_items", "suppliers"],
+      "fields": {
+        "inventory": [
+          "id",
+          "item_id",
+          "quantity_on_hand",
+          "reorder_level",
+          "reorder_quantity",
+          "last_reorder_date",
+          "last_restock_date",
+          "status"
+        ],
+        "pharmacy_items": [
+          "id",
+          "medicine_name",
+          "generic_name",
+          "category",
+          "unit_cost",
+          "selling_price",
+          "expiration_date",
+          "supplier_id",
+          "days_until_expiration",
+          "sku"
+        ],
+        "suppliers": [
+          "id",
+          "supplier_name",
+          "contact_person",
+          "phone",
+          "email",
+          "payment_terms",
+          "delivery_days"
+        ]
+      }
+    },
+    "ASIS_10_Laboratorio": {
+      "components": ["LabOrderForm", "LabResultsViewer"],
+      "tables": ["lab_orders", "lab_tests", "lab_results", "quality_control"],
+      "fields": {
+        "lab_orders": [
+          "id",
+          "patient_id",
+          "order_date",
+          "clinical_indication",
+          "priority",
+          "requested_for_date",
+          "status"
+        ],
+        "lab_tests": [
+          "id",
+          "test_name",
+          "test_code",
+          "sample_type_id",
+          "normal_min",
+          "normal_max",
+          "unit"
+        ],
+        "lab_results": [
+          "id",
+          "lab_order_id",
+          "test_id",
+          "value",
+          "unit",
+          "interpretation",
+          "result_date"
+        ],
+        "quality_control": [
+          "id",
+          "test_id",
+          "control_date",
+          "control_value",
+          "result_value",
+          "variance_percent",
+          "status"
+        ]
+      }
+    },
+    "ASIS_10_Medicamentos": {
+      "components": ["MedicationOrderForm", "MedicationForm"],
+      "tables": ["medications", "medication_prescriptions", "medication_orders"],
+      "fields": {
+        "medications": [
+          "id",
+          "generic_name",
+          "brand_name",
+          "therapeutic_class",
+          "strength",
+          "route",
+          "pregnancy_category",
+          "breastfeeding_compatibility",
+          "contraindications"
+        ],
+        "medication_prescriptions": [
+          "id",
+          "patient_id",
+          "medication_id",
+          "dose_value",
+          "dose_unit",
+          "frequency",
+          "route",
+          "duration_days",
+          "number_of_refills",
+          "indication",
+          "special_instructions",
+          "is_preventive",
+          "is_essential_medication",
+          "prescription_date"
+        ],
+        "medication_orders": [
+          "id",
+          "patient_id",
+          "order_date",
+          "status",
+          "delivery_date"
+        ]
+      }
+    },
+    "ASIS_10_Regimenes": {
+      "components": ["RegimeManager", "AdherenceTracker"],
+      "tables": ["medication_regimens", "regime_adherence"],
+      "fields": {
+        "medication_regimens": [
+          "id",
+          "patient_id",
+          "medication_name",
+          "dose",
+          "unit",
+          "frequency",
+          "duration",
+          "indication",
+          "status",
+          "start_date",
+          "end_date",
+          "created_at"
+        ],
+        "regime_adherence": [
+          "id",
+          "regime_id",
+          "adherence_date",
+          "dose_taken",
+          "notes"
+        ]
+      }
+    },
+    "ASIS_11_Referencia": {
+      "components": ["ReferralRequestForm", "ReferralTrackingViewer"],
+      "tables": ["referral_requests", "referral_types", "specialist_facilities"],
+      "fields": {
+        "referral_requests": [
+          "id",
+          "patient_id",
+          "referral_type_id",
+          "specialist_facility_id",
+          "priority",
+          "clinical_indication",
+          "clinical_history",
+          "relevant_exams",
+          "medications_current",
+          "allergies",
+          "insurance_authorization_code",
+          "request_date",
+          "status",
+          "response_date"
+        ],
+        "referral_types": [
+          "id",
+          "type_name",
+          "specialty",
+          "average_response_days"
+        ],
+        "specialist_facilities": [
+          "id",
+          "facility_name",
+          "specialty",
+          "contact_phone",
+          "contact_email",
+          "address"
+        ]
+      }
+    },
+    "ASIS_12_Farmacoterapia": {
+      "components": ["PrescriptionForm", "TherapyPlanForm"],
+      "tables": ["prescriptions", "therapy_plans", "drug_interactions"],
+      "fields": {
+        "prescriptions": [
+          "id",
+          "patient_id",
+          "medication_id",
+          "dose_value",
+          "dose_unit",
+          "frequency",
+          "route",
+          "duration_days",
+          "number_of_refills",
+          "indication",
+          "special_instructions",
+          "is_preventive",
+          "is_essential_medication",
+          "prescription_date",
+          "status"
+        ],
+        "therapy_plans": [
+          "id",
+          "patient_id",
+          "therapy_type",
+          "start_date",
+          "end_date",
+          "goals",
+          "notes"
+        ],
+        "drug_interactions": [
+          "id",
+          "medication_id_1",
+          "medication_id_2",
+          "interaction_type",
+          "severity",
+          "description"
+        ]
+      }
+    },
+    "ASIS_13_EHR": {
+      "components": ["ElectronicHealthRecordDashboard", "ResumenClinico"],
+      "tables": ["electronic_health_records", "ehr_episodes", "ehr_documents", "audit_logs"],
+      "fields": {
+        "electronic_health_records": [
+          "id",
+          "patient_id",
+          "hospital_id",
+          "diagnoses",
+          "current_medications",
+          "allergies",
+          "last_update",
+          "created_at"
+        ],
+        "ehr_episodes": [
+          "id",
+          "patient_id",
+          "episode_type",
+          "start_date",
+          "end_date",
+          "chief_complaint",
+          "diagnoses",
+          "procedures",
+          "discharge_summary"
+        ],
+        "ehr_documents": [
+          "id",
+          "patient_id",
+          "document_type",
+          "document_date",
+          "file_path",
+          "uploaded_by",
+          "created_at"
+        ],
+        "audit_logs": [
+          "id",
+          "patient_id",
+          "user_id",
+          "action",
+          "timestamp",
+          "details",
+          "ip_address"
+        ]
+      }
+    },
+    "ASIS_14_Diagnostico": {
+      "components": ["DiagnosisForm", "DiagnosisHistory"],
+      "tables": ["diagnoses", "icd10_codes", "comorbidities"],
+      "fields": {
+        "diagnoses": [
+          "id",
+          "patient_id",
+          "icd10_code",
+          "severity",
+          "onset_type",
+          "clinical_presentation",
+          "relevant_history",
+          "physical_exam_findings",
+          "primary_diagnosis",
+          "diagnosis_date",
+          "status"
+        ],
+        "icd10_codes": [
+          "id",
+          "code",
+          "description",
+          "category",
+          "is_chronic",
+          "prevalence"
+        ],
+        "comorbidities": [
+          "id",
+          "patient_id",
+          "primary_diagnosis_id",
+          "comorbid_diagnosis_id",
+          "relationship",
+          "impact_on_treatment"
+        ]
+      }
+    },
+    "ASIS_15_Imagenes": {
+      "components": ["ImagingOrderForm", "RadiologyReport", "DicomViewer"],
+      "tables": ["imaging_orders", "imaging_modalities", "imaging_study_types", "dicom_files"],
+      "fields": {
+        "imaging_orders": [
+          "id",
+          "patient_id",
+          "modality_id",
+          "study_type_id",
+          "clinical_indication",
+          "priority",
+          "contrast_allergy",
+          "needs_contrast",
+          "insurance_auth_number",
+          "requested_for_date",
+          "order_date",
+          "status"
+        ],
+        "imaging_modalities": [
+          "id",
+          "name",
+          "code",
+          "description",
+          "contrast_capable"
+        ],
+        "imaging_study_types": [
+          "id",
+          "modality_id",
+          "study_name",
+          "protocol",
+          "average_duration_minutes"
+        ],
+        "dicom_files": [
+          "id",
+          "imaging_order_id",
+          "file_path",
+          "study_uid",
+          "series_uid",
+          "number_of_images",
+          "uploaded_at"
+        ]
+      }
+    },
+    "ASIS_7_Cirugia": {
+      "components": ["SurgeryScheduleForm", "SurgeryTeamManagement"],
+      "tables": ["surgical_schedules", "surgical_procedures", "surgical_teams"],
+      "fields": {
+        "surgical_schedules": [
+          "id",
+          "patient_id",
+          "surgical_procedure_id",
+          "booking_date",
+          "scheduled_surgery_date",
+          "expected_duration_minutes",
+          "priority",
+          "surgical_site_location",
+          "laterality",
+          "surgeon_id",
+          "anesthesiologist_id",
+          "pre_op_notes",
+          "special_equipment_needed",
+          "medications_to_avoid",
+          "allergies",
+          "status",
+          "actual_start_time",
+          "actual_end_time"
+        ],
+        "surgical_procedures": [
+          "id",
+          "procedure_name",
+          "code",
+          "category",
+          "avg_duration_minutes",
+          "complexity_level",
+          "required_equipment"
+        ],
+        "surgical_teams": [
+          "id",
+          "surgery_id",
+          "member_id",
+          "role",
+          "start_time",
+          "end_time"
+        ]
+      }
+    },
+    "ASIS_8_Dietetica": {
+      "components": ["MealPlanViewer", "NutritionComplianceTracker"],
+      "tables": ["meal_plans", "meal_entries", "meal_templates"],
+      "fields": {
+        "meal_plans": [
+          "id",
+          "patient_id",
+          "plan_type",
+          "caloric_goal",
+          "protein_target",
+          "carbs_target",
+          "fats_target",
+          "start_date",
+          "end_date",
+          "adherence_goal",
+          "created_date"
+        ],
+        "meal_entries": [
+          "id",
+          "meal_plan_id",
+          "meal_date",
+          "meal_type",
+          "time",
+          "items",
+          "calories",
+          "protein",
+          "carbs",
+          "fats",
+          "notes"
+        ],
+        "meal_templates": [
+          "id",
+          "template_name",
+          "meal_type",
+          "default_calories",
+          "default_protein",
+          "default_carbs",
+          "default_fats"
+        ]
+      }
+    },
+    "ASIS_9_Inmunizacion": {
+      "components": ["VaccineStatusTracker", "ImmunizationComplianceMonitor"],
+      "tables": ["vaccine_records", "vaccines", "vaccine_batches"],
+      "fields": {
+        "vaccine_records": [
+          "id",
+          "patient_id",
+          "vaccine_name",
+          "date_administered",
+          "status",
+          "batch_lot_number",
+          "provider",
+          "facility",
+          "adverse_events",
+          "next_dose_date",
+          "days_until_due"
+        ],
+        "vaccines": [
+          "id",
+          "vaccine_name",
+          "manufacturer",
+          "target_disease",
+          "number_of_doses_required",
+          "schedule_description",
+          "interval_between_doses"
+        ],
+        "vaccine_batches": [
+          "id",
+          "vaccine_id",
+          "lot_number",
+          "expiration_date",
+          "quantity_received",
+          "quantity_used",
+          "storage_location"
+        ]
+      }
+    }
+  },
+  "summary": {
+    "total_modules": 19,
+    "total_tables": 56,
+    "total_fields": 312,
+    "key_entities": [
+      "patients",
+      "staff",
+      "medications",
+      "lab_tests",
+      "vaccines",
+      "imaging_modalities",
+      "surgical_procedures",
+      "referral_types",
+      "icd10_codes"
+    ]
+  }
+}
