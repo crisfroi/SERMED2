@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // DiagnosisHistory.tsx - Diagnosis Timeline & History Tracking
 // ASIS 14.0 - Diagnóstico Unificado

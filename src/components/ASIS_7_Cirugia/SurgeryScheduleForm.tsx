@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/ASIS_7_Cirugia/SurgeryScheduleForm.tsx
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';

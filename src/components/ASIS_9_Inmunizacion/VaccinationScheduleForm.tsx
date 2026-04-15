@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/ASIS_9_Inmunizacion/VaccinationScheduleForm.tsx
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';

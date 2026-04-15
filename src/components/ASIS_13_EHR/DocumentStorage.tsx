@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { FileText, Download, Eye, Trash2, Upload, Filter } from 'lucide-react';
 

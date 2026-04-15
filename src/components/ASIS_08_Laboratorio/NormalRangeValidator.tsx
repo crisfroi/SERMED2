@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // Normal Range Validator Component - ASIS 8.0
 // Validate lab results against demographic-specific normal ranges

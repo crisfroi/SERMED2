@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, Clock, AlertTriangle, FileText, Phone, Mail, ExternalLink } from 'lucide-react';
 

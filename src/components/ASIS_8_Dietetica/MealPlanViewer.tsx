@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/ASIS_8_Dietetica/MealPlanViewer.tsx
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';

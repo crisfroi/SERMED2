@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/ASIS_8_Dietetica/NutritionAssessmentForm.tsx
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';

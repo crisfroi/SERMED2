@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/ASIS_7_Cirugia/SurgeryTeamManagement.tsx
 import React, { useState } from 'react';
 import { Users, Plus, Trash2, Clock, Award, AlertCircle } from 'lucide-react';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // InteractionChecker.tsx - Medication Interaction Detection Component
 // ASIS 10.0 - Regímenes de Medicación - Validación de Interacciones

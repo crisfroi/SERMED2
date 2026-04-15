@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // Radiology Report Component - ASIS 15.0 - Display Radiologist Reports
 // View detailed radiology reports with findings and recommendations

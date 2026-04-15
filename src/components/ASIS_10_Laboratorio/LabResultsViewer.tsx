@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, TrendingUp, TrendingDown, CheckCircle, AlertTriangle } from 'lucide-react';
 

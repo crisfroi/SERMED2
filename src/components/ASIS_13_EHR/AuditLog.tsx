@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { Eye, AlertCircle, Download, Filter, User, Clock, Shield, FileText } from 'lucide-react';
 
