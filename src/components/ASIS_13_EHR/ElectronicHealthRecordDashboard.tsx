@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { Loader, AlertCircle, Download, Share2, Clock, Users, FileText } from 'lucide-react';
-import { useElectronicHealthRecord } from '../hooks/useElectronicHealthRecord';
-import { useThalamusSync } from '../hooks/useThalamusSync';
+import { useElectronicHealthRecord } from '@/hooks/useElectronicHealthRecord';
+import { useThalamusSync } from '@/hooks/useThalamusSync';
 import EHRTimeline from './EHRTimeline';
 import ResumenClinico from './ResumenClinico';
 import DocumentStorage from './DocumentStorage';
