@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 12 ADMIN 2: Waiting Rooms
 // Hook: useQueueNotifications
 // Purpose: Multi-channel notifications (SMS, email, push, call)

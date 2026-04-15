@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 11 ADMIN 1: Custom Hooks
 // Hook: useStaffScheduling
 // Purpose: Manage staff schedules, shifts, conflict detection

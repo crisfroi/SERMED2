@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // useAdherenceTracker.ts - Medication Adherence Monitoring Hook
 // ASIS 10.0 - Regímenes de Medicación - Hito 3

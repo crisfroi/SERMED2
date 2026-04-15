@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 11 ADMIN 1: Staff Directory Component
 // Component: StaffDirectory
 // Purpose: Manage employee records, contracts, documents

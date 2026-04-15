@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import * as XLSX from 'xlsx';

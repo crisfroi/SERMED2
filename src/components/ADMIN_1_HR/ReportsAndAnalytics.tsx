@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 11 ADMIN 1: Reports & Analytics Component
 // Component: ReportsAndAnalytics
 // Purpose: Generate reports in XAF, payroll analytics

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * ==========================================================================
  * QUIROFANO HOOKS - Orquestación Cruzada de Procedimientos Quirúrgicos

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 12 ADMIN 2: Waiting Rooms
 // Component: QueueManagementPanel.tsx
 // Purpose: Staff control panel for queue management

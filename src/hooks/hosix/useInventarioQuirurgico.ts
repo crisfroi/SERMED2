@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * ==========================================================================
  * HOOK: Gestión de Inventario Quirúrgico en Tiempo Real

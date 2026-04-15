@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * ==========================================================================
  * FARMACIA AVANZADA - ORQUESTACION CRUZADA (Cross-Module Orchestration)

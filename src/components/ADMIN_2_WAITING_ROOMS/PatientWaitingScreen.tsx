@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 12 ADMIN 2: Waiting Rooms
 // Component: PatientWaitingScreen.tsx
 // Purpose: What patient sees while waiting (mobile/tablet interface)

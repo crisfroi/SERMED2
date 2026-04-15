@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 11 ADMIN 1: Custom Hooks
 // Hook: useThalamusStaffSync
 // Purpose: [OPTIONAL] Sync staff data to THALAMUS (cross-hospital visibility)

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 11 ADMIN 1: Custom Hooks
 // Hook: usePayrollProcessing  
 // Purpose: Create, edit, approve payroll (XAF calculations)

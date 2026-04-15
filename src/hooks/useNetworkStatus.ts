@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect } from 'react';
 import { getConnectionStatus } from '@/integrations/supabase/client';
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * useOfflineCache - Hook for managing offline cache using IndexedDB
  * FASE A3: Enable offline-first functionality

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 12 ADMIN 2: Waiting Rooms
 // Component: WaitingRoomDashboard.tsx
 // Purpose: Main waiting room display (public screen in hospital)

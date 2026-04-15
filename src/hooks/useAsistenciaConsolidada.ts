@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 

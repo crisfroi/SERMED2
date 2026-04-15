@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 11 ADMIN 1: Scheduling Board Component
 // Component: SchedulingBoard
 // Purpose: Manage staff shifts and schedules

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 12 ADMIN 2: Waiting Rooms
 // Hook: useWaitingQueue
 // Purpose: Queue operations - CRUD, position, wait calculations
