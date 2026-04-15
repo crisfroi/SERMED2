@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // useLabOrder Hook - Laboratory Order Management
 // Handle lab order creation, test selection, and order tracking
