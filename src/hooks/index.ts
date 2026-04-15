@@ -42,3 +42,6 @@ export {
   useMedicationAdherence,
   useAdverseMedicationEvents,
 } from './usePharmacotherapyHooks';
+
+// Hospital Management Hooks
+export { useHospital } from './useHospital';
