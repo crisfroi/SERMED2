@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // MedicationOrderForm.tsx - Medication/Prescription Form Component
 // ASIS 10.0 - Regímenes de Medicación

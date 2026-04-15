@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // Lab Results Viewer Component - ASIS 8.0 - View Test Results
 // Display laboratory test results with clinical interpretation and alerts

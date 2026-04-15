@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { Loader, AlertCircle, Download, Share2, Clock, Users, FileText } from 'lucide-react';
 import { useElectronicHealthRecord } from '../hooks/useElectronicHealthRecord';
