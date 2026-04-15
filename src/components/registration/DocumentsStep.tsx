@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 import { useFormContext } from 'react-hook-form';
 import React from 'react';

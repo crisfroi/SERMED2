@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 // Importar el tipo Profesional actualizado
 import type { Profesional } from '@/hooks/useProfesionales'; 

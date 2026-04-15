@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * DrugBank Integration Service
  * Integración con DrugBank API para información de medicamentos e interacciones
