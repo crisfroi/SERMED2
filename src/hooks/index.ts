@@ -45,3 +45,15 @@ export {
 
 // Hospital Management Hooks
 export { useHospital } from './useHospital';
+
+// ADMIN Module Hooks
+export { useHRDashboard } from './useHRDashboard';
+export { useReportsAndAnalytics } from './useReportsAndAnalytics';
+export { useQueueManagement } from './useQueueManagement';
+
+// Diagnosis Hooks
+export { useDiagnosisForm } from './useDiagnosisForm';
+export { useComorbidityAnalysis } from './useComorbidityAnalysis';
+
+// Referral Specialist Hooks
+export { useReferralSpecialist } from './useReferralSpecialist';
