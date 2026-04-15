@@ -31,6 +31,10 @@
     "src"
   ],
   "exclude": [
-    "src/_quarantine_hosix"
+    "src/_quarantine_hosix",
+    "src/components/hosix",
+    "src/hooks/hosix",
+    "src/pages/Hosix",
+    "src/__tests__"
   ]
 }
