@@ -23,7 +23,7 @@ import {
   Power,
   Activity,
   BarChart3,
-  Image, // 💡 NUEVO: Icono para la pestaña del carrusel
+  Image,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
@@ -273,7 +273,7 @@ const AdminPanel = () => {
 
       <Tabs defaultValue="slideshow" className="space-y-6"> {/* 💡 CAMBIO: Establecemos 'slideshow' como pestaña por defecto */}
         {/* 💡 CAMBIO: Añadimos una nueva columna al grid (w-full grid-cols-6) y el nuevo TabTrigger */}
-        <TabsList className="grid w-full grid-cols-6"> 
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="settings" className="flex items-center gap-1">
             <Settings className="w-4 h-4" />
             <span className="hidden sm:inline">Configuración</span>
