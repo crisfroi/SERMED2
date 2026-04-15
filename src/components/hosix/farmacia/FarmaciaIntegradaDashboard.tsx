@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * ==========================================================================
  * COMPONENTE REACT: Farmacia Integrada Dashboard

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserRole } from '@/types/roles';

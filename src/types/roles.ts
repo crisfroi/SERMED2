@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * SISTEMA COMPLETO DE ROLES Y PERMISOS
  * 

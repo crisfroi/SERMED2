@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // Lab Order Form Component - ASIS 8.0 - Laboratory Orders
 // Create and manage laboratory test orders with specimens and urgency

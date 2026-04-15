@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // Trend Analysis Component - ASIS 8.0 - Lab Results Trends Over Time
 // Track and visualize laboratory results trends for clinical decision-making

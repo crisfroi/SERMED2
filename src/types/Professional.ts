@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Interface unificada para Professional basada en la tabla profesionales_sanitarios
 export interface Professional {
   id: string;

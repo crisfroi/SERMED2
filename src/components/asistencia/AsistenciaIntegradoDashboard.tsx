@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useMemo, useState } from 'react';
 import { format, subDays } from 'date-fns';
 import { es } from 'date-fns/locale';

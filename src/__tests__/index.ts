@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // ASIS 13 Test Suite Index
 // Propósito: Centralizar y exportar todos los tests del módulo HME

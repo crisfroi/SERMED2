@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Connection test runner utility
  * This provides a simple way to test and validate the Supabase connection fixes

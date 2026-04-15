@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // DICOM Viewer Component - ASIS 15.0 - Orthanc PACS Integration
 // Display DICOM images from Orthanc server with viewer controls

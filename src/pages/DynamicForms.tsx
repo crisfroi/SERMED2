@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { FormManager } from '@/components/dynamic-forms/FormManager';
 

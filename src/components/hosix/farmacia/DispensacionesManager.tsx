@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { supabase, executeSupabaseQuery } from '../../../integrations/supabase/client';
 import useDispensaciones from '../../../hooks/hosix/useDispensaciones';

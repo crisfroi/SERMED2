@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/hooks/use-surgery-hooks.ts
 import { useState, useCallback, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';

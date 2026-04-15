@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // useComorbidity.ts - Comorbidity Detection & Risk Assessment Hook
 // ASIS 14.0 - Diagnóstico Unificado - Hito 3

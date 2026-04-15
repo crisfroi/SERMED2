@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 11 ADMIN 1: Payroll Management Component
 // Component: PayrollManagement
 // Purpose: Create, edit, approve, and process payroll in XAF

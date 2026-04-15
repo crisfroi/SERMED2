@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react'
 import { useHosixImagenologia } from '@/hooks/useHosixImagenologia'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

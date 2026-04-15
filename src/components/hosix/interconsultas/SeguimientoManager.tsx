@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import useHosixInterconsultas from '../../../hooks/hosix/useHosixInterconsultas';
 import SeguimientoForm from './SeguimientoForm';

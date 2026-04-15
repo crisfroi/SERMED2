@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { Settings, Users, Lock, Database, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';

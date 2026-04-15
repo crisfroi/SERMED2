@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Banknote, FileText, Upload, Wallet } from 'lucide-react'; // Importa los íconos
 

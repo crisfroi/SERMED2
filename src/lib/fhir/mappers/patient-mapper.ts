@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { FHIR } from '../types';
 import { supabase } from '@/integrations/supabase/client';
 

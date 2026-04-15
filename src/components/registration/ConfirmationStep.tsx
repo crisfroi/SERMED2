@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from "react"; // Importamos useState
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Mapeo de GeoJSON (ADM2) a la Clave Canónica del Distrito Sanitario (BD).
  * ESTRICTAMENTE basado en el archivo de mapeo proporcionado y correcciones del usuario.

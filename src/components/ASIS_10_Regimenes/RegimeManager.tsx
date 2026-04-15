@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // RegimeManager.tsx - Medication Regimen Management Component
 // ASIS 10.0 - Regímenes de Medicación

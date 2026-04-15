@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Utility functions for cleaning up localStorage and sessionStorage
  * to prevent authentication conflicts

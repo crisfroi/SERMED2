@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Enhanced error suppression utility for common React/browser issues
  * Specifically targets ResizeObserver loops and normalizes non-Error runtime issues

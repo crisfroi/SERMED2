@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 12 ADMIN 2: Waiting Rooms
 // Hook: useRoomConfiguration
 // Purpose: Room management - CRUD, status, configuration

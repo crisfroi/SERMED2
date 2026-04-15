@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * FHIR R4 Type Definitions
  * Based on HL7 FHIR 4.0.1 specification

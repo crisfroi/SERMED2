@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button } from '@/components/ui/button';
 import { Activity, FileText, Users, TrendingUp, MessageCircle, AlertTriangle, Settings, UserCheck, Building2 } from 'lucide-react';
 

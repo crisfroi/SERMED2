@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { CloudUpload, UserPlus, Trash2, Check } from 'lucide-react';

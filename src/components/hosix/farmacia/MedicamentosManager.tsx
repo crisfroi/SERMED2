@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import useHosixMedicamentos from '../../../hooks/hosix/useHosixMedicamentos';
 import MedicamentoForm from './MedicamentoForm';

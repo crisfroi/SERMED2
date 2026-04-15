@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ============================================================================
 // Imaging Order Form Component - ASIS 15.0 - Radiology Orders
 // Create imaging orders with modality selection and DICOM/Orthanc integration

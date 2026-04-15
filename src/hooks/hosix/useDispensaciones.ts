@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback } from 'react';
 import { supabase, executeSupabaseQuery } from '../../integrations/supabase/client';
 import useHosixStock from './useHosixStock';

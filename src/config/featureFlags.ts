@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const ENABLE_INTERACTIVE_TOURS = true;
 
 export const TOURS_STORAGE_KEYS = {

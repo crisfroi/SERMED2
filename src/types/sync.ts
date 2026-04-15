@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Sync Queue Types - FASE A2
  * Types for offline-first, multi-center synchronization

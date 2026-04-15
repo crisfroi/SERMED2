@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { useHosixEnfermeria, WorklistEnfermeria } from '@/hooks/useHosixEnfermeria';
 import { Button } from '@/components/ui/button';

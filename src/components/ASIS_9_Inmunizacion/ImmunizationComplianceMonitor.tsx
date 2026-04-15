@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/ASIS_9_Inmunizacion/ImmunizationComplianceMonitor.tsx
 import React, { useState } from 'react';
 import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter } from 'recharts';

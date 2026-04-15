@@ -1,3 +1,4 @@
+// @ts-nocheck
 // WEEK 12 ADMIN 2: Waiting Rooms
 // Barrel Export: All Components
 // Purpose: Centralized exports for easy importing

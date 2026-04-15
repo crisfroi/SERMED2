@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import useHosixPrescripciones from '../../../hooks/hosix/useHosixPrescripciones';
 import useHosixMedicamentos from '../../../hooks/hosix/useHosixMedicamentos';

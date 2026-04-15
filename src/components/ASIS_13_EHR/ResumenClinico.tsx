@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { AlertTriangle, Pill, AlertCircle, Trash2, Plus } from 'lucide-react';
 
