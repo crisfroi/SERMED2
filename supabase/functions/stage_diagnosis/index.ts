@@ -107,19 +107,20 @@ serve(async (req) => {
     const activeCodes = patientActiveDiagnoses?.map((d: any) => d.icd10_code) || [];
 
     if (activeCodes.length > 0) {
-      const { data: comorbidities, error: comErr } = await supabase
-        .from('comorbidities')
+      // Check for active diagnoses that overlap (potential comorbidities)
+      const { data: relatedDiagnoses, error: relErr } = await supabase
+        .from('diagnoses')
         .select('*')
         .in('icd10_code', activeCodes)
-        .eq('comorbid_code', icd10_code)
+        .eq('status', 'active')
         .limit(10);
 
-      if (comErr) throw comErr;
+      if (relErr) throw relErr;
 
-      if (comorbidities && comorbidities.length > 0) {
-        result.comorbidities = comorbidities;
+      if (relatedDiagnoses && relatedDiagnoses.length > 0) {
+        result.comorbidities = relatedDiagnoses;
         result.warnings.push(
-          `${comorbidities.length} significant comorbidity/comorbidities interactions detected.`
+          `${relatedDiagnoses.length} active comorbid diagnoses detected.`
         );
       }
     }

@@ -31,7 +31,7 @@ serve(async (req) => {
     // Fetch pregnancy data
     const { data: pregnancy, error: fetchError } = await supabase
       .from("pregnancy")
-      .select("*, patient:patient_id(date_of_birth, comorbidities)")
+      .select("*, patient:patient_id(date_of_birth, chronic_conditions)")
       .eq("id", pregnancy_id)
       .single();
 
@@ -66,17 +66,17 @@ serve(async (req) => {
         riskFactors.maternal.push("Edad materna muy avanzada (>40)");
       }
 
-      // Comorbidities
-      if (pregnancy.patient.comorbidities) {
-        if (pregnancy.patient.comorbidities.includes("hypertension")) {
+      // Chronic conditions
+      if (pregnancy.patient.chronic_conditions) {
+        if (pregnancy.patient.chronic_conditions.includes("hypertension")) {
           riskScore += 20;
           riskFactors.maternal.push("Hipertensión crónica");
         }
-        if (pregnancy.patient.comorbidities.includes("diabetes")) {
+        if (pregnancy.patient.chronic_conditions.includes("diabetes")) {
           riskScore += 25;
           riskFactors.maternal.push("Diabetes pregestacional");
         }
-        if (pregnancy.patient.comorbidities.includes("obesity")) {
+        if (pregnancy.patient.chronic_conditions.includes("obesity")) {
           riskScore += 15;
           riskFactors.maternal.push("Obesidad (IMC >30)");
         }
