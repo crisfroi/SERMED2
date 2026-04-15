@@ -19,11 +19,29 @@ import ErrorBoundary from "@/components/ui/error-boundary";
 import "./utils/authErrorHandler";
 import "./utils/storageCleanup";
 import { initResizeObserverErrorHandling } from "./utils/resizeObserverHandler";
+import { lazy, Suspense } from "react";
 
-// New Hospital System
+// Hospital System
 import HospitalLogin from "./pages/Hospital/HospitalLogin";
 import HospitalLayout from "./components/hospital/HospitalLayout";
 import HospitalDashboard from "./pages/Hospital/HospitalDashboard";
+
+// ASIS Clinical Modules (lazy loaded)
+const ObstetriciaModule = lazy(() => import("./pages/Hospital/modules/ObstetriciaModule"));
+const CREDModule = lazy(() => import("./pages/Hospital/modules/CREDModule"));
+const CirugiaModule = lazy(() => import("./pages/Hospital/modules/CirugiaModule"));
+const DieteticaModule = lazy(() => import("./pages/Hospital/modules/DieteticaModule"));
+const InmunizacionModule = lazy(() => import("./pages/Hospital/modules/InmunizacionModule"));
+const LaboratorioModule = lazy(() => import("./pages/Hospital/modules/LaboratorioModule"));
+const FarmaciaModule = lazy(() => import("./pages/Hospital/modules/FarmaciaModule"));
+const MedicamentosModule = lazy(() => import("./pages/Hospital/modules/MedicamentosModule"));
+const ReferenciaModule = lazy(() => import("./pages/Hospital/modules/ReferenciaModule"));
+const FarmacoterapiaModule = lazy(() => import("./pages/Hospital/modules/FarmacoterapiaModule"));
+const DiagnosticoModule = lazy(() => import("./pages/Hospital/modules/DiagnosticoModule"));
+const ImagenesModule = lazy(() => import("./pages/Hospital/modules/ImagenesModule"));
+const EHRModule = lazy(() => import("./pages/Hospital/modules/EHRModule"));
+const RRHHModule = lazy(() => import("./pages/Hospital/modules/RRHHModule"));
+const SalasEsperaModule = lazy(() => import("./pages/Hospital/modules/SalasEsperaModule"));
 
 initResizeObserverErrorHandling();
 
@@ -44,11 +62,9 @@ const queryClient = new QueryClient({
   }
 });
 
-// Simple placeholder for modules not yet wired
-const ModulePlaceholder = ({ name }: { name: string }) => (
-  <div className="p-6">
-    <h2 className="text-xl font-semibold mb-2">{name}</h2>
-    <p className="text-muted-foreground">Módulo en desarrollo. Los componentes ASIS están disponibles en src/components/.</p>
+const Loading = () => (
+  <div className="flex items-center justify-center p-12">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
   </div>
 );
 
@@ -62,6 +78,7 @@ function App() {
             <Sonner />
             <BrowserRouter>
               <Routes>
+                {/* RENAPROSA - Professional Registry */}
                 <Route path="/" element={<Home />} />
                 <Route path="/old-home" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
@@ -72,25 +89,25 @@ function App() {
                 <Route path="/dynamic-forms" element={<DynamicForms />} />
                 <Route path="/form/:publicUrl" element={<PublicForm />} />
 
-                {/* Hospital System */}
+                {/* HOSIX - Hospital Management System (separate Supabase project) */}
                 <Route path="/hosix/login" element={<HospitalLogin />} />
                 <Route path="/hosix" element={<HospitalLayout />}>
                   <Route index element={<HospitalDashboard />} />
-                  <Route path="obstetricia" element={<ModulePlaceholder name="Obstetricia (ASIS 4)" />} />
-                  <Route path="cred" element={<ModulePlaceholder name="CRED (ASIS 5)" />} />
-                  <Route path="cirugia" element={<ModulePlaceholder name="Cirugía (ASIS 7)" />} />
-                  <Route path="dietetica" element={<ModulePlaceholder name="Dietética (ASIS 8)" />} />
-                  <Route path="inmunizacion" element={<ModulePlaceholder name="Inmunización (ASIS 8)" />} />
-                  <Route path="laboratorio" element={<ModulePlaceholder name="Laboratorio (ASIS 8/10)" />} />
-                  <Route path="farmacia" element={<ModulePlaceholder name="Farmacia (ASIS 9)" />} />
-                  <Route path="medicamentos" element={<ModulePlaceholder name="Medicamentos (ASIS 10)" />} />
-                  <Route path="referencia" element={<ModulePlaceholder name="Referencia (ASIS 11)" />} />
-                  <Route path="farmacoterapia" element={<ModulePlaceholder name="Farmacoterapia (ASIS 12)" />} />
-                  <Route path="diagnostico" element={<ModulePlaceholder name="Diagnóstico (ASIS 14)" />} />
-                  <Route path="imagenes" element={<ModulePlaceholder name="Imágenes (ASIS 15)" />} />
-                  <Route path="ehr" element={<ModulePlaceholder name="Historia Clínica Electrónica (ASIS 13)" />} />
-                  <Route path="rrhh" element={<ModulePlaceholder name="Recursos Humanos (ADMIN 1)" />} />
-                  <Route path="salas-espera" element={<ModulePlaceholder name="Salas de Espera (ADMIN 2)" />} />
+                  <Route path="obstetricia" element={<Suspense fallback={<Loading />}><ObstetriciaModule /></Suspense>} />
+                  <Route path="cred" element={<Suspense fallback={<Loading />}><CREDModule /></Suspense>} />
+                  <Route path="cirugia" element={<Suspense fallback={<Loading />}><CirugiaModule /></Suspense>} />
+                  <Route path="dietetica" element={<Suspense fallback={<Loading />}><DieteticaModule /></Suspense>} />
+                  <Route path="inmunizacion" element={<Suspense fallback={<Loading />}><InmunizacionModule /></Suspense>} />
+                  <Route path="laboratorio" element={<Suspense fallback={<Loading />}><LaboratorioModule /></Suspense>} />
+                  <Route path="farmacia" element={<Suspense fallback={<Loading />}><FarmaciaModule /></Suspense>} />
+                  <Route path="medicamentos" element={<Suspense fallback={<Loading />}><MedicamentosModule /></Suspense>} />
+                  <Route path="referencia" element={<Suspense fallback={<Loading />}><ReferenciaModule /></Suspense>} />
+                  <Route path="farmacoterapia" element={<Suspense fallback={<Loading />}><FarmacoterapiaModule /></Suspense>} />
+                  <Route path="diagnostico" element={<Suspense fallback={<Loading />}><DiagnosticoModule /></Suspense>} />
+                  <Route path="imagenes" element={<Suspense fallback={<Loading />}><ImagenesModule /></Suspense>} />
+                  <Route path="ehr" element={<Suspense fallback={<Loading />}><EHRModule /></Suspense>} />
+                  <Route path="rrhh" element={<Suspense fallback={<Loading />}><RRHHModule /></Suspense>} />
+                  <Route path="salas-espera" element={<Suspense fallback={<Loading />}><SalasEsperaModule /></Suspense>} />
                 </Route>
 
                 <Route path="*" element={<NotFound />} />

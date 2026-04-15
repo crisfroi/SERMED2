@@ -27,7 +27,7 @@ console.log('✅ Supabase client initialized with:', {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-const resilientFetch: typeof fetch = async (input, init = {}) => {
+const resilientFetch: typeof fetch = async (input, init: any = {}) => {
   const maxAttempts = 3;
   const baseTimeoutMs = 12000;
   let lastError: any = null;
