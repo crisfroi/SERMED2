@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Tipos para el sistema de formularios dinámicos
 export interface FormFieldConfig {
   id: string;

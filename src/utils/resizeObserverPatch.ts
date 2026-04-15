@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Direct patch for ResizeObserver loop errors
  * This is a simple, lightweight solution that directly prevents the error

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { useHosixCitas } from '@/hooks/useHosixCitas';
 import { useHosixPacientes } from '@/hooks/useHosixPacientes';

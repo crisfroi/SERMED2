@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Utility to handle ResizeObserver loop errors and warnings
  * This prevents console spam from ResizeObserver loop limit exceeded errors

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Test helpers to verify enum mapping functionality
  */

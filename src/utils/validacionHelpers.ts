@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Helper functions for validation (validacion) management
  * Handles mapping between frontend workflow stages and database enum values

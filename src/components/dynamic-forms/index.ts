@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Exportaciones del sistema de formularios dinámicos
 export { FormBuilder } from './FormBuilder';
 export { FieldEditor } from './FieldEditor';

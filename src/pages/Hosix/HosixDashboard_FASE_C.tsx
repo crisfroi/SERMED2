@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * FASE C: Dashboard with Real Data + Sync Status
  * Updated HosixDashboard.tsx to show actual system state

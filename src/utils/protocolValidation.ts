@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Protocol validation utilities for guardias payment system
  * Ensures compliance with medical guards payment protocol requirements

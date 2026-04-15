@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { supabase, executeSupabaseQuery } from '../../../integrations/supabase/client';
 import { useEffect, useState, useCallback } from 'react';

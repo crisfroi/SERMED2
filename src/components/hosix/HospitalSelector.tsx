@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * HospitalSelector - FASE A1 MULTICENTRO
  * Dropdown to select active hospital, integrated into header

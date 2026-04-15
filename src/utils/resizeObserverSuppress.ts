@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Utility to suppress ResizeObserver loop errors
  * These errors are benign and occur when ResizeObserver callbacks

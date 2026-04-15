@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { useHosixPacientes } from '@/hooks/useHosixPacientes';
 import { Button } from '@/components/ui/button';

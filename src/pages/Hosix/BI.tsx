@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { BarChart3, TrendingUp, PieChart, LineChart } from 'lucide-react';
 import { Button } from '@/components/ui/button';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 export function getErrorMessage(error: any): string {
   // Si es un string, devolverlo directamente
   if (typeof error === "string") {

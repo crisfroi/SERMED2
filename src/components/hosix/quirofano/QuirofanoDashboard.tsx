@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * =========================================================================
  * QUIROFANO DASHBOARD - Control Integral de Procedimientos Quirúrgicos

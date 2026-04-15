@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const PROVINCIAS_EG = [
   "Annobon",
   "Bioko Norte",

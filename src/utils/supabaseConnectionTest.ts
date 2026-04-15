@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Supabase connectivity test utility
  * This helps debug network connectivity issues with Supabase

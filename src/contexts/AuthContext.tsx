@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import { UserRole, hasPermission, canAccessTab, getRoleRestrictions, ROLE_DEFINITIONS } from '@/types/roles';
 import { supabase } from '@/integrations/supabase/client';

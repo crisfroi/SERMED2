@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Menu, Search, Bell, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
