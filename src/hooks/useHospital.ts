@@ -14,9 +14,8 @@ export const useHospital = () => {
       try {
         setIsLoading(true);
         const { data, error: fetchError } = await supabase
-          .from('establishments')
-          .select('id, nombre, region')
-          .eq('type', 'hospital')
+          .from('clinic')
+          .select('id, name, address, phone, email')
           .limit(50);
 
         if (fetchError) throw fetchError;

@@ -1,11 +1,13 @@
-import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { AppProvider } from './contexts/AppContext'
+import { AppRouter } from '../packages/hosix/src/components/layout/AppRouter'
 import './index.css'
-import './utils/resizeObserverPatch'
-import { initializeErrorSuppression } from './utils/errorSuppression'
 
-// Inicializaciones existentes
-initializeErrorSuppression()
-
-// Renderizado de la aplicación
-createRoot(document.getElementById("root")!).render(<App />);
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <AppProvider>
+      <AppRouter />
+    </AppProvider>
+  </React.StrictMode>,
+)
