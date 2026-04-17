@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from '../common/ErrorBoundary';
 import { ProtectedRoute } from './ProtectedRoute';
-import { useAuth } from '@hosix/hooks/shared/useApp';
+import { useAuth } from '@/hooks/useApp';
 
 // Pages - lazy loaded for performance
 import LoginPage from '@/pages/LoginPage';
