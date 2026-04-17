@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useDocumentEncryption } from '@/hooks/useDocumentEncryption';
+import { useDocumentEncryption } from '@hosix/hooks/07-clinical-docs/useDocumentEncryption';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Lock, Key, Shield, RefreshCw, Trash2, Copy } from 'lucide-react';

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { useObstetricRisk } from '@/hooks/useObstetricRisk';
+import { useObstetricRisk } from '@hosix/hooks/01-obstetrics/useObstetricRisk';
 import { AlertTriangle, TrendingUp, Heart, Clock, Users } from 'lucide-react';
 
 interface ObstetricRiskAlertProps {

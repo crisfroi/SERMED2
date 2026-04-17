@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { useNutritionCompliance, evaluateCompliance, getComplianceRecommendation } from '@/hooks/useNutritionCompliance'
+import { useNutritionCompliance, evaluateCompliance, getComplianceRecommendation } from '@hosix/hooks/03-nutrition/useNutritionCompliance'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

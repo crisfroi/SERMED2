@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { useApp } from '@/hooks/useApp';
+import { useApp } from '@hosix/hooks/shared/useApp';
 import { validateEmail, validatePassword } from '@sermed2/shared/utils/validators';
 import { loginViaEdgeFunction } from '@sermed2/shared/services/auth';
 

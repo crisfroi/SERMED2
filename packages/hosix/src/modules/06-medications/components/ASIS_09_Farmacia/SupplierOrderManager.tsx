@@ -17,7 +17,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useProcurementWorkflow } from '@/hooks/useProcurementWorkflow';
+import { useProcurementWorkflow } from '@hosix/hooks/11-admin-operations/useProcurementWorkflow';
 
 // ============================================================================
 // VALIDATION SCHEMA

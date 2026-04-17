@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useMedicationOrder } from '@/hooks/useMedicationOrder';
+import { useMedicationOrder } from '@hosix/hooks/06-medications/useMedicationOrder';
 import { AlertCircle, Loader2, Check } from 'lucide-react';
 
 interface MedicationOrderFormProps {

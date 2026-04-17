@@ -24,7 +24,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, AlertCircle, Loader } from 'lucide-react';
-import { useMedicationOrder } from '@/hooks/useMedicationOrder';
+import { useMedicationOrder } from '@hosix/hooks/06-medications/useMedicationOrder';
 
 const medicationFormSchema = z.object({
   medicationId: z.string().uuid('Selecciona un medicamento válido'),

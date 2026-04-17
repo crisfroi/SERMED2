@@ -6,7 +6,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DiagnosisForm } from '@/components/ASIS_14_Diagnostico/DiagnosisForm';
-import { useDiagnosisForm } from '@/hooks/useDiagnosisForm';
+import { useDiagnosisForm } from '@hosix/hooks/08-diagnoses/useDiagnosisForm';
 
 jest.mock('@/hooks/useDiagnosisForm');
 

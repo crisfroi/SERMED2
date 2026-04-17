@@ -18,7 +18,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useDicomViewer } from '@/hooks/useDicomViewer';
+import { useDicomViewer } from '@hosix/hooks/09-imaging/useDicomViewer';
 
 interface DicomImage {
   id: string;

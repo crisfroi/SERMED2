@@ -24,7 +24,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, AlertCircle, Loader, Search } from 'lucide-react';
-import { useDiagnosisManagement } from '@/hooks/useDiagnosisManagement';
+import { useDiagnosisManagement } from '@hosix/hooks/08-diagnoses/useDiagnosisManagement';
 
 const diagnosisFormSchema = z.object({
   icd10Code: z.string().min(3, 'Código ICD-10 requerido'),

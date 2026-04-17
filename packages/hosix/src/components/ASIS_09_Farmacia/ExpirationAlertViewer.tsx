@@ -13,7 +13,7 @@ import {
   AlertTriangle,
   TrendingUp,
 } from 'lucide-react';
-import { useExpirationTracking } from '@/hooks/useExpirationTracking';
+import { useExpirationTracking } from '@hosix/hooks/06-medications/useExpirationTracking';
 
 // ============================================================================
 // TYPES

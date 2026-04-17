@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useAuditIntegration, type AuditTrailEntry, type AccessLog } from '@/hooks/useAuditIntegration';
+import { useAuditIntegration, type AuditTrailEntry, type AccessLog } from '@hosix/hooks/shared/useAuditIntegration';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import {

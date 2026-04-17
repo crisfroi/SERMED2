@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useComorbidity } from '@/hooks/useComorbidity';
+import { useComorbidity } from '@hosix/hooks/08-diagnoses/useComorbidity';
 import {
   BarChart,
   Bar,

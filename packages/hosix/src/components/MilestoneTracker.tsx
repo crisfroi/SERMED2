@@ -9,7 +9,7 @@
  */
 
 import React, { useState } from 'react'
-import { useMilestoneTracking, WHO_MILESTONES, evaluateMilestoneStatus } from '@/hooks/useMilestoneTracking'
+import { useMilestoneTracking, WHO_MILESTONES, evaluateMilestoneStatus } from '@hosix/hooks/02-pediatrics/useMilestoneTracking'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'

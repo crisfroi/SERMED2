@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, AlertTriangle, CheckCircle2, Loader } from 'lucide-react';
-import { useImmunizationGaps } from '@/hooks/useImmunizationHooks';
+import { useImmunizationGaps } from '@hosix/hooks/05-immunization/useImmunizationHooks';
 
 // ============================================================================
 // TYPES

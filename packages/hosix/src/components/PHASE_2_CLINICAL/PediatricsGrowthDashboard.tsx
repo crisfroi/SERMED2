@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { TrendingUp, AlertCircle, CheckCircle2, AlertTriangle, Baby, Plus } from 'lucide-react';
-import { usePediatricsGrowth } from '@/hooks/usePediatricsGrowth';
+import { usePediatricsGrowth } from '@hosix/hooks/02-pediatrics/usePediatricsGrowth';
 
 interface PediatricsGrowthDashboardProps {
   patientId: string;

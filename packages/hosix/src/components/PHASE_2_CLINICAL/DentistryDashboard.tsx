@@ -29,7 +29,7 @@ import {
   Clock,
   Plus,
 } from 'lucide-react';
-import { useDentistryManagement } from '@/hooks/useDentistryManagement';
+import { useDentistryManagement } from '@hosix/hooks/shared/useDentistryManagement';
 
 interface DentistryDashboardProps {
   dentistId?: string;

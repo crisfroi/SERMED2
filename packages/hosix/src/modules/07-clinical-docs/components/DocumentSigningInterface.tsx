@@ -4,7 +4,7 @@
  */
 
 import React, { useRef, useState, useEffect } from 'react';
-import { useApp } from '@/hooks/useApp';
+import { useApp } from '@hosix/hooks/shared/useApp';
 
 export interface DocumentSigningInterfaceProps {
   documentTitle: string;

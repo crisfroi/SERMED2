@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, AlertCircle, Clock, AlertTriangle, Loader, Download } from 'lucide-react';
-import { useNutritionPlanning } from '@/hooks/useNutritionPlanning';
+import { useNutritionPlanning } from '@hosix/hooks/03-nutrition/useNutritionPlanning';
 
 // ============================================================================
 // TYPES

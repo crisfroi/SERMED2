@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import { useApp } from '@/hooks/useApp';
-import { usePermissions } from '@/hooks/usePermissions';
+import { useApp } from '@hosix/hooks/shared/useApp';
+import { usePermissions } from '@hosix/hooks/shared/usePermissions';
 
 export interface PermissionGuardProps {
   requiredPermission: string;

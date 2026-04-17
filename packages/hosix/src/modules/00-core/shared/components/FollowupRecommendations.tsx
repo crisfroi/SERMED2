@@ -14,8 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useReferralFollowup } from '@/hooks/useReferralFollowup';
-import { useReferralOutcomes } from '@/hooks/useReferralOutcomes';
+import { useReferralFollowup } from '@hosix/hooks/shared/useReferralFollowup';
+import { useReferralOutcomes } from '@hosix/hooks/shared/useReferralOutcomes';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Calendar, CheckCircle, TrendingUp, AlertCircle } from 'lucide-react';

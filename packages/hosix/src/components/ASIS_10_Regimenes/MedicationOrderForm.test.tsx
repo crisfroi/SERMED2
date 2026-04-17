@@ -6,7 +6,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MedicationOrderForm } from '@/components/ASIS_10_Regimenes/MedicationOrderForm';
-import { useMedicationOrder } from '@/hooks/useMedicationOrder';
+import { useMedicationOrder } from '@hosix/hooks/06-medications/useMedicationOrder';
 
 jest.mock('@/hooks/useMedicationOrder');
 

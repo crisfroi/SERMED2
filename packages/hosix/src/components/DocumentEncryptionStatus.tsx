@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useDocumentEncryption, type EncryptionKey, type EncryptionStatus } from '@/hooks/useDocumentEncryption';
+import { useDocumentEncryption, type EncryptionKey, type EncryptionStatus } from '@hosix/hooks/07-clinical-docs/useDocumentEncryption';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Lock, LockOpen, RotateCcw, Key, Shield, AlertCircle, CheckCircle } from 'lucide-react';

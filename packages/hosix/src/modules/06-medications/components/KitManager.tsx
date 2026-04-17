@@ -26,7 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useMedicationKit } from '@/hooks/useMedicationKit'
+import { useMedicationKit } from '@hosix/hooks/06-medications/useMedicationKit'
 import { Plus, Trash2, Edit2, Package } from 'lucide-react'
 
 interface KitFormData {

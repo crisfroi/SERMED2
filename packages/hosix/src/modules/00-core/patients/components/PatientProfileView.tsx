@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useApp } from '@/hooks/useApp';
+import { useApp } from '@hosix/hooks/shared/useApp';
 import { formatDate, formatPhone } from '@sermed2/shared/utils/formatters';
 import type { Patient } from '@sermed2/shared/types';
 

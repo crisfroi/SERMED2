@@ -4,8 +4,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useClinical } from '@/hooks/useClinical';
-import { usePermissions } from '@/hooks/usePermissions';
+import { useClinical } from '@hosix/hooks/07-clinical-docs/useClinical';
+import { usePermissions } from '@hosix/hooks/shared/usePermissions';
 import { VisitNotesForm } from './VisitNotesForm';
 import { DiagnosisForm } from './DiagnosisForm';
 import { PrescriptionForm } from './PrescriptionForm';

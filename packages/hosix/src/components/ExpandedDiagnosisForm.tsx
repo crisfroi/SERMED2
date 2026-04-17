@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useDiagnosisExpanding } from '@/hooks/useDiagnosisExpanding'
+import { useDiagnosisExpanding } from '@hosix/hooks/08-diagnoses/useDiagnosisExpanding'
 import { Plus, Zap, BookOpen } from 'lucide-react'
 
 interface ExpandedDiagnosisFormProps {

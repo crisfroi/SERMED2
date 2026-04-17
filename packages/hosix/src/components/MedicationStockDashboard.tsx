@@ -24,7 +24,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { AlertCircle, TrendingUp, Package, DollarSign } from 'lucide-react'
-import { useStockVariants } from '@/hooks/useStockVariants'
+import { useStockVariants } from '@hosix/hooks/06-medications/useStockVariants'
 
 const VARIANT_COLORS = {
   inpatient: '#3b82f6',

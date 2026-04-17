@@ -5,8 +5,8 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useApp } from '@/hooks/useApp';
-import { usePermissions } from '@/hooks/usePermissions';
+import { useApp } from '@hosix/hooks/shared/useApp';
+import { usePermissions } from '@hosix/hooks/shared/usePermissions';
 
 export interface RoleBasedRouteProps {
   children: React.ReactNode;

@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { usePrescriptionViewer } from '@/hooks/usePrescriptionViewer';
+import { usePrescriptionViewer } from '@hosix/hooks/06-medications/usePrescriptionViewer';
 import {
   Calendar,
   Pill,

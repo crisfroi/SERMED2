@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, CheckCircle2, Clock, AlertTriangle, Loader } from 'lucide-react';
-import { useVaccineSchedule } from '@/hooks/useImmunizationHooks';
+import { useVaccineSchedule } from '@hosix/hooks/05-immunization/useImmunizationHooks';
 
 // ============================================================================
 // TYPES
