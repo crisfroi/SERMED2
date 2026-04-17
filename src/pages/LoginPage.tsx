@@ -8,7 +8,7 @@ const LoginPage = () => {
   const { addNotification } = useNotifications();
   const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState({
-    username: '',
+    username: '', // email
     password: '',
   });
 
@@ -34,13 +34,17 @@ const LoginPage = () => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           },
-          body: JSON.stringify(credentials),
+          body: JSON.stringify({
+            username: credentials.username,
+            password: credentials.password,
+          }),
         }
       );
 
       const data = await response.json();
 
       if (data.success && data.user) {
+        // Store auth state
         setAuth({
           user: data.user,
           isAuthenticated: true,
@@ -55,7 +59,10 @@ const LoginPage = () => {
           duration: 2000,
         });
 
-        navigate('/dashboard');
+        // Redirect based on role
+        setTimeout(() => {
+          navigate('/hosix/dashboard');
+        }, 1000);
       } else {
         addNotification({
           id: Date.now().toString(),
@@ -88,14 +95,14 @@ const LoginPage = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Usuario
+              Email
             </label>
             <input
-              type="text"
+              type="email"
               name="username"
               value={credentials.username}
               onChange={handleChange}
-              placeholder="Ingrese su usuario"
+              placeholder="admin@hosix.com"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               disabled={loading}
             />
@@ -129,7 +136,9 @@ const LoginPage = () => {
           <p className="text-center text-sm text-gray-600">
             Demo credentials:
             <br />
-            Usuario: <code className="bg-gray-100 px-2 py-1 rounded text-xs">admin</code>
+            Email: <code className="bg-gray-100 px-2 py-1 rounded text-xs">admin@hosix.com</code>
+            <br />
+            Password: <code className="bg-gray-100 px-2 py-1 rounded text-xs">Admin@Hosix123</code>
           </p>
         </div>
       </div>

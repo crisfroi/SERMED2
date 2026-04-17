@@ -1,0 +1,28 @@
+{
+  "project_id": "dfqefbkxounzmtggnfsc",
+  "api": {
+    "port": 54321,
+    "schemas": ["public", "graphql_public"],
+    "extra_search_path": ["public", "extensions"],
+    "max_rows": 1000
+  },
+  "db": {
+    "port": 54322,
+    "major_version": 15
+  },
+  "studio": {
+    "port": 54323
+  },
+  "inbucket": {
+    "port": 54324
+  },
+  "vector": {
+    "port": 54325
+  },
+  "realtime": {
+    "max_bytes_per_second": 1048576
+  },
+  "edge_runtime": {
+    "policy": "wasm"
+  }
+}
