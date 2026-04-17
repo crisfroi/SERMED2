@@ -1,16 +1,13 @@
-﻿export { useMealPlan } from './useMealPlan';
-export type * from './useMealPlan';
-export { useMedicationRegimen } from './useMedicationRegimen';
-export type * from './useMedicationRegimen';
-export { useNutritionAssessment } from './useNutritionAssessment';
-export type * from './useNutritionAssessment';
-export { useNutritionCompliance } from './useNutritionCompliance';
-export type * from './useNutritionCompliance';
-export { useNutritionHooks } from './useNutritionHooks';
-export type * from './useNutritionHooks';
-export { use-nutrition-hooks } from './use-nutrition-hooks';
-export type * from './use-nutrition-hooks';
-export { useNutritionPlanning } from './useNutritionPlanning';
-export type * from './useNutritionPlanning';
-export { useNutritionTracking } from './useNutritionTracking';
-export type * from './useNutritionTracking';
+import { useMealPlan } from './useMealPlan';
+import { useNutritionCompliance } from './useNutritionCompliance';
+import { useNutritionAssessment } from './useNutritionAssessment';
+import { useNutritionPlanning } from './useNutritionPlanning';
+import { useNutritionTracking } from './useNutritionTracking';
+
+export {
+  useMealPlan,
+  useNutritionCompliance,
+  useNutritionAssessment,
+  useNutritionPlanning,
+  useNutritionTracking
+};

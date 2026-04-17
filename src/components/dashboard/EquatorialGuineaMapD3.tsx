@@ -13,10 +13,11 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import * as LucideIcons from "lucide-react";
-const MaleIcon = (LucideIcons as any).Male || (LucideIcons as any).GenderMale || (LucideIcons as any).Man || (LucideIcons as any).User || null;
-const FemaleIcon = (LucideIcons as any).Female || (LucideIcons as any).GenderFemale || (LucideIcons as any).Woman || (LucideIcons as any).User || null;
-const { MapPin, Users, Building, Eye, Map: MapIcon } = LucideIcons;
+import { Users, Building, Eye, Map as MapIcon, User, MapPin } from 'lucide-react';
+
+// Use User as fallback for gender icons
+const MaleIcon = User;
+const FemaleIcon = User;
 
 // PASO 1: IMPORTAR UTILIDADES Y HOOK DE DATOS
 import ADM1_GEOJSON from "@/data/geoBoundaries-GNQ-ADM1.json";

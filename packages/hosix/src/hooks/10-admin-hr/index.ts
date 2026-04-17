@@ -1,30 +1,8 @@
-﻿export { useAccreditationStatusUpdate } from './useAccreditationStatusUpdate';
-export type * from './useAccreditationStatusUpdate';
-export { useAdherenceTracker } from './useAdherenceTracker';
-export type * from './useAdherenceTracker';
-export { useAllFormationStats } from './useAllFormationStats';
-export type * from './useAllFormationStats';
-export { useExportarEmpleados } from './useExportarEmpleados';
-export type * from './useExportarEmpleados';
-export { useFormationSegmentation } from './useFormationSegmentation';
-export type * from './useFormationSegmentation';
-export { useHRDashboard } from './useHRDashboard';
-export type * from './useHRDashboard';
-export { useInstitucionesFormacion } from './useInstitucionesFormacion';
-export type * from './useInstitucionesFormacion';
-export { useNominasPaymentSystem } from './useNominasPaymentSystem';
-export type * from './useNominasPaymentSystem';
-export { useNominasPaymentSystemV2 } from './useNominasPaymentSystemV2';
-export type * from './useNominasPaymentSystemV2';
-export { usePayrollProcessing } from './usePayrollProcessing';
-export type * from './usePayrollProcessing';
-export { useProfesionales } from './useProfesionales';
-export type * from './useProfesionales';
-export { useProfesionalesMutations } from './useProfesionalesMutations';
-export type * from './useProfesionalesMutations';
-export { useStaffManagement } from './useStaffManagement';
-export type * from './useStaffManagement';
-export { useStaffScheduling } from './useStaffScheduling';
-export type * from './useStaffScheduling';
-export { useThalamusStaffSync } from './useThalamusStaffSync';
-export type * from './useThalamusStaffSync';
+/**
+ * Admin HR Module Hooks
+ * 
+ * Currently no imports found from HOSIX components.
+ * Add HR-specific hooks here as needed.
+ */
+
+// TODO: Add admin HR hooks

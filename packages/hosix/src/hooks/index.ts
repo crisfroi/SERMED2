@@ -1,46 +1,46 @@
 /**
- * HOSIX Hooks - Central Export Point
+ * HOSIX Hooks - Modular Structure
  * 
- * Organized by clinical module for maximum clarity and maintainability.
- * Each module is self-contained and can be imported directly or via this root.
- * 
- * Usage:
- * - By module: import { useChildGrowth } from '@hosix/hooks/02-pediatrics'
- * - From root: import { useChildGrowth } from '@hosix/hooks'
- * 
- * Module Structure:
- * ├── 00-core/          → Authentication, app state, fundamentals
- * ├── 01-obstetrics/    → Pregnancy, obstetric care
- * ├── 02-pediatrics/    → Child health, growth, development
- * ├── 03-nutrition/     → Nutrition, diet planning
- * ├── 04-surgery/       → Surgical procedures, OR management
- * ├── 05-immunization/  → Vaccination, immunization
- * ├── 06-medications/   → Pharmacy, prescriptions, medication
- * ├── 07-clinical-docs/ → EHR, documents, signatures
- * ├── 08-diagnoses/     → Diagnosis, ICD coding, comorbidity
- * ├── 09-imaging/       → Imaging, radiology, DICOM
- * ├── 10-admin-hr/      → HR, staffing, payroll
- * ├── 11-admin-ops/     → Operations, inventory, queues
- * └── shared/           → Connectivity, sync, utilities
+ * Organized hooks by clinical domain for HOSIX modules.
  */
 
-// Core
-export * from './00-core';
-
-// Clinical Modules
+// 01-obstetrics
 export * from './01-obstetrics';
+
+// 02-pediatrics
 export * from './02-pediatrics';
+
+// 03-nutrition
 export * from './03-nutrition';
+
+// 04-surgery
 export * from './04-surgery';
+
+// 05-immunization
 export * from './05-immunization';
+
+// 06-medications
 export * from './06-medications';
+
+// 07-clinical-docs
 export * from './07-clinical-docs';
+
+// 08-diagnoses
 export * from './08-diagnoses';
+
+// 09-imaging
 export * from './09-imaging';
 
-// Administrative Modules
+// 10-admin-hr
 export * from './10-admin-hr';
+
+// 11-admin-operations
 export * from './11-admin-operations';
 
-// Shared
+// shared (includes existing hooks)
 export * from './shared';
+
+// Legacy exports
+export { useClinical } from './useClinical';
+export { usePatient } from './usePatient';
+export { usePermissions } from './usePermissions';

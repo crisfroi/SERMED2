@@ -1,3 +1,7 @@
+// Pediatrics stubs
+export const usePediatricsGrowth = () => {
+  return {};
+};
 /**
  * Hook: useMilestoneTracking - Hitos developmentales del niño
  * Gestiona: Rastreo de logros del desarrollo según WHO standards

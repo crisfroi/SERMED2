@@ -1,3 +1,20 @@
+// Nutrition stubs
+import { useState } from 'react';
+
+export const useMealPlan = (patientId: string) => {
+  const [plans, setPlans] = useState([]);
+  return { plans };
+};
+
+export const useNutritionCompliance = (patientId: string) => {
+  const [compliance, setCompliance] = useState(null);
+  return { compliance };
+};
+
+export const useNutritionAssessment = (patientId: string) => {
+  const [assessment, setAssessment] = useState(null);
+  return { assessment };
+};
 /**
  * Hook: useMealPlan
  * Gestiona planes de comidas: creación, edición, seguimiento

@@ -1,4 +1,4 @@
-supabase start# For detailed configuration reference documentation, visit:
+# For detailed configuration reference documentation, visit:
 # https://supabase.com/docs/guides/local-development/cli/config
 # A string used to distinguish different Supabase projects on the same host. Defaults to the
 # working directory name when running `supabase init`.
@@ -122,21 +122,21 @@ file_size_limit = "50MiB"
 
 # Store analytical data in S3 for running ETL jobs over Iceberg Catalog
 # This feature is only available on the hosted platform.
-[storage.analytics]
-enabled = false
-max_namespaces = 5
-max_tables = 10
-max_catalogs = 2
+# [storage.analytics]
+# enabled = false
+# max_namespaces = 5
+# max_tables = 10
+# max_catalogs = 2
 
 # Analytics Buckets is available to Supabase Pro plan.
 # [storage.analytics.buckets.my-warehouse]
 
 # Store vector embeddings in S3 for large and durable datasets
 # This feature is only available on the hosted platform.
-[storage.vector]
-enabled = false
-max_buckets = 10
-max_indexes = 5
+# [storage.vector]
+# enabled = false
+# max_buckets = 10
+# max_indexes = 5
 
 # Vector Buckets is available to Supabase Pro plan.
 # [storage.vector.buckets.documents-openai]

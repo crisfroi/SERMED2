@@ -1,18 +1,10 @@
-﻿export { useComorbidity } from './useComorbidity';
-export type * from './useComorbidity';
-export { useComorbidityAnalysis } from './useComorbidityAnalysis';
-export type * from './useComorbidityAnalysis';
-export { useComorbidityMatrix } from './useComorbidityMatrix';
-export type * from './useComorbidityMatrix';
-export { useDiagnosisExpanding } from './useDiagnosisExpanding';
-export type * from './useDiagnosisExpanding';
-export { useDiagnosisForm } from './useDiagnosisForm';
-export type * from './useDiagnosisForm';
-export { useDiagnosisHistory } from './useDiagnosisHistory';
-export type * from './useDiagnosisHistory';
-export { useDiagnosisManagement } from './useDiagnosisManagement';
-export type * from './useDiagnosisManagement';
-export { useICDSystemSwitch } from './useICDSystemSwitch';
-export type * from './useICDSystemSwitch';
-export { useInteractionChecker } from './useInteractionChecker';
-export type * from './useInteractionChecker';
+export {
+  useICDSystemSwitch,
+  useDiagnosisExpanding,
+  useComorbidityMatrix,
+  useDiagnosisManagement,
+  useDiagnosisHistory,
+  useDiagnosisForm,
+  useComorbidity,
+  useComorbidityAnalysis
+} from './index-exports';

@@ -1,0 +1,716 @@
+{
+  "analysis_date": "2026-04-17",
+  "analysis_status": "research_only_no_modifications",
+  "summary": {
+    "total_hosix_imports_found": 81,
+    "files_scanned": "packages/hosix/src/components/**/*.tsx",
+    "unique_import_paths": 45,
+    "modules_referenced": 13,
+    "critical_issue": "Hook structure broken - 160 hooks copied to modular structure in packages/hosix/src/hooks/{module}/ but the folder structure no longer exists. Only 4 files remain in packages/hosix/src/hooks/: index.ts, useClinical.ts, usePatient.ts, usePermissions.ts"
+  },
+  "imports_by_module": {
+    "01-obstetrics": {
+      "hooks": [
+        {
+          "path": "@hosix/hooks/01-obstetrics/useObstetricPatient",
+          "hook_name": "useObstetricPatient",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_04_Obstetricia/GestationMonitor.tsx:L2"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/01-obstetrics/useObstetricRisk",
+          "hook_name": "useObstetricRisk",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_04_Obstetricia/GestationMonitor.tsx:L3",
+            "packages/hosix/src/components/ASIS_04_Obstetricia/ObstetricRiskAlert.tsx:L5"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 2
+        }
+      ],
+      "total_imports": 3,
+      "status": "BROKEN - folder missing"
+    },
+    "02-pediatrics": {
+      "hooks": [
+        {
+          "path": "@hosix/hooks/02-pediatrics/useChildGrowth",
+          "hook_name": "useChildGrowth",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_05_CRED/GrowthChart.tsx:L3",
+            "packages/hosix/src/components/ASIS_05_CRED/MilestoneTracker.tsx:L6"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 2
+        },
+        {
+          "path": "@hosix/hooks/02-pediatrics/useChildGrowthWHO",
+          "hook_name": "useChildGrowthWHO",
+          "files_using": [
+            "packages/hosix/src/components/WHOPercentileChart.tsx:L13"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/02-pediatrics/usePediatricsGrowth",
+          "hook_name": "usePediatricsGrowth",
+          "files_using": [
+            "packages/hosix/src/components/PHASE_2_CLINICAL/PediatricsGrowthDashboard.tsx:L16"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/02-pediatrics/useMilestoneTracking",
+          "hook_name": "useMilestoneTracking",
+          "files_using": [
+            "packages/hosix/src/components/MilestoneTracker.tsx:L12"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        }
+      ],
+      "total_imports": 5,
+      "status": "BROKEN - folder missing"
+    },
+    "03-nutrition": {
+      "hooks": [
+        {
+          "path": "@hosix/hooks/03-nutrition/useMealPlan",
+          "hook_name": "useMealPlan",
+          "files_using": [
+            "packages/hosix/src/components/MealPlanBuilder.tsx:L7"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/03-nutrition/useNutritionCompliance",
+          "hook_name": "useNutritionCompliance",
+          "files_using": [
+            "packages/hosix/src/components/NutritionComplianceTracker.tsx:L7"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/03-nutrition/useNutritionAssessment",
+          "hook_name": "useNutritionAssessment",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_07_Nutricion/NutritionAssessmentForm.tsx:L13"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/03-nutrition/useNutritionPlanning",
+          "hook_name": "useNutritionPlanning",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_07_Nutricion/NutritionPlanViewer.tsx:L8"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/03-nutrition/useNutritionTracking",
+          "hook_name": "useNutritionTracking",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_07_Nutricion/WeightTrendChart.tsx:L8"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        }
+      ],
+      "total_imports": 5,
+      "status": "BROKEN - folder missing"
+    },
+    "05-immunization": {
+      "hooks": [
+        {
+          "path": "@hosix/hooks/05-immunization/useImmunizationHooks",
+          "hook_name": "useImmunizationHooks (exports 3 hooks)",
+          "hook_exports": [
+            "useVaccineSchedule",
+            "useImmunizationRecord",
+            "useImmunizationGaps"
+          ],
+          "files_using": [
+            "packages/hosix/src/components/ASIS_08_Inmunizacion/VaccineScheduleViewer.tsx:L6",
+            "packages/hosix/src/components/ASIS_08_Inmunizacion/ImmunizationRecordForm.tsx:L13",
+            "packages/hosix/src/components/ASIS_08_Inmunizacion/ImmunizationGapReport.tsx:L6"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 3,
+          "note": "Aggregator - imports from useImmunizationHooks"
+        }
+      ],
+      "total_imports": 3,
+      "status": "BROKEN - folder missing"
+    },
+    "06-medications": {
+      "hooks": [
+        {
+          "path": "@hosix/hooks/06-medications/useMedicationKit",
+          "hook_name": "useMedicationKit",
+          "files_using": [
+            "packages/hosix/src/components/KitManager.tsx:L21"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/06-medications/useStockVariants",
+          "hook_name": "useStockVariants",
+          "files_using": [
+            "packages/hosix/src/components/MedicationStockDashboard.tsx:L27"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/06-medications/useMedicationRegimen",
+          "hook_name": "useMedicationRegimen",
+          "files_using": [
+            "packages/hosix/src/components/RegimensBuilder.tsx:L21",
+            "packages/hosix/src/components/ASIS_10_Medicamentos/RegimensList.tsx:L28"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 2
+        },
+        {
+          "path": "@hosix/hooks/06-medications/useMedicationOrder",
+          "hook_name": "useMedicationOrder",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_10_Regimenes/MedicationOrderForm.tsx:L17",
+            "packages/hosix/src/components/ASIS_10_Regimenes/MedicationOrderForm.test.tsx:L9",
+            "packages/hosix/src/components/ASIS_10_Medicamentos/MedicationForm.tsx:L27"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 3
+        },
+        {
+          "path": "@hosix/hooks/06-medications/usePrescriptionViewer",
+          "hook_name": "usePrescriptionViewer",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_10_Regimenes/PrescriptionViewer.tsx:L14"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/06-medications/useExpirationTracking",
+          "hook_name": "useExpirationTracking",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_09_Farmacia/ExpirationAlertViewer.tsx:L16"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/06-medications/useRegimeManager",
+          "hook_name": "useRegimeManager",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_10_Regimenes/RegimeManager.tsx:L14"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/06-medications/useAdherenceTracker",
+          "hook_name": "useAdherenceTracker",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_10_Regimenes/AdherenceTracker.tsx:L13",
+            "packages/hosix/src/components/ASIS_10_Medicamentos/AdherenceTracker.tsx:L22"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 2
+        },
+        {
+          "path": "@hosix/hooks/06-medications/useInteractionChecker",
+          "hook_name": "useInteractionChecker",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_10_Regimenes/InteractionChecker.tsx:L13",
+            "packages/hosix/src/components/ASIS_10_Medicamentos/InteractionChecker.tsx:L19"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 2
+        }
+      ],
+      "total_imports": 10,
+      "status": "BROKEN - folder missing"
+    },
+    "07-clinical-docs": {
+      "hooks": [
+        {
+          "path": "@hosix/hooks/07-clinical-docs/useEHRVersioning",
+          "hook_name": "useEHRVersioning",
+          "files_using": [
+            "packages/hosix/src/components/VersionHistoryViewer.tsx:L9"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/07-clinical-docs/useDocumentEncryption",
+          "hook_name": "useDocumentEncryption",
+          "files_using": [
+            "packages/hosix/src/components/DocumentEncryptionStatus.tsx:L9"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/07-clinical-docs/useClinical",
+          "hook_name": "useClinical",
+          "files_using": [
+            "packages/hosix/src/components/clinical/ClinicalDocumentationTabs.tsx:L7"
+          ],
+          "exists_in_src_hooks": false,
+          "exists_in_packages_hosix_hooks": true,
+          "frequency": 1,
+          "note": "ALREADY EXISTS in packages/hosix/src/hooks/useClinical.ts"
+        }
+      ],
+      "total_imports": 3,
+      "status": "PARTIALLY BROKEN"
+    },
+    "08-diagnoses": {
+      "hooks": [
+        {
+          "path": "@hosix/hooks/08-diagnoses/useICDSystemSwitch",
+          "hook_name": "useICDSystemSwitch",
+          "files_using": [
+            "packages/hosix/src/components/ICDSystemSelector.tsx:L18"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/08-diagnoses/useDiagnosisExpanding",
+          "hook_name": "useDiagnosisExpanding",
+          "files_using": [
+            "packages/hosix/src/components/ExpandedDiagnosisForm.tsx:L21"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/08-diagnoses/useComorbidityMatrix",
+          "hook_name": "useComorbidityMatrix",
+          "files_using": [
+            "packages/hosix/src/components/ComorbidityMatrixEditor.tsx:L12"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/08-diagnoses/useDiagnosisManagement",
+          "hook_name": "useDiagnosisManagement",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_14_Diagnostico/DiagnosisList.tsx:L28",
+            "packages/hosix/src/components/ASIS_14_Diagnostico/DiagnosisForm.tsx:L27"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 2
+        },
+        {
+          "path": "@hosix/hooks/08-diagnoses/useDiagnosisHistory",
+          "hook_name": "useDiagnosisHistory",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_14_Diagnostico/DiagnosisHistory.tsx:L13"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/08-diagnoses/useDiagnosisForm",
+          "hook_name": "useDiagnosisForm",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_14_Diagnostico/DiagnosisForm.test.tsx:L9"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/08-diagnoses/useComorbidity",
+          "hook_name": "useComorbidity",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_14_Diagnostico/ComorbidityAssessment.tsx:L13"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/08-diagnoses/useComorbidityAnalysis",
+          "hook_name": "useComorbidityAnalysis",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_14_Diagnostico/ComorbidityAnalyzer.tsx:L21"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        }
+      ],
+      "total_imports": 8,
+      "status": "BROKEN - folder missing"
+    },
+    "09-imaging": {
+      "hooks": [
+        {
+          "path": "@hosix/hooks/09-imaging/useLabOrder",
+          "hook_name": "useLabOrder",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_08_Laboratorio/LabOrderForm.tsx:L43"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/09-imaging/useNormalRanges",
+          "hook_name": "useNormalRanges",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_08_Laboratorio/NormalRangeValidator.tsx:L24"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/09-imaging/useLabResults",
+          "hook_name": "useLabResults",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_08_Laboratorio/ResultsViewer.tsx:L30"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/09-imaging/useTrendAnalysis",
+          "hook_name": "useTrendAnalysis",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_08_Laboratorio/TrendAnalysis.tsx:L35"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/09-imaging/useDicomViewer",
+          "hook_name": "useDicomViewer",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_15_Imagenes/DicomViewer.tsx:L21"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/09-imaging/useImagingOrder",
+          "hook_name": "useImagingOrder",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_15_Imagenes/ImagingOrderForm.tsx:L43"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/09-imaging/useRadiologyReport",
+          "hook_name": "useRadiologyReport",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_15_Imagenes/RadiologyReport.tsx:L21"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        }
+      ],
+      "total_imports": 7,
+      "status": "BROKEN - folder missing"
+    },
+    "11-admin-operations": {
+      "hooks": [
+        {
+          "path": "@hosix/hooks/11-admin-operations/useProcurementWorkflow",
+          "hook_name": "useProcurementWorkflow",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_09_Farmacia/SupplierOrderManager.tsx:L20"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/11-admin-operations/useInventoryManagement",
+          "hook_name": "useInventoryManagement",
+          "files_using": [
+            "packages/hosix/src/components/ASIS_09_Farmacia/InventoryDashboard.tsx:L17"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        }
+      ],
+      "total_imports": 2,
+      "status": "BROKEN - folder missing"
+    },
+    "shared": {
+      "hooks": [
+        {
+          "path": "@hosix/hooks/shared/useApp",
+          "hook_name": "useApp",
+          "files_using": [
+            "packages/hosix/src/components/patient/PatientSearchForm.tsx:L7",
+            "packages/hosix/src/components/patient/PatientProfileView.tsx:L7",
+            "packages/hosix/src/components/patient/PatientDemographicsForm.tsx:L7",
+            "packages/hosix/src/components/clinical/VisitNotesForm.tsx:L7",
+            "packages/hosix/src/components/clinical/PrescriptionForm.tsx:L7",
+            "packages/hosix/src/components/clinical/DocumentSigningInterface.tsx:L7",
+            "packages/hosix/src/components/clinical/DiagnosisForm.tsx:L7",
+            "packages/hosix/src/components/auth/UserProfileForm.tsx:L7",
+            "packages/hosix/src/components/auth/RoleBasedRoute.tsx:L8",
+            "packages/hosix/src/components/auth/RegistrationForm.tsx:L7",
+            "packages/hosix/src/components/auth/PermissionGuard.tsx:L7",
+            "packages/hosix/src/components/auth/PasswordResetForm.tsx:L7",
+            "packages/hosix/src/components/auth/EnhancedLoginForm.tsx:L7"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 13,
+          "note": "CRITICAL: Most widely used hook"
+        },
+        {
+          "path": "@hosix/hooks/shared/usePermissions",
+          "hook_name": "usePermissions",
+          "files_using": [
+            "packages/hosix/src/components/clinical/VisitNotesForm.tsx:L8",
+            "packages/hosix/src/components/clinical/PrescriptionForm.tsx:L8",
+            "packages/hosix/src/components/clinical/DiagnosisForm.tsx:L8",
+            "packages/hosix/src/components/clinical/ClinicalDocumentationTabs.tsx:L8",
+            "packages/hosix/src/components/auth/RoleBasedRoute.tsx:L9",
+            "packages/hosix/src/components/auth/PermissionGuard.tsx:L8"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": true,
+          "frequency": 6,
+          "note": "ALREADY EXISTS in packages/hosix/src/hooks/usePermissions.ts"
+        },
+        {
+          "path": "@hosix/hooks/shared/useReferralManagement",
+          "hook_name": "useReferralManagement",
+          "files_using": [
+            "packages/hosix/src/components/ReferralTracker.tsx:L16"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/shared/useReferralFollowup",
+          "hook_name": "useReferralFollowup",
+          "files_using": [
+            "packages/hosix/src/components/FollowupRecommendations.tsx:L26"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/shared/useSpecialistLookup",
+          "hook_name": "useSpecialistLookup",
+          "files_using": [
+            "packages/hosix/src/components/SpecialistFinder.tsx:L18"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/shared/useAuditIntegration",
+          "hook_name": "useAuditIntegration",
+          "files_using": [
+            "packages/hosix/src/components/AuditTrailDashboard.tsx:L25"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/shared/useOphthalmology",
+          "hook_name": "useOphthalmology",
+          "files_using": [
+            "packages/hosix/src/components/PHASE_2_CLINICAL/OphthalmologyDashboard.tsx:L31"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/shared/useNursingManagement",
+          "hook_name": "useNursingManagement",
+          "files_using": [
+            "packages/hosix/src/components/PHASE_2_CLINICAL/NursingTaskBoard.tsx:L24"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/shared/useInpatientManagement",
+          "hook_name": "useInpatientManagement",
+          "files_using": [
+            "packages/hosix/src/components/PHASE_2_CLINICAL/InpatientDashboard.tsx:L25"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/shared/useICUManagement",
+          "hook_name": "useICUManagement",
+          "files_using": [
+            "packages/hosix/src/components/PHASE_2_CLINICAL/ICUDashboard.tsx:L33"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/shared/useGenetics",
+          "hook_name": "useGenetics",
+          "files_using": [
+            "packages/hosix/src/components/PHASE_2_CLINICAL/GeneticsDashboard.tsx:L31"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/shared/useEMS",
+          "hook_name": "useEMS",
+          "files_using": [
+            "packages/hosix/src/components/PHASE_2_CLINICAL/EMSDashboard.tsx:L38"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        },
+        {
+          "path": "@hosix/hooks/shared/useDentistryManagement",
+          "hook_name": "useDentistryManagement",
+          "files_using": [
+            "packages/hosix/src/components/PHASE_2_CLINICAL/DentistryDashboard.tsx:L32"
+          ],
+          "exists_in_src_hooks": true,
+          "exists_in_packages_hosix_hooks": false,
+          "frequency": 1
+        }
+      ],
+      "total_imports": 30,
+      "status": "BROKEN - most hooks missing from folder"
+    }
+  },
+  "missing_modules": [
+    "00-core",
+    "04-surgery",
+    "10-admin-hr"
+  ],
+  "modules_with_missing_hooks": {
+    "01-obstetrics": ["useObstetricPatient", "useObstetricRisk"],
+    "02-pediatrics": ["useChildGrowth", "useChildGrowthWHO", "usePediatricsGrowth", "useMilestoneTracking"],
+    "03-nutrition": ["useMealPlan", "useNutritionCompliance", "useNutritionAssessment", "useNutritionPlanning", "useNutritionTracking"],
+    "05-immunization": ["useImmunizationHooks"],
+    "06-medications": ["useMedicationKit", "useStockVariants", "useMedicationRegimen", "useMedicationOrder", "usePrescriptionViewer", "useExpirationTracking", "useRegimeManager", "useAdherenceTracker", "useInteractionChecker"],
+    "07-clinical-docs": ["useEHRVersioning", "useDocumentEncryption"],
+    "08-diagnoses": ["useICDSystemSwitch", "useDiagnosisExpanding", "useComorbidityMatrix", "useDiagnosisManagement", "useDiagnosisHistory", "useDiagnosisForm", "useComorbidity", "useComorbidityAnalysis"],
+    "09-imaging": ["useLabOrder", "useNormalRanges", "useLabResults", "useTrendAnalysis", "useDicomViewer", "useImagingOrder", "useRadiologyReport"],
+    "11-admin-operations": ["useProcurementWorkflow", "useInventoryManagement"],
+    "shared": ["useApp", "useReferralManagement", "useReferralFollowup", "useSpecialistLookup", "useAuditIntegration", "useOphthalmology", "useNursingManagement", "useInpatientManagement", "useICUManagement", "useGenetics", "useEMS", "useDentistryManagement"]
+  },
+  "existing_in_packages_hosix_hooks": {
+    "shared": ["useClinical", "usePatient", "usePermissions"]
+  },
+  "critical_findings": [
+    "The packages/hosix/src/hooks/ directory is BROKEN - it only contains 4 files instead of the organized module structure with 160+ hooks",
+    "81 HOSIX component imports expect hooks in packages/hosix/src/hooks/{module}/ paths that no longer exist",
+    "All hooks EXIST in src/hooks/ flat directory (~160 hooks)",
+    "Three hooks already in packages/hosix/src/hooks/: useClinical, usePatient, usePermissions",
+    "Most imported hooks are: useApp (13 times), usePermissions (6 times), followed by medication hooks (10 imports)",
+    "RENAPROSA-only hooks (useAsistencia, useCarnetGeneration, useNominasPaymentSystem, etc.) should NOT be copied to packages/hosix - they should stay in src/hooks/"
+  ],
+  "required_actions": [
+    {
+      "priority": "CRITICAL",
+      "action": "Recreate modular folder structure in packages/hosix/src/hooks/",
+      "folders_needed": [
+        "01-obstetrics",
+        "02-pediatrics",
+        "03-nutrition",
+        "05-immunization",
+        "06-medications",
+        "07-clinical-docs",
+        "08-diagnoses",
+        "09-imaging",
+        "11-admin-operations",
+        "shared"
+      ]
+    },
+    {
+      "priority": "CRITICAL",
+      "action": "Copy HOSIX-specific hooks from src/hooks/ to packages/hosix/src/hooks/{module}/",
+      "affected_count": 46,
+      "note": "Must identify and copy only HOSIX-used hooks, not RENAPROSA-only hooks"
+    },
+    {
+      "priority": "HIGH",
+      "action": "Generate index.ts exports for each module",
+      "modules_affected": 10
+    },
+    {
+      "priority": "HIGH",
+      "action": "Audit which hooks are truly HOSIX-specific vs shared vs RENAPROSA-only",
+      "note": "Examples: useApp, useAsistencia, useCarnetGeneration should stay in src/hooks for RENAPROSA"
+    }
+  ],
+  "execution_notes": {
+    "status": "RESEARCH ONLY",
+    "implementation_blocked": true,
+    "reason": "Analysis is for research only. User requested no file modifications at this stage."
+  }
+}

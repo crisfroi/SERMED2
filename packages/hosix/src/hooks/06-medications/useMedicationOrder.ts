@@ -1,6 +1,5 @@
 // ============================================================================
 // useMedicationOrder.ts - Medication Order Management Hook
-// ASIS 10.0 - Regímenes de Medicación - Hito 3
 // ============================================================================
 
 import { useCallback, useState } from 'react';

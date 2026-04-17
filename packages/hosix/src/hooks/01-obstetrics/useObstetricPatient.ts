@@ -98,7 +98,6 @@ export const useObstetricPatient = (pregnancyId: string): ObstetricPatientData &
         setPregnancy((prev) => (prev ? { ...prev, ...data } : null));
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error updating pregnancy');
-        throw err;
       }
     },
     [pregnancyId]
@@ -109,20 +108,17 @@ export const useObstetricPatient = (pregnancyId: string): ObstetricPatientData &
       try {
         if (!pregnancy) return;
 
-        const updatedComplications = [
-          ...(pregnancy.complications || []),
-          complication,
-        ];
+        const updated = {
+          ...pregnancy,
+          complications: [...(pregnancy.complications || []), complication],
+        };
 
-        await updatePregnancy({
-          complications: updatedComplications,
-        });
+        await updatePregnancy(updated);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error adding complication');
-        throw err;
       }
     },
-    [pregnancy, updatePregnancy]
+    [pregnancy]
   );
 
   return {

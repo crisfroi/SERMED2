@@ -1,3 +1,7 @@
+// Nutrition stubs
+export const useNutritionAssessment = () => {
+  return {};
+};
 /**
  * Hook: useNutritionAssessment
  * Gestiona evaluación nutricional: BMI, estado nutricional, alergias, suplementos

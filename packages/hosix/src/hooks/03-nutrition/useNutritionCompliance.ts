@@ -1,3 +1,7 @@
+// Nutrition stubs
+export const useNutritionCompliance = () => {
+  return {};
+};
 /**
  * Hook: useNutritionCompliance
  * Rastra adherencia del paciente al plan de nutrición
