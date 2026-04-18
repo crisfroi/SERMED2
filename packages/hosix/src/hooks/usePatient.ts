@@ -5,7 +5,7 @@
 
 import { useState, useCallback } from 'react';
 import { supabaseDb } from '@sermed2/shared/services/supabaseClient';
-import { useApp } from './useApp';
+import { useApp } from '@hosix/hooks/shared';
 import type { Patient, MedicalRecord, Appointment } from '@sermed2/shared/types';
 
 export function usePatient() {

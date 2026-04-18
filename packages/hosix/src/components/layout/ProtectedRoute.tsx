@@ -1,23 +1,48 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../../../../../src/hooks/useApp';
+import { useState, useEffect } from 'react';
 import { AppLayout } from './AppLayout';
 
 export const ProtectedRoute = () => {
-  const { auth } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  if (auth.isLoading) {
+  useEffect(() => {
+    // Check if user is stored in localStorage
+    const hosixUser = localStorage.getItem('hosix_user');
+    const hosixToken = localStorage.getItem('hosix_token');
+    
+    if (hosixUser && hosixToken) {
+      setIsAuthenticated(true);
+    }
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600">Cargando...</p>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            display: 'inline-block',
+            animation: 'spin 1s linear infinite',
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            borderTop: '4px solid #2563eb',
+            borderRight: '4px solid transparent',
+          }} />
+          <p style={{ marginTop: '1rem', color: '#4b5563' }}>Cargando...</p>
         </div>
       </div>
     );
   }
 
-  if (!auth.isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/hosix/login" replace />;
   }
 
   return (

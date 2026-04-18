@@ -3,7 +3,7 @@
  * Hook para verificar permisos del usuario actual
  */
 
-import { useApp } from './useApp';
+import { useApp } from '@hosix/hooks/shared';
 import { checkPermissions } from '@sermed2/shared/services/auth';
 
 export function usePermissions() {

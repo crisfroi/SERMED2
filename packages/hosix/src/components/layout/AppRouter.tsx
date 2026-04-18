@@ -1,12 +1,11 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from '../common/ErrorBoundary';
 import { ProtectedRoute } from './ProtectedRoute';
-import { useAuth } from '@/hooks/useApp';
 
 // Pages - lazy loaded for performance
-import LoginPage from '@/pages/LoginPage';
-import DashboardPage from '@/pages/DashboardPage';
-import NotFoundPage from '@/pages/NotFoundPage';
+import LoginPage from '@hosix/pages/LoginPage';
+import DashboardPage from '@hosix/pages/DashboardPage';
+import NotFoundPage from '@hosix/pages/NotFoundPage';
 
 /**
  * HosixRoutes - Exports only Routes (no BrowserRouter)
@@ -14,18 +13,11 @@ import NotFoundPage from '@/pages/NotFoundPage';
  * Following React Router v6+ best practices for nested routing
  */
 export const HosixRoutes = () => {
-  const { auth } = useAuth();
-
   return (
     <ErrorBoundary>
       <Routes>
         {/* Public Routes */}
-        <Route
-          path="login"
-          element={
-            auth.isAuthenticated ? <Navigate to="dashboard" /> : <LoginPage />
-          }
-        />
+        <Route path="login" element={<LoginPage />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
@@ -33,11 +25,8 @@ export const HosixRoutes = () => {
           {/* More routes will be added here in subsequent modules */}
         </Route>
 
-        {/* Redirect root to dashboard or login */}
-        <Route
-          path=""
-          element={<Navigate to={auth.isAuthenticated ? 'dashboard' : 'login'} />}
-        />
+        {/* Redirect root to login by default */}
+        <Route path="" element={<Navigate to="login" />} />
 
         {/* 404 Page */}
         <Route path="*" element={<NotFoundPage />} />

@@ -3,7 +3,6 @@
 // Uses independent credentials from the main Renaprosa project
 
 import { createClient } from '@supabase/supabase-js';
-import type { Database } from './types';
 
 // HOSIX Project Credentials (Independent from Renaprosa)
 export const HOSIX_SUPABASE_URL = import.meta.env.VITE_HOSIX_SUPABASE_URL || "https://dfqefbkxounzmtggnfsc.supabase.co";
@@ -76,7 +75,7 @@ const resilientFetch: typeof fetch = async (input, init = {}) => {
 };
 
 // Create HOSIX Supabase client
-export const hosixSupabase = createClient<Database>(
+export const hosixSupabase = createClient(
   HOSIX_SUPABASE_URL,
   HOSIX_SUPABASE_ANON_KEY,
   {

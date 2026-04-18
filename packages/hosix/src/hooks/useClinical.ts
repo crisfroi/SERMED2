@@ -5,7 +5,7 @@
 
 import { useState, useCallback } from 'react';
 import { supabaseClient } from '@sermed2/shared/services/supabaseClient';
-import { useApp } from './useApp';
+import { useApp } from '@hosix/hooks/shared';
 import { Document } from '@/components/clinical/DocumentViewer';
 
 interface ClinicalDocument {
