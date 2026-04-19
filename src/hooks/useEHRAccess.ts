@@ -1,10 +1,10 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+﻿import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/services/supabaseClient';
 
 // ============================================================================
 // ASIS 13: useEHRAccess Hook
-// Propósito: Gestionar acceso y auditoría de EHR (HIPAA-compliant)
-// Líneas: ~400
+// PropÃ³sito: Gestionar acceso y auditorÃ­a de EHR (HIPAA-compliant)
+// LÃ­neas: ~400
 // ============================================================================
 
 interface AccessLog {
@@ -174,3 +174,4 @@ export function useEHRAccess(erhId: string | undefined) {
     unauthorizedAttempts: 0 // Would be populated from API
   };
 }
+

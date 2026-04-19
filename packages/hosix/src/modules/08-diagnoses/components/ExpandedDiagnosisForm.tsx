@@ -19,7 +19,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { useDiagnosisExpanding } from '@hosix/hooks/08-diagnoses/useDiagnosisExpanding'
+import { useDiagnosisExpanding } from '@/hooks/useDiagnosisExpanding';
 import { Plus, Lightbulb, Search, Expand } from 'lucide-react'
 
 interface DiagnosisEntry {

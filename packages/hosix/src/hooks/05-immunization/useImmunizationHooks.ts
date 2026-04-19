@@ -1,6 +1,6 @@
 // Immunization - copy from src
 import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 
 // ============================================================================
 // TYPES

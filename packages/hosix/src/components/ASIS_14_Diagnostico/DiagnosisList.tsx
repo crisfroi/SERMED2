@@ -25,7 +25,7 @@ import {
   Clock,
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useDiagnosisManagement } from '@hosix/hooks/08-diagnoses/useDiagnosisManagement';
+import { useDiagnosisManagement } from '@/hooks/useDiagnosisManagement';
 
 interface DiagnosisItem {
   id: string;

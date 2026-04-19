@@ -8,6 +8,11 @@ export interface User {
   perfil_id: string;
   activo: boolean;
   ultimo_acceso?: string;
+  /** Rol Hosix (edge / hospital); opcional para compatibilidad con Renaprosa */
+  role?: string;
+  hospital_id?: string;
+  hospital_nombre?: string;
+  permissions?: string[];
 }
 
 export interface AuthState {

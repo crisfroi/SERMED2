@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useCallback, useEffect, useState } from 'react';
+import { supabase } from '@/services/supabaseClient';
 
 interface Specialist {
   id: string;
@@ -51,3 +51,4 @@ export const useReferralSpecialist = (specialty?: string) => {
 
   return { specialists, loading, error, sendReferral };
 };
+

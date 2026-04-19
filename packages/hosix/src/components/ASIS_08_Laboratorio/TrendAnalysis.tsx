@@ -32,7 +32,7 @@ import {
   Calendar,
   Activity,
 } from 'lucide-react';
-import { useTrendAnalysis } from '@hosix/hooks/09-imaging/useTrendAnalysis';
+import { useTrendAnalysis } from '@/hooks/useTrendAnalysis';
 
 interface TrendDataPoint {
   date: string;

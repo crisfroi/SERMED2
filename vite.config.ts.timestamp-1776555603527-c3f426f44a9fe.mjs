@@ -1,0 +1,36 @@
+// vite.config.ts
+import { defineConfig } from "file:///C:/Users/HP/Desktop/Proyectos%20y%20Empresas/geprostec/RENAPROSA/Renaprosa2/SERMED2/node_modules/vite/dist/node/index.js";
+import react from "file:///C:/Users/HP/Desktop/Proyectos%20y%20Empresas/geprostec/RENAPROSA/Renaprosa2/SERMED2/node_modules/@vitejs/plugin-react-swc/index.js";
+import path from "path";
+import { componentTagger } from "file:///C:/Users/HP/Desktop/Proyectos%20y%20Empresas/geprostec/RENAPROSA/Renaprosa2/SERMED2/node_modules/lovable-tagger/dist/index.js";
+var __vite_injected_original_dirname = "C:\\Users\\HP\\Desktop\\Proyectos y Empresas\\geprostec\\RENAPROSA\\Renaprosa2\\SERMED2";
+var vite_config_default = defineConfig(({ mode }) => ({
+  server: {
+    host: "::",
+    port: 8080
+  },
+  plugins: [
+    react(),
+    mode === "development" && componentTagger()
+  ].filter(Boolean),
+  resolve: {
+    alias: {
+      "@": path.resolve(__vite_injected_original_dirname, "./src"),
+      "@hosix": path.resolve(__vite_injected_original_dirname, "./packages/hosix/src"),
+      "@sermed2/shared": path.resolve(__vite_injected_original_dirname, "./packages/shared/src")
+    }
+  },
+  optimizeDeps: {
+    include: [
+      "zod",
+      "@hookform/resolvers",
+      "@hookform/resolvers/zod",
+      "leaflet",
+      "react-leaflet"
+    ]
+  }
+}));
+export {
+  vite_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidml0ZS5jb25maWcudHMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImNvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9kaXJuYW1lID0gXCJDOlxcXFxVc2Vyc1xcXFxIUFxcXFxEZXNrdG9wXFxcXFByb3llY3RvcyB5IEVtcHJlc2FzXFxcXGdlcHJvc3RlY1xcXFxSRU5BUFJPU0FcXFxcUmVuYXByb3NhMlxcXFxTRVJNRUQyXCI7Y29uc3QgX192aXRlX2luamVjdGVkX29yaWdpbmFsX2ZpbGVuYW1lID0gXCJDOlxcXFxVc2Vyc1xcXFxIUFxcXFxEZXNrdG9wXFxcXFByb3llY3RvcyB5IEVtcHJlc2FzXFxcXGdlcHJvc3RlY1xcXFxSRU5BUFJPU0FcXFxcUmVuYXByb3NhMlxcXFxTRVJNRUQyXFxcXHZpdGUuY29uZmlnLnRzXCI7Y29uc3QgX192aXRlX2luamVjdGVkX29yaWdpbmFsX2ltcG9ydF9tZXRhX3VybCA9IFwiZmlsZTovLy9DOi9Vc2Vycy9IUC9EZXNrdG9wL1Byb3llY3RvcyUyMHklMjBFbXByZXNhcy9nZXByb3N0ZWMvUkVOQVBST1NBL1JlbmFwcm9zYTIvU0VSTUVEMi92aXRlLmNvbmZpZy50c1wiO2ltcG9ydCB7IGRlZmluZUNvbmZpZyB9IGZyb20gXCJ2aXRlXCI7XHJcblxyXG5pbXBvcnQgcmVhY3QgZnJvbSBcIkB2aXRlanMvcGx1Z2luLXJlYWN0LXN3Y1wiO1xyXG5cclxuaW1wb3J0IHBhdGggZnJvbSBcInBhdGhcIjtcclxuXHJcbmltcG9ydCB7IGNvbXBvbmVudFRhZ2dlciB9IGZyb20gXCJsb3ZhYmxlLXRhZ2dlclwiO1xyXG5cclxuXHJcblxyXG4vLyBodHRwczovL3ZpdGVqcy5kZXYvY29uZmlnL1xyXG5cclxuZXhwb3J0IGRlZmF1bHQgZGVmaW5lQ29uZmlnKCh7IG1vZGUgfSkgPT4gKHtcclxuXHJcbiAgc2VydmVyOiB7XHJcblxyXG4gICAgaG9zdDogXCI6OlwiLFxyXG5cclxuICAgIHBvcnQ6IDgwODAsXHJcblxyXG4gIH0sXHJcblxyXG4gIHBsdWdpbnM6IFtcclxuXHJcbiAgICByZWFjdCgpLFxyXG5cclxuICAgIG1vZGUgPT09ICdkZXZlbG9wbWVudCcgJiZcclxuXHJcbiAgICBjb21wb25lbnRUYWdnZXIoKSxcclxuXHJcbiAgXS5maWx0ZXIoQm9vbGVhbiksXHJcblxyXG4gIHJlc29sdmU6IHtcclxuXHJcbiAgICBhbGlhczoge1xyXG5cclxuICAgICAgXCJAXCI6IHBhdGgucmVzb2x2ZShfX2Rpcm5hbWUsIFwiLi9zcmNcIiksXHJcblxyXG4gICAgICBcIkBob3NpeFwiOiBwYXRoLnJlc29sdmUoX19kaXJuYW1lLCBcIi4vcGFja2FnZXMvaG9zaXgvc3JjXCIpLFxyXG5cclxuICAgICAgXCJAc2VybWVkMi9zaGFyZWRcIjogcGF0aC5yZXNvbHZlKF9fZGlybmFtZSwgXCIuL3BhY2thZ2VzL3NoYXJlZC9zcmNcIiksXHJcblxyXG4gICAgfSxcclxuXHJcbiAgfSxcclxuXHJcbiAgb3B0aW1pemVEZXBzOiB7XHJcblxyXG4gICAgaW5jbHVkZTogW1xyXG5cclxuICAgICAgJ3pvZCcsXHJcblxyXG4gICAgICAnQGhvb2tmb3JtL3Jlc29sdmVycycsXHJcblxyXG4gICAgICAnQGhvb2tmb3JtL3Jlc29sdmVycy96b2QnLFxyXG5cclxuICAgICAgJ2xlYWZsZXQnLFxyXG5cclxuICAgICAgJ3JlYWN0LWxlYWZsZXQnLFxyXG5cclxuICAgIF0sXHJcblxyXG4gIH0sXHJcblxyXG59KSk7XHJcblxyXG4iXSwKICAibWFwcGluZ3MiOiAiO0FBQXFiLFNBQVMsb0JBQW9CO0FBRWxkLE9BQU8sV0FBVztBQUVsQixPQUFPLFVBQVU7QUFFakIsU0FBUyx1QkFBdUI7QUFOaEMsSUFBTSxtQ0FBbUM7QUFZekMsSUFBTyxzQkFBUSxhQUFhLENBQUMsRUFBRSxLQUFLLE9BQU87QUFBQSxFQUV6QyxRQUFRO0FBQUEsSUFFTixNQUFNO0FBQUEsSUFFTixNQUFNO0FBQUEsRUFFUjtBQUFBLEVBRUEsU0FBUztBQUFBLElBRVAsTUFBTTtBQUFBLElBRU4sU0FBUyxpQkFFVCxnQkFBZ0I7QUFBQSxFQUVsQixFQUFFLE9BQU8sT0FBTztBQUFBLEVBRWhCLFNBQVM7QUFBQSxJQUVQLE9BQU87QUFBQSxNQUVMLEtBQUssS0FBSyxRQUFRLGtDQUFXLE9BQU87QUFBQSxNQUVwQyxVQUFVLEtBQUssUUFBUSxrQ0FBVyxzQkFBc0I7QUFBQSxNQUV4RCxtQkFBbUIsS0FBSyxRQUFRLGtDQUFXLHVCQUF1QjtBQUFBLElBRXBFO0FBQUEsRUFFRjtBQUFBLEVBRUEsY0FBYztBQUFBLElBRVosU0FBUztBQUFBLE1BRVA7QUFBQSxNQUVBO0FBQUEsTUFFQTtBQUFBLE1BRUE7QUFBQSxNQUVBO0FBQUEsSUFFRjtBQUFBLEVBRUY7QUFFRixFQUFFOyIsCiAgIm5hbWVzIjogW10KfQo=

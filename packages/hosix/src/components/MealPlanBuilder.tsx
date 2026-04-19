@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react'
-import { useMealPlan, calculateMealPlanMacros, MEAL_TYPES } from '@hosix/hooks/03-nutrition/useMealPlan'
+import { useMealPlan, calculateMealPlanMacros, MEAL_TYPES } from '@/hooks/useMealPlan';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

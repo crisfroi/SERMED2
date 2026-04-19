@@ -40,7 +40,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useImagingOrder } from '@hosix/hooks/09-imaging/useImagingOrder';
+import { useImagingOrder } from '@/hooks/useImagingOrder';
 
 interface ImagingOrderFormProps {
   patientId: string;

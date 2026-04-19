@@ -35,7 +35,7 @@ import {
   Plus,
 } from 'lucide-react';
 import Map from 'lucide-react/dist/esm/icons/map';
-import { useEMS } from '@hosix/hooks/shared/useEMS';
+import { useEMS } from '@hosix/hooks/shared';
 
 interface EMSDashboardProps {
   centerName?: string;

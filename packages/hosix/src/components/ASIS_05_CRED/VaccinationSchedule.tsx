@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Calendar, CheckCircle, AlertCircle, Clock } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 
 interface VaccinationScheduleProps {
   childId: string;

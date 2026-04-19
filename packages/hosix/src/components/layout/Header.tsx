@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuth, useTheme } from '../../../../../src/hooks/useApp';
+import { useAuth, useTheme } from '@/hooks/useApp';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -18,7 +18,9 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
       error: null,
     });
     localStorage.removeItem('authState');
-    navigate('/login');
+    localStorage.removeItem('hosix_user');
+    localStorage.removeItem('hosix_token');
+    navigate('/hosix/login');
   };
 
   return (

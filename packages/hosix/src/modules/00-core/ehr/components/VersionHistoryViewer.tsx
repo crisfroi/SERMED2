@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useEHRVersioning, type EHRDocumentVersion, type EHRDocument } from '@hosix/hooks/07-clinical-docs/useEHRVersioning';
+import { useEHRVersioning, type EHRDocumentVersion, type EHRDocument } from '@/hooks/useEHRVersioning';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { ChevronDown, ChevronUp, Clock, User, FileText, ArrowLeft, ArrowRight } from 'lucide-react';

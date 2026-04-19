@@ -40,7 +40,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useLabOrder } from '@hosix/hooks/09-imaging/useLabOrder';
+import { useLabOrder } from '@/hooks/useLabOrder';
 
 interface TestSelection {
   testId: string;

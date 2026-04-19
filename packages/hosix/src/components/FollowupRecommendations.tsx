@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useReferralFollowup, useReferralOutcomes } from '@hosix/hooks/shared/useReferralFollowup';
+import { useReferralFollowup } from '@hosix/hooks/shared';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import {

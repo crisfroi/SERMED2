@@ -7,7 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
 
 interface PostpartumCareFormProps {

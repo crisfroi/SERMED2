@@ -3,4 +3,4 @@ export { useReferralManagement, useReferralFollowup, useSpecialistLookup, useAud
 // Already exist in packages/hosix/src/hooks/
 export { useClinical } from '../useClinical';
 export { usePatient } from '../usePatient';
-export { usePermissions } from '../usePermissions';
+export { usePermissions } from './usePermissions';

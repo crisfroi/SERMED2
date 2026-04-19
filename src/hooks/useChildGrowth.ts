@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useEffect, useState, useCallback } from 'react';
+import { supabase } from '@/services/supabaseClient';
 
 interface GrowthControl {
   id: string;
@@ -182,3 +182,4 @@ export const useChildGrowth = (childId: string): ChildGrowthData & {
 };
 
 export default useChildGrowth;
+

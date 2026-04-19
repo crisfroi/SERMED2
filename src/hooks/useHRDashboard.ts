@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useState, useCallback } from 'react';
+import { supabase } from '@/services/supabaseClient';
 
 export interface Employee {
   id: string;
@@ -322,3 +322,4 @@ export const useHRDashboard = () => {
     addDeduction,
   };
 };
+

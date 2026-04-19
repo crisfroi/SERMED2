@@ -1,9 +1,9 @@
-// ============================================================================
+﻿// ============================================================================
 // useDicomViewer Hook - DICOM Image Fetching from Orthanc
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 
 interface DicomImage {
   id: string;
@@ -134,3 +134,4 @@ export const useDicomViewer = () => {
 };
 
 export default useDicomViewer;
+

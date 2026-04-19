@@ -4,7 +4,7 @@
  * Usa credenciales y URL de HOSIX, no de Renaprosa
  */
 
-import type { User, AuthState } from '../types/index.js';
+import type { User } from '../types/index.js';
 
 /**
  * Autenticarse via Edge Function (HOSIX)
@@ -13,7 +13,7 @@ import type { User, AuthState } from '../types/index.js';
 export async function loginViaHosixEdgeFunction(
   username: string,
   password: string
-): Promise<{ user: User; token: string } | null> {
+): Promise<{ user: User } | null> {
   try {
     const hosixUrl = import.meta.env.VITE_HOSIX_SUPABASE_URL;
     const hosixKey = import.meta.env.VITE_HOSIX_SUPABASE_ANON_KEY;
@@ -44,10 +44,9 @@ export async function loginViaHosixEdgeFunction(
 
     const data = await response.json();
     console.log('✅ HOSIX Authentication successful for:', username);
-    
+
     return {
       user: data.user,
-      token: data.token,
     };
   } catch (error) {
     console.error('❌ HOSIX Authentication error:', error);
@@ -60,14 +59,13 @@ export async function loginViaHosixEdgeFunction(
  */
 export async function getCurrentHosixUser(): Promise<User | null> {
   try {
-    const token = localStorage.getItem('hosix_auth_token');
-    if (!token) {
+    const userStr = localStorage.getItem('hosix_user');
+    if (!userStr) {
       return null;
     }
 
-    // El token es un JWT mock que contiene el usuario en base64
-    // Decodificar y retornar
-    const userData = JSON.parse(atob(token));
+    // El usuario está guardado como JSON en localStorage
+    const userData = JSON.parse(userStr);
     return userData as User;
   } catch (error) {
     console.error('Error getting current HOSIX user:', error);
@@ -79,7 +77,8 @@ export async function getCurrentHosixUser(): Promise<User | null> {
  * Logout de HOSIX
  */
 export async function logoutFromHosix(): Promise<void> {
-  localStorage.removeItem('hosix_auth_token');
-  localStorage.removeItem('hosix_auth_user');
+  localStorage.removeItem('hosix_token');
+  localStorage.removeItem('hosix_user');
+  localStorage.removeItem('authToken'); // Limpiar también la clave antigua por seguridad
   console.log('✅ HOSIX logout successful');
 }

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useCallback, useEffect, useState } from 'react';
+import { supabase } from '@/services/supabaseClient';
 
 export const useComorbidityAnalysis = (patientId: string) => {
   const [comorbidities, setComorbidities] = useState<any[]>([]);
@@ -39,3 +39,4 @@ export const useComorbidityAnalysis = (patientId: string) => {
 
   return { comorbidities, riskScore, loading, error };
 };
+

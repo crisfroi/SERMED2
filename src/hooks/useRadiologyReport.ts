@@ -1,9 +1,9 @@
-// ============================================================================
+﻿// ============================================================================
 // useRadiologyReport Hook - Radiology Report Management
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 
 interface RadiologyFinding {
   id: string;
@@ -204,3 +204,4 @@ export const useRadiologyReport = () => {
 };
 
 export default useRadiologyReport;
+

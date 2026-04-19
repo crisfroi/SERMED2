@@ -1,11 +1,11 @@
-// ============================================================================
+﻿// ============================================================================
 // useProcurementWorkflow Hook - Pharmacy Procurement Management
 // Handle purchase orders, supplier management, and procurement workflow
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/services/supabaseClient';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Supplier {
   id: string;
@@ -179,3 +179,4 @@ export const useProcurementWorkflow = () => {
     updateOrderStatus,
   };
 };
+

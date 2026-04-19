@@ -1,5 +1,5 @@
-import { useMutation } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+﻿import { useMutation } from '@tanstack/react-query';
+import { supabase } from '@/services/supabaseClient';
 
 interface SignDocumentParams {
   documentId: string;
@@ -55,3 +55,4 @@ export const useEHRDocumentVerifySignature = () => {
     },
   });
 };
+

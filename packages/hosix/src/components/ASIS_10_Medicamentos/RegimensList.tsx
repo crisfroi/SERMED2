@@ -25,7 +25,7 @@ import {
   Plus,
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useMedicationRegimen } from '@hosix/hooks/06-medications/useMedicationRegimen';
+import { useMedicationRegimen } from '@/hooks/useMedicationRegimen';
 
 interface RegimentItem {
   id: string;

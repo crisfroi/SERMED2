@@ -1,9 +1,9 @@
-// ============================================================================
+﻿// ============================================================================
 // useLabResults Hook - Laboratory Results Viewing and Interpretation
 // ============================================================================
 
 import { useCallback, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 
 interface LabResult {
   id: string;
@@ -111,3 +111,4 @@ export const useLabResults = () => {
 };
 
 export default useLabResults;
+

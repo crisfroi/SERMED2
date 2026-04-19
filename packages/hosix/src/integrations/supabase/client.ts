@@ -4,9 +4,9 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// HOSIX Project Credentials (Independent from Renaprosa)
-export const HOSIX_SUPABASE_URL = import.meta.env.VITE_HOSIX_SUPABASE_URL || "https://dfqefbkxounzmtggnfsc.supabase.co";
-export const HOSIX_SUPABASE_ANON_KEY = import.meta.env.VITE_HOSIX_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmcWVmYmt4b3Vuem10Z2duZnNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTA0ODUsImV4cCI6MjA5MTQyNjQ4NX0.bekwHgla4lG7W0RIiSqZoGgq0kSl9h2hxl-SeB7P8tU";
+// HOSIX Project Credentials — solo variables de entorno (sin anon key ni URL embebidas)
+export const HOSIX_SUPABASE_URL = import.meta.env.VITE_HOSIX_SUPABASE_URL as string;
+export const HOSIX_SUPABASE_ANON_KEY = import.meta.env.VITE_HOSIX_SUPABASE_ANON_KEY as string;
 
 // Validate HOSIX environment variables
 if (!HOSIX_SUPABASE_URL) {
@@ -80,10 +80,10 @@ export const hosixSupabase = createClient(
   HOSIX_SUPABASE_ANON_KEY,
   {
     auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true,
-      flowType: 'pkce',
+      // Solo rol anónimo del proyecto Hosix; no persistir sesión JWT de Supabase Auth en el navegador.
+      autoRefreshToken: false,
+      persistSession: false,
+      detectSessionInUrl: false,
     },
     global: {
       fetch: resilientFetch,

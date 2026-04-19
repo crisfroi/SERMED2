@@ -37,8 +37,15 @@ export function usePermissions() {
    * Verificar si el usuario tiene un rol específico
    */
   const hasRole = (role: string): boolean => {
-    if (!auth?.user) return false;
-    return auth.user.role === role;
+    if (auth?.user?.role === role) return true;
+    try {
+      const raw = localStorage.getItem('hosix_user');
+      if (!raw) return false;
+      const u = JSON.parse(raw) as { role?: string };
+      return u.role === role;
+    } catch {
+      return false;
+    }
   };
 
   /**
@@ -80,14 +87,30 @@ export function usePermissions() {
    * Obtener el rol del usuario
    */
   const getRole = (): string => {
-    return auth?.user?.role || 'guest';
+    if (auth?.user?.role) return auth.user.role;
+    try {
+      const raw = localStorage.getItem('hosix_user');
+      if (!raw) return 'guest';
+      const u = JSON.parse(raw) as { role?: string };
+      return u.role || 'guest';
+    } catch {
+      return 'guest';
+    }
   };
 
   /**
    * Verificar si el usuario está autenticado
    */
   const isAuthenticated = (): boolean => {
-    return auth?.isAuthenticated || false;
+    if (auth?.isAuthenticated) return true;
+    try {
+      const raw = localStorage.getItem('hosix_user');
+      if (!raw) return false;
+      const u = JSON.parse(raw) as Record<string, unknown>;
+      return Boolean(u && (u.id || u.email || u.username));
+    } catch {
+      return false;
+    }
   };
 
   return {

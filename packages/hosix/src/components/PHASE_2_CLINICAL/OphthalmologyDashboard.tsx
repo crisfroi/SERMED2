@@ -28,7 +28,7 @@ import {
   Calendar,
   Plus,
 } from 'lucide-react';
-import { useOphthalmology } from '@hosix/hooks/shared/useOphthalmology';
+import { useOphthalmology } from '@hosix/hooks/shared';
 
 interface OphthalmologyDashboardProps {
   patientId?: string;

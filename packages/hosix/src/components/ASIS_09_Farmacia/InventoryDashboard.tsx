@@ -14,7 +14,7 @@ import {
   Search,
   Filter,
 } from 'lucide-react';
-import { useInventoryManagement } from '@hosix/hooks/11-admin-operations/useInventoryManagement';
+import { useInventoryManagement } from '@/hooks/useInventoryManagement';
 
 // ============================================================================
 // TYPES

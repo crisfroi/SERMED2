@@ -1,12 +1,29 @@
+import { useMemo } from 'react';
 import { useAuth } from '@/hooks/useApp';
 
 const DashboardPage = () => {
   const { auth } = useAuth();
-  
-  // Obtener información del usuario
-  const userRole = auth.user?.role || 'PUBLICO';
-  const hospitalName = auth.user?.hospital_nombre || 'Hospital Central';
-  const userName = auth.user?.nombre_completo || 'Usuario';
+
+  const hosixUser = useMemo(() => {
+    try {
+      const raw = localStorage.getItem('hosix_user');
+      if (!raw) return null;
+      return JSON.parse(raw) as Record<string, string | undefined>;
+    } catch {
+      return null;
+    }
+  }, [auth.user?.id]);
+
+  const mergedUser = auth.user ?? (hosixUser as typeof auth.user);
+
+  // Obtener información del usuario (contexto Renaprosa + sesión Hosix en localStorage)
+  const userRole = (mergedUser as { role?: string })?.role || 'PUBLICO';
+  const hospitalName =
+    (mergedUser as { hospital_nombre?: string })?.hospital_nombre || 'Hospital Central';
+  const userName =
+    (mergedUser as { nombre_completo?: string })?.nombre_completo ||
+    hosixUser?.email ||
+    'Usuario';
 
   // Dashboards específicos por rol
   const renderDashboardByRole = () => {

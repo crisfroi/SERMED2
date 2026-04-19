@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useCallback, useEffect, useState } from 'react';
+import { supabase } from '@/services/supabaseClient';
 
 export const useReportsAndAnalytics = () => {
   const [reports, setReports] = useState<any[]>([]);
@@ -39,3 +39,4 @@ export const useReportsAndAnalytics = () => {
 
   return { reports, loading, error, generateReport };
 };
+

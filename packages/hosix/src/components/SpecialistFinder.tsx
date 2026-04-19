@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useSpecialistLookup, useSpecialistResponses } from '@hosix/hooks/shared/useSpecialistLookup';
+import { useSpecialistLookup } from '@hosix/hooks/shared';
 import { Star, MapPin, Clock, Phone, Mail } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';

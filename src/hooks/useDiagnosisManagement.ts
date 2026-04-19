@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useState, useCallback } from 'react';
+import { supabase } from '@/services/supabaseClient';
 import { useDiagnosisForm } from './useDiagnosisForm';
 import { useDiagnosisHistory } from './useDiagnosisHistory';
 
@@ -140,3 +140,4 @@ export const useDiagnosisManagement = (patientId: string) => {
     error,
   };
 };
+

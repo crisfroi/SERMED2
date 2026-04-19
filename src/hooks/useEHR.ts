@@ -1,5 +1,5 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+﻿import { useQuery, useMutation } from '@tanstack/react-query';
+import { supabase } from '@/services/supabaseClient';
 import type { Database } from '@/types/supabase';
 
 type EHR = Database['public']['Tables']['electronic_health_record']['Row'];
@@ -52,3 +52,4 @@ export const useEHRMutation = () => {
     },
   });
 };
+

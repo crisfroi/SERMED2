@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { useMedicationKit } from '@hosix/hooks/06-medications/useMedicationKit'
+import { useMedicationKit } from '@/hooks/useMedicationKit';
 import { Plus, Copy, Trash2, Eye } from 'lucide-react'
 
 interface KitFormData {

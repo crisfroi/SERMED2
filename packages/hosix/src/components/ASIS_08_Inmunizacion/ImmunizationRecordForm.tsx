@@ -10,7 +10,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { CheckCircle2, AlertCircle, Loader } from 'lucide-react';
-import { useImmunizationRecord } from '@hosix/hooks/05-immunization/useImmunizationHooks';
+import { useImmunizationHooks } from '@/hooks/useImmunizationHooks';
 
 // ============================================================================
 // VALIDATION SCHEMA

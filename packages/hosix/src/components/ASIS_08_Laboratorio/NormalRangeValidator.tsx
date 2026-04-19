@@ -21,7 +21,7 @@ import {
   ReferenceLine,
 } from 'recharts';
 import { AlertCircle, CheckCircle2, AlertTriangle, Info } from 'lucide-react';
-import { useNormalRanges } from '@hosix/hooks/09-imaging/useNormalRanges';
+import { useNormalRanges } from '@/hooks/useNormalRanges';
 
 interface RangeData {
   sex?: string;

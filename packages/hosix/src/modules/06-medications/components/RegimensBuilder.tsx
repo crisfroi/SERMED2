@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { useMedicationRegimen } from '@hosix/hooks/06-medications/useMedicationRegimen'
+import { useMedicationRegimen } from '@/hooks/useMedicationRegimen';
 import { Plus, Check, X, Edit2 } from 'lucide-react'
 
 interface RegimenFormData {

@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useLabResults } from '@hosix/hooks/09-imaging/useLabResults';
+import { useLabResults } from '@/hooks/useLabResults';
 
 interface LabResult {
   id: string;

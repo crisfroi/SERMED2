@@ -22,7 +22,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { AlertCircle, Bed, Clock, User, FileText, Plus, CheckCircle2 } from 'lucide-react';
-import { useInpatientManagement } from '@hosix/hooks/shared/useInpatientManagement';
+import { useInpatientManagement } from '@hosix/hooks/shared';
 
 interface InpatientDashboardProps {
   departmentId?: string;

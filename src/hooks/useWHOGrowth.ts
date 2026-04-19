@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useCallback, useState } from 'react';
+import { supabase } from '@/services/supabaseClient';
 
 interface PercentileResult {
   percentile_weight: number;
@@ -146,7 +146,7 @@ function calculatePercentileFallback(params: {
 
   if (percentile_weight < 5) {
     status = 'underweight';
-    alert = 'Peso bajo para edad - Riesgo de desnutrición';
+    alert = 'Peso bajo para edad - Riesgo de desnutriciÃ³n';
   } else if (percentile_weight > 95) {
     status = 'overweight';
     alert = 'Peso alto para edad - Riesgo de sobrepeso';
@@ -157,7 +157,7 @@ function calculatePercentileFallback(params: {
 
   if (percentile_height < 5) {
     status = 'underweight';
-    if (!alert) alert = 'Talla baja para edad - Evaluación recomendada';
+    if (!alert) alert = 'Talla baja para edad - EvaluaciÃ³n recomendada';
   }
 
   return {
@@ -170,3 +170,4 @@ function calculatePercentileFallback(params: {
 }
 
 export default useWHOGrowth;
+

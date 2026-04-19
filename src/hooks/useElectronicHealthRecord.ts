@@ -1,11 +1,11 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+﻿import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/services/supabaseClient';
 
 // ============================================================================
 // ASIS 13: useElectronicHealthRecord Hook
-// Propósito: Gestionar datos de Historia Médica Electrónica
-// Características: CRUD, consolidación, exportación PDF/HL7
-// Líneas: ~600
+// PropÃ³sito: Gestionar datos de Historia MÃ©dica ElectrÃ³nica
+// CaracterÃ­sticas: CRUD, consolidaciÃ³n, exportaciÃ³n PDF/HL7
+// LÃ­neas: ~600
 // ============================================================================
 
 interface Electronic HealthRecord {
@@ -59,7 +59,7 @@ export function useElectronicHealthRecord(patientId: string) {
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
-  // Fetch episodes (todo tipo de episodios clínicos)
+  // Fetch episodes (todo tipo de episodios clÃ­nicos)
   const episodesQuery = useQuery({
     queryKey: ['ehr-episodes', patientId],
     queryFn: async () => {
@@ -185,7 +185,7 @@ export function useElectronicHealthRecord(patientId: string) {
         accessed_by: (await supabase.auth.getUser()).data.user?.id,
         access_type: accessType,
         reason: reason,
-        ip_address: 'auto-detected', // En producción, obtener del backend
+        ip_address: 'auto-detected', // En producciÃ³n, obtener del backend
         duration_seconds: 0,
         status: 'completed',
         data_accessed: dataAccessed || { summary: true, episodes: true }
@@ -214,3 +214,4 @@ export function useElectronicHealthRecord(patientId: string) {
     }
   };
 }
+

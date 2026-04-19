@@ -1,4 +1,4 @@
-/**
+﻿/**
  * useSyncStatus - Hook for real-time sync queue status
  * FASE A3: Show sync progress in UI (toast, badge, dashboard)
  *
@@ -17,7 +17,7 @@
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 import { SyncStatusSnapshot } from '@/types/sync';
 
 export const useSyncStatus = (hospital_id: string) => {
@@ -218,3 +218,4 @@ export const SyncStatusBadge: React.FC<{ hospital_id: string }> = ({
 };
 
 export default useSyncStatus;
+

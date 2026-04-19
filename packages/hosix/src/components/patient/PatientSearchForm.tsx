@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { useApp } from '@hosix/hooks/shared/useApp';
+import { useApp } from '@hosix/hooks/shared';
 import { supabaseDb } from '@sermed2/shared/services/supabaseClient';
 import { validateEmail } from '@sermed2/shared/utils/validators';
 import type { Patient } from '@sermed2/shared/types';

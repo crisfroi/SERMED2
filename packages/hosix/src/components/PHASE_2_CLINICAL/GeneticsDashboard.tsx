@@ -28,7 +28,7 @@ import {
   AlertTriangle,
   Plus,
 } from 'lucide-react';
-import { useGenetics } from '@hosix/hooks/shared/useGenetics';
+import { useGenetics } from '@hosix/hooks/shared';
 
 interface GeneticsDashboardProps {
   patientId?: string;

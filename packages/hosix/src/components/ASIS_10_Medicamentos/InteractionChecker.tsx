@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Zap,
 } from 'lucide-react';
-import { useInteractionChecker } from '@hosix/hooks/06-medications/useInteractionChecker';
+import { useInteractionChecker } from '@/hooks/useInteractionChecker';
 
 interface DrugInteraction {
   medicationA: string;

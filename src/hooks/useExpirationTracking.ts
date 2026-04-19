@@ -1,10 +1,10 @@
-// ============================================================================
+﻿// ============================================================================
 // useExpirationTracking Hook - Pharmacy Medication Expiration Management
 // Monitor medication expiration dates and generate alerts
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 
 interface ExpiringMedication {
   id: string;
@@ -139,3 +139,4 @@ export const useExpirationTracking = () => {
     markAsDiscarded,
   };
 };
+

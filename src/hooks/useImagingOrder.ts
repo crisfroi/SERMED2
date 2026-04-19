@@ -1,10 +1,10 @@
-// ============================================================================
+﻿// ============================================================================
 // useImagingOrder Hook - Imaging Order Management
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/services/supabaseClient';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Modality {
   id: string;
@@ -167,3 +167,4 @@ export const useImagingOrder = () => {
 };
 
 export default useImagingOrder;
+

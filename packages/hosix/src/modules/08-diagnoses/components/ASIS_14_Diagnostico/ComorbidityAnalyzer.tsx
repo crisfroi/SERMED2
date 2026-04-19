@@ -18,7 +18,7 @@ import {
   ChevronUp,
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter } from 'recharts';
-import { useComorbidityAnalysis } from '@hosix/hooks/08-diagnoses/useComorbidityAnalysis';
+import { useComorbidityAnalysis } from '@/hooks/useComorbidityAnalysis';
 
 interface ComorbidityRelationship {
   diagnosisA: string;

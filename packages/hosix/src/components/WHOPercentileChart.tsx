@@ -10,7 +10,7 @@
  */
 
 import React, { useState } from 'react'
-import { useChildGrowthWHO } from '@hosix/hooks/02-pediatrics/useChildGrowthWHO'
+import { useChildGrowthWHO } from '@/hooks/useChildGrowthWHO';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

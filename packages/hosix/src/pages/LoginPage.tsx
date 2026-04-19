@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useApp';
+import { mapHosixApiUserToContextUser } from '@hosix/utils/mapHosixApiUserToContextUser';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { setAuth } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [credentials, setCredentials] = useState({
@@ -24,8 +27,15 @@ const LoginPage = () => {
     setError(null);
 
     try {
-      const hosixUrl = import.meta.env.VITE_HOSIX_SUPABASE_URL || 'https://dfqefbkxounzmtggnfsc.supabase.co';
+      const hosixUrl = import.meta.env.VITE_HOSIX_SUPABASE_URL;
       const hosixKey = import.meta.env.VITE_HOSIX_SUPABASE_ANON_KEY;
+
+      if (!hosixUrl || !hosixKey) {
+        setError(
+          'Faltan VITE_HOSIX_SUPABASE_URL o VITE_HOSIX_SUPABASE_ANON_KEY en el entorno del proyecto Hosix.'
+        );
+        return;
+      }
 
       console.log('🔐 HOSIX Login - Attempting auth...');
 
@@ -48,8 +58,16 @@ const LoginPage = () => {
 
       if (data && data.success && data.user) {
         console.log('✅ Login successful!');
+        // Sesión de UI: solo usuario. Las llamadas a Supabase Hosix usan la anon key del build (env), no JWT de usuario.
+        localStorage.removeItem('hosix_token');
         localStorage.setItem('hosix_user', JSON.stringify(data.user));
-        localStorage.setItem('hosix_token', data.token || '');
+        const mapped = mapHosixApiUserToContextUser(data.user as Record<string, unknown>);
+        setAuth({
+          user: mapped,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null,
+        });
         navigate('/hosix/dashboard');
       } else if (data) {
         setError(data.error || data.message || 'Login falló');

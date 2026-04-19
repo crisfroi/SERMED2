@@ -4,8 +4,8 @@
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/services/supabaseClient';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface NutritionPlan {
   id: string;
@@ -218,8 +218,8 @@ export const useNutritionPlanning = () => {
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@hosix/hooks/shared/useAuth';
+import { supabase } from '@/services/supabaseClient';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface NutritionPlan {
   id: string;
@@ -426,3 +426,5 @@ export const useNutritionPlanning = () => {
     completePlan,
   };
 };
+
+

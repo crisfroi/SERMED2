@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CheckCircle2, Clock, AlertCircle, Stethoscope, ClipboardList, Plus } from 'lucide-react';
-import { useNursingManagement } from '@hosix/hooks/shared/useNursingManagement';
+import { useNursingManagement } from '@hosix/hooks/shared';
 
 interface NursingTaskBoardProps {
   nurseId: string;

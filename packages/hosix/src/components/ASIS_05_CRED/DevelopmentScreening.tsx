@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Radio, RadioGroup } from '@/components/ui/radio-group';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 import { AlertTriangle, CheckCircle, HelpCircle } from 'lucide-react';
 
 interface DevelopmentScreeningProps {

@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useChildGrowth } from '@hosix/hooks/02-pediatrics/useChildGrowth';
-import { supabase } from '@/lib/supabase';
+import { useChildGrowth } from '@/hooks/useChildGrowth';
+import { supabase } from '@/services/supabaseClient';
 import { Check, Clock, AlertCircle } from 'lucide-react';
 
 interface Milestone {

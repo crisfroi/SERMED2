@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+﻿import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/services/supabaseClient';
 
 // ============================================================================
 // ASIS 13: useEHRTimeline Hook
-// Propósito: Gestionar timeline de episodios clínicos
-// Líneas: ~350
+// PropÃ³sito: Gestionar timeline de episodios clÃ­nicos
+// LÃ­neas: ~350
 // ============================================================================
 
 interface TimelineEpisode {
@@ -197,3 +197,4 @@ export function useEHRTimeline(erhId: string | undefined, filter?: TimelineFilte
     findCareGaps
   };
 }
+

@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useInteractionChecker } from '@hosix/hooks/06-medications/useInteractionChecker';
+import { useInteractionChecker } from '@/hooks/useInteractionChecker';
 import {
   AlertTriangle,
   AlertCircle,

@@ -10,11 +10,10 @@
 
 import React, { useState } from 'react';
 
-import { useApp } from '@hosix/hooks/shared/useApp';
-
-import { validateEmail, validatePassword } from '@sermed2/shared/utils/validators';
+import { useApp } from '@hosix/hooks/shared';
 
 import { loginViaHosixEdgeFunction } from '@hosix/services/auth';
+import { mapHosixApiUserToContextUser } from '@hosix/utils/mapHosixApiUserToContextUser';
 
 
 
@@ -62,7 +61,7 @@ export const EnhancedLoginForm: React.FC<EnhancedLoginFormProps> = ({
 
     if (!username.trim() || !password.trim()) {
 
-      addNotification('error', 'Por favor complete todos los campos');
+      addNotification({ type: 'error', message: 'Por favor complete todos los campos' });
 
       return;
 
@@ -82,11 +81,11 @@ export const EnhancedLoginForm: React.FC<EnhancedLoginFormProps> = ({
 
       if (result) {
 
-        // Guardar token
+        // Sesión Hosix: solo usuario en localStorage. Supabase Hosix usa VITE_HOSIX_SUPABASE_ANON_KEY del build, no JWT de usuario.
+        localStorage.removeItem('hosix_token');
+        localStorage.setItem('hosix_user', JSON.stringify(result.user));
 
-        localStorage.setItem('authToken', result.token);
-
-
+        const mapped = mapHosixApiUserToContextUser(result.user as unknown as Record<string, unknown>);
 
         // Si "recordarme" está activado
 
@@ -104,19 +103,22 @@ export const EnhancedLoginForm: React.FC<EnhancedLoginFormProps> = ({
 
         setAuth({
 
-          user: result.user,
+          user: mapped,
 
           isAuthenticated: true,
 
           isLoading: false,
 
-          token: result.token,
+          error: null,
 
         });
 
 
 
-        addNotification('success', `Bienvenido, ${result.user.firstName || result.user.username}!`);
+        addNotification({
+          type: 'success',
+          message: `Bienvenido, ${mapped.nombre_completo}!`,
+        });
 
         onSuccess?.();
 
@@ -124,7 +126,7 @@ export const EnhancedLoginForm: React.FC<EnhancedLoginFormProps> = ({
 
     } catch (error: any) {
 
-      addNotification('error', error.message || 'Error al iniciar sesión');
+      addNotification({ type: 'error', message: error.message || 'Error al iniciar sesión' });
 
     } finally {
 

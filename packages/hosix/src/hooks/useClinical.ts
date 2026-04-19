@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { supabaseClient } from '@sermed2/shared/services/supabaseClient';
+import { supabase } from '@sermed2/shared/services/supabaseClient';
 import { useApp } from '@hosix/hooks/shared';
 import { Document } from '@/components/clinical/DocumentViewer';
 
@@ -41,7 +41,7 @@ export const useClinical = () => {
       try {
         const offset = (page - 1) * pageSize;
 
-        let query = supabaseClient
+        let query = supabase
           .from('clinical_documents')
           .select('*', { count: 'exact' })
           .eq('patient_id', patientId);
@@ -80,7 +80,7 @@ export const useClinical = () => {
       setIsLoading(true);
 
       try {
-        const { data, error } = await supabaseClient
+        const { data, error } = await supabase
           .from('clinical_documents')
           .select('*')
           .eq('id', documentId)
@@ -108,7 +108,7 @@ export const useClinical = () => {
       setIsLoading(true);
 
       try {
-        const { error, data: newDoc } = await supabaseClient
+        const { error, data: newDoc } = await supabase
           .from('clinical_documents')
           .insert([
             {
@@ -148,7 +148,7 @@ export const useClinical = () => {
       setIsLoading(true);
 
       try {
-        const { error, data: updatedDoc } = await supabaseClient
+        const { error, data: updatedDoc } = await supabase
           .from('clinical_documents')
           .update({
             ...updates,
@@ -188,7 +188,7 @@ export const useClinical = () => {
       setIsLoading(true);
 
       try {
-        const { error } = await supabaseClient
+        const { error } = await supabase
           .from('clinical_documents')
           .delete()
           .eq('id', documentId);
@@ -221,7 +221,7 @@ export const useClinical = () => {
       setIsLoading(true);
 
       try {
-        const { error, data: signedDoc } = await supabaseClient
+        const { error, data: signedDoc } = await supabase
           .from('clinical_documents')
           .update({
             signature,
@@ -262,7 +262,7 @@ export const useClinical = () => {
       setIsLoading(true);
 
       try {
-        const { data, error } = await supabaseClient
+        const { data, error } = await supabase
           .from('clinical_documents')
           .select('*')
           .eq('patient_id', patientId)
@@ -296,7 +296,7 @@ export const useClinical = () => {
       setIsLoading(true);
 
       try {
-        const { data, error } = await supabaseClient
+        const { data, error } = await supabase
           .from('clinical_documents')
           .select('*')
           .eq('patient_id', patientId)
@@ -324,7 +324,7 @@ export const useClinical = () => {
       setIsLoading(true);
 
       try {
-        const { data, error } = await supabaseClient
+        const { data, error } = await supabase
           .from('clinical_documents')
           .select('*')
           .eq('patient_id', patientId)

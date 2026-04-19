@@ -25,7 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useComorbidityMatrix } from '@hosix/hooks/08-diagnoses/useComorbidityMatrix'
+import { useComorbidityMatrix } from '@/hooks/useComorbidityMatrix';
 import { Grid3X3, AlertTriangle, TrendingUp } from 'lucide-react'
 
 interface ComorbidityData {

@@ -1,9 +1,9 @@
-// ============================================================================
+﻿// ============================================================================
 // useNormalRanges Hook - Demographic-specific Normal Ranges
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 
 interface RangeData {
   sex?: string;
@@ -134,3 +134,4 @@ export const useNormalRanges = () => {
 };
 
 export default useNormalRanges;
+

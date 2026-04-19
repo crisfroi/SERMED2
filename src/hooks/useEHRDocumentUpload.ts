@@ -1,5 +1,5 @@
-import { useMutation } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+﻿import { useMutation } from '@tanstack/react-query';
+import { supabase } from '@/services/supabaseClient';
 import type { Database } from '@/types/supabase';
 
 type DocumentType = 'lab_result' | 'prescription' | 'discharge' | 'imaging' | 'report' | 'consultation' | 'procedure' | 'consent';
@@ -107,3 +107,4 @@ export const useEHRDocumentDelete = () => {
     },
   });
 };
+

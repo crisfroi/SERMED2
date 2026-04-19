@@ -30,7 +30,7 @@ import {
   Wind,
   Thermometer,
 } from 'lucide-react';
-import { useICUManagement } from '@hosix/hooks/shared/useICUManagement';
+import { useICUManagement } from '@hosix/hooks/shared';
 
 interface ICUDashboardProps {
   patientId?: string;

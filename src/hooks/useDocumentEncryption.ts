@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useState, useCallback } from 'react';
+import { supabase } from '@/services/supabaseClient';
 
 export interface EncryptionKey {
   id: string;
@@ -333,3 +333,4 @@ export const useDocumentEncryption = () => {
     getActiveEncryptionKeys,
   };
 };
+

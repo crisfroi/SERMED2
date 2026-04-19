@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+﻿import { useQuery } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 import type { Database } from '@/types/supabase';
 
 type Document = Database['public']['Tables']['ehr_document_storage']['Row'];
@@ -39,7 +39,7 @@ export const useEHRDocuments = (ehrId: string | null, options: UseEHRDocumentsOp
   });
 };
 
-// Hook para búsqueda full-text
+// Hook para bÃºsqueda full-text
 export const useEHRDocumentSearch = (query: string) => {
   return useQuery({
     queryKey: ['ehr-documents-search', query],
@@ -74,3 +74,4 @@ export const useEHRDocumentMutation = () => {
     },
   });
 };
+

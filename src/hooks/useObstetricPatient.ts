@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useEffect, useState, useCallback } from 'react';
+import { supabase } from '@/services/supabaseClient';
 
 interface Pregnancy {
   id: string;
@@ -136,3 +136,4 @@ export const useObstetricPatient = (pregnancyId: string): ObstetricPatientData &
 };
 
 export default useObstetricPatient;
+

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useCallback, useEffect, useState } from 'react';
+import { supabase } from '@/services/supabaseClient';
 
 interface QueueItem {
   id: string;
@@ -54,3 +54,4 @@ export const useQueueManagement = (roomId?: string) => {
 
   return { queue, loading, error, callPatient };
 };
+

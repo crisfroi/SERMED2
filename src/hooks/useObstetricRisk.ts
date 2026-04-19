@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useEffect, useState, useCallback } from 'react';
+import { supabase } from '@/services/supabaseClient';
 
 interface RiskFactors {
   maternal: string[];
@@ -94,7 +94,7 @@ export const useObstetricRisk = (pregnancyId: string): ObstetricRiskData => {
           const age = new Date().getFullYear() - birthDate.getFullYear();
           if (age < 18) {
             score += 10;
-            factors.maternal.push('Edad materna <18 años');
+            factors.maternal.push('Edad materna <18 aÃ±os');
           } else if (age > 35) {
             score += 15;
             factors.maternal.push('Edad materna avanzada (>35)');
@@ -144,3 +144,4 @@ export const useObstetricRisk = (pregnancyId: string): ObstetricRiskData => {
 };
 
 export default useObstetricRisk;
+

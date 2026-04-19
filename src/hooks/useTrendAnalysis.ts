@@ -1,9 +1,9 @@
-// ============================================================================
+﻿// ============================================================================
 // useTrendAnalysis Hook - Laboratory Results Trend Analysis
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 
 interface TrendDataPoint {
   date: string;
@@ -159,3 +159,4 @@ export const useTrendAnalysis = () => {
 };
 
 export default useTrendAnalysis;
+

@@ -18,7 +18,7 @@ import {
   CheckCircle2,
   Clock,
 } from 'lucide-react';
-import { useRadiologyReport } from '@hosix/hooks/09-imaging/useRadiologyReport';
+import { useRadiologyReport } from '@/hooks/useRadiologyReport';
 
 interface RadiologyFinding {
   id: string;

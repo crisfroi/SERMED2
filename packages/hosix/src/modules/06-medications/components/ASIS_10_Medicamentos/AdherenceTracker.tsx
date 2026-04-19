@@ -19,7 +19,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAdherenceTracker } from '@hosix/hooks/06-medications/useAdherenceTracker';
+import { useAdherenceTracker } from '@/hooks/useAdherenceTracker';
 
 interface AdherenceRecord {
   date: string;

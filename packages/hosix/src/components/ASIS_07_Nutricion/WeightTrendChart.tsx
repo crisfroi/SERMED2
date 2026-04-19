@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, TrendingDown, TrendingUp, Minus } from 'lucide-react';
-import { useNutritionTracking } from '@hosix/hooks/03-nutrition/useNutritionTracking';
+import { useNutritionTracking } from '@/hooks/useNutritionTracking';
 
 // ============================================================================
 // TYPES

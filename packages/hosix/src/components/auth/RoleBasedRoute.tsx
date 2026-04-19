@@ -5,8 +5,7 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useApp } from '@hosix/hooks/shared/useApp';
-import { usePermissions } from '@hosix/hooks/shared/usePermissions';
+import { usePermissions } from '@hosix/hooks/shared';
 
 export interface RoleBasedRouteProps {
   children: React.ReactNode;
@@ -17,10 +16,9 @@ export interface RoleBasedRouteProps {
 export const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
   children,
   allowedRoles,
-  fallbackPath = '/login',
+  fallbackPath = '/hosix/login',
 }) => {
-  const { auth } = useApp();
-  const { hasRole, isAuthenticated } = usePermissions();
+  const { isAuthenticated, hasRole, user } = usePermissions();
 
   if (!isAuthenticated()) {
     return <Navigate to={fallbackPath} replace />;

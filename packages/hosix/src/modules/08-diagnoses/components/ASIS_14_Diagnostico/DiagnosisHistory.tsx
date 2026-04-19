@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useDiagnosisHistory } from '@hosix/hooks/08-diagnoses/useDiagnosisHistory';
+import { useDiagnosisHistory } from '@/hooks/useDiagnosisHistory';
 import {
   BarChart,
   Bar,

@@ -4,8 +4,8 @@
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/services/supabaseClient';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface NutritionAssessment {
   id: string;
@@ -226,8 +226,8 @@ export const useNutritionTracking = () => {
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@hosix/hooks/shared/useAuth';
+import { supabase } from '@/services/supabaseClient';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface NutritionAssessment {
   id: string;
@@ -442,3 +442,5 @@ export const useNutritionTracking = () => {
     recordFeedingData,
   };
 };
+
+

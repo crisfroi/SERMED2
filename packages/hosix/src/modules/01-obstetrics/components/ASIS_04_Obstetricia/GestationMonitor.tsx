@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useObstetricPatient } from '@hosix/hooks/01-obstetrics/useObstetricPatient';
-import { useObstetricRisk } from '@hosix/hooks/01-obstetrics/useObstetricRisk';
+import { useObstetricPatient } from '@/hooks/useObstetricPatient';
+import { useObstetricRisk } from '@/hooks/useObstetricRisk';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';

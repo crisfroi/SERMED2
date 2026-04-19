@@ -1,11 +1,11 @@
-// ============================================================================
+﻿// ============================================================================
 // useNutritionPlanning Hook - Personalized Nutrition Plan Management
 // Create, manage, and track personalized nutrition plans for children
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/services/supabaseClient';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface NutritionPlan {
   id: string;
@@ -212,3 +212,4 @@ export const useNutritionPlanning = () => {
     completePlan,
   };
 };
+

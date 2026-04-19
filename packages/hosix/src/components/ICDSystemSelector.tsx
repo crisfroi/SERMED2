@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { useICDSystemSwitch } from '@hosix/hooks/08-diagnoses/useICDSystemSwitch'
+import { useICDSystemSwitch } from '@/hooks/useICDSystemSwitch';
 import { ArrowRight, AlertCircle } from 'lucide-react'
 
 interface ICDSystemSelectorProps {

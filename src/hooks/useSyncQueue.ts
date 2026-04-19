@@ -1,4 +1,4 @@
-/**
+﻿/**
  * useSyncQueue - Hook for managing sync queue operations
  * FASE A3: Allow components to add/track items in sync queue
  * 
@@ -10,7 +10,7 @@
  * await addToQueue({
  *   tabla: 'admisiones',
  *   accion: 'INSERT',
- *   datos: { nombre: 'Juan Pérez' }
+ *   datos: { nombre: 'Juan PÃ©rez' }
  * });
  * 
  * // Check pending items
@@ -23,7 +23,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 import {
   SyncQueueItem,
   SyncStatus,
@@ -239,3 +239,4 @@ export const useSyncQueue = (hospital_id: string) => {
 };
 
 export default useSyncQueue;
+

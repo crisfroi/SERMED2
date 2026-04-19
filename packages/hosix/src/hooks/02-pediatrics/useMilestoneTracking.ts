@@ -16,7 +16,7 @@ export const usePediatricsGrowth = () => {
  */
 
 import { useEffect, useState } from 'react'
-import { useSupabase } from '@hosix/hooks/shared/useSupabase'
+import { supabase } from '@/services/supabaseClient';
 import type { PostgrestError } from '@supabase/supabase-js'
 
 export interface PediatricMilestone {

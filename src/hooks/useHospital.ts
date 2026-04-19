@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useEffect, useState, useCallback } from 'react';
+import { supabase } from '@/services/supabaseClient';
 import { Hospital } from '@/types/hospital';
 
 export const useHospital = () => {
@@ -52,3 +52,4 @@ export const useHospital = () => {
     error,
   };
 };
+

@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/services/supabaseClient';
 
 // ============================================================================
 // ASIS 13: useThalamusSync Hook
-// Propósito: Gestionar sincronización de HME con THALAMUS central
-// NEW: Integración general de datos (no solo epidemiología)
-// Líneas: ~450
+// PropÃ³sito: Gestionar sincronizaciÃ³n de HME con THALAMUS central
+// NEW: IntegraciÃ³n general de datos (no solo epidemiologÃ­a)
+// LÃ­neas: ~450
 // ============================================================================
 
 interface ThalamusSyncStatus {
@@ -257,3 +257,4 @@ export function useThalamusSync(patientId: string, hospitalId: string) {
     }
   };
 }
+

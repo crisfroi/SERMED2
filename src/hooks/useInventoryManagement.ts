@@ -1,11 +1,11 @@
-// ============================================================================
+﻿// ============================================================================
 // useInventoryManagement Hook - Pharmacy Inventory Control
 // Handle medication stock levels, movements, and inventory tracking
 // ============================================================================
 
 import { useCallback, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/services/supabaseClient';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface MedicationInventory {
   id: string;
@@ -195,3 +195,4 @@ export const useInventoryManagement = () => {
     recordMovement,
   };
 };
+

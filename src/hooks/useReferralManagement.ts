@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useState, useCallback } from 'react';
+import { supabase } from '@/services/supabaseClient';
 
 export interface Referral {
   id: string;
@@ -348,3 +348,4 @@ export const useReferralManagement = () => {
     cancelReferral,
   };
 };
+

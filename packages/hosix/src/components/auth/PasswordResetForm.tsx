@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { useApp } from '@hosix/hooks/shared/useApp';
+import { useApp } from '@hosix/hooks/shared';
 import { validateEmail, validatePassword } from '@sermed2/shared/utils/validators';
 
 export interface PasswordResetFormProps {

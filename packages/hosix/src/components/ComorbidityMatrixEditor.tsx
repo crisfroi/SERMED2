@@ -9,7 +9,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useComorbidityMatrix } from '@hosix/hooks/08-diagnoses/useComorbidityMatrix'
+import { useComorbidityMatrix } from '@/hooks/useComorbidityMatrix';
 import { AlertTriangle, Activity } from 'lucide-react'
 
 interface ComorbidityMatrixEditorProps {

@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useState, useCallback } from 'react';
+import { supabase } from '@/services/supabaseClient';
 
 // ============================================================================
 // TYPES
@@ -372,3 +372,4 @@ export const useVaccineLotTracking = () => {
     error,
   };
 };
+
