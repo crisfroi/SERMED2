@@ -4,7 +4,7 @@
  * Tests: LoginForm → VerifyTwoFA → Dashboard → PatientSearch → PatientProfile
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 
 describe('HOSIX Authentication E2E Flow', () => {
   // Mock setup
@@ -14,7 +14,7 @@ describe('HOSIX Authentication E2E Flow', () => {
   });
 
   afterEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('1. Login Form Flow', () => {

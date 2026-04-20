@@ -4,7 +4,7 @@
  * Tests: login, 2FA verification, session management, logout
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from '@jest/globals';
 
 describe('useAuth2FA Hook', () => {
   beforeEach(() => {

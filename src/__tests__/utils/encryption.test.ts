@@ -4,7 +4,7 @@
  * Tests: encryptPII, decryptPII, key generation, rotation
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from '@jest/globals';
 
 describe('Encryption Module (AES-256-GCM)', () => {
   let testKey: string;
